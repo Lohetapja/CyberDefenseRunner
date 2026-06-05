@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cyber-defense-runner",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "3900", "--directory", "D:/Projects/CyberDefenseRunner"],
+      "port": 3900
+    }
+  ]
+}

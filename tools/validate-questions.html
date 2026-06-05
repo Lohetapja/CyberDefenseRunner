@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CDR — Question Batch Validator</title>
+<style>
+  :root {
+    --bg:#080c10; --surface:#0f1923; --surface2:#162030; --border:#1e3048; --border-hi:#2a4a6a;
+    --accent:#00d4ff; --green:#00e87a; --red:#ff3d55; --amber:#ffb300; --text:#cdd9e5; --muted:#607080;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; font-size:15px; padding:24px; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { color:var(--accent); font-size:1.4rem; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:0.85rem; margin-bottom:20px; }
+  .card { background:var(--surface); border:1px solid var(--border-hi); border-radius:10px; padding:18px; margin-bottom:16px; }
+  label { display:block; font-size:0.72rem; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; font-family:'Consolas',monospace; }
+  textarea { width:100%; min-height:220px; background:#0b121a; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:12px; font-family:'Consolas',monospace; font-size:0.8rem; resize:vertical; }
+  input[type=text] { background:#0b121a; color:var(--text); border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-family:'Consolas',monospace; font-size:0.8rem; width:100%; }
+  .row { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+  .col { flex:1 1 240px; }
+  button { background:var(--accent); color:#000; border:none; padding:11px 26px; border-radius:6px; font-weight:800; letter-spacing:1px; text-transform:uppercase; cursor:pointer; font-size:0.8rem; }
+  button:hover { opacity:.9; }
+  .file-btn { background:var(--surface2); color:var(--accent); border:1px solid var(--border-hi); margin-left:8px; }
+  .status { font-size:1.1rem; font-weight:800; font-family:'Consolas',monospace; padding:10px 16px; border-radius:8px; display:inline-block; margin-bottom:14px; }
+  .status.pass { color:var(--green); background:rgba(0,232,122,.1); border:1px solid rgba(0,232,122,.4); }
+  .status.fail { color:var(--red); background:rgba(255,61,85,.1); border:1px solid rgba(255,61,85,.4); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
+  .stat { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; }
+  .stat .k { font-size:0.58rem; letter-spacing:1px; color:var(--muted); font-family:'Consolas',monospace; }
+  .stat .v { font-size:1rem; font-weight:800; font-family:'Consolas',monospace; color:var(--accent); }
+  .list { font-family:'Consolas',monospace; font-size:0.78rem; line-height:1.7; }
+  .list .err { color:var(--red); }
+  .list .warn { color:var(--amber); }
+  .list .ok { color:var(--green); }
+  .section-title { font-size:0.62rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); font-family:'Consolas',monospace; margin:14px 0 6px; border-top:1px solid var(--border); padding-top:12px; }
+  details summary { cursor:pointer; color:var(--accent); font-family:'Consolas',monospace; font-size:0.78rem; }
+  pre { background:#0b121a; border:1px solid var(--border); border-radius:6px; padding:10px; overflow:auto; font-size:0.72rem; color:var(--muted); }
+  code { color:var(--amber); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Cyber Defense Runner — Question Batch Validator</h1>
+  <div class="sub">Paste a batch and validate it <b>before merging</b>. Nothing here touches the game files.</div>
+
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label>Expected Topic (optional)</label>
+        <input type="text" id="topic" placeholder="e.g. Networking Basics">
+      </div>
+      <div class="col">
+        <label>Expected ID Prefix (optional)</label>
+        <input type="text" id="prefix" placeholder="e.g. networking-basics">
+      </div>
+    </div>
+    <label>Batch — paste a JS array <code>[ {…}, … ]</code> or <code>const NAME = [ … ];</code></label>
+    <textarea id="batch" placeholder="const NETWORKING_BASICS_QUESTIONS = [ { id: 'networking-basics-001', tier: 'Beginner', topic: 'Networking Basics', prompt: '…', options: ['…','…','…','…'], correct: 0, explain: '…', reward: '…' } ];"></textarea>
+    <div style="margin-top:12px;">
+      <button id="run">Validate</button>
+      <button class="file-btn" id="loadFileBtn">Load .js file…</button>
+      <input type="file" id="file" accept=".js,.txt" style="display:none">
+    </div>
+  </div>
+
+  <div class="card" id="report" style="display:none;"></div>
+
+  <details class="card">
+    <summary>How to use this validator</summary>
+    <pre>
+1. Paste a question batch into the box above (either a bare array, or
+   `const NETWORKING_BASICS_QUESTIONS = [ ... ];`). Or click "Load .js file…".
+2. Optionally type the Expected Topic (e.g. "Networking Basics") and the
+   Expected ID Prefix (e.g. "networking-basics") to enforce those.
+3. Click Validate. A PASS/FAIL banner plus full summary appears.
+
+Checks performed:
+  total count, unique IDs, required fields present, exactly 4 options,
+  correct is integer 0-3, balanced A/B/C/D distribution, no obvious
+  position pattern, no consecutive repeats (warning), no duplicate/near-
+  duplicate prompts, no duplicate option text, topic match, valid tier,
+  short explanations, no certification names, no empty strings, ID format.
+
+PASS means zero errors. Warnings are advisory (e.g. distribution slightly
+off, or two consecutive answers sharing an index) and do not block merge.
+
+Programmatic / Node CLI usage is documented at the top of
+tools/validate-questions.js.
+    </pre>
+  </details>
+</div>
+
+<script src="validate-questions.js"></script>
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+
+  function extractBatch(text) {
+    text = text.trim().replace(/;+\s*$/, "");
+    if (!text) throw new Error("Batch is empty.");
+    if (text[0] === "[") return (0, eval)("(" + text + ")");
+    var m = text.match(/^(const|let|var)\s+[A-Za-z0-9_$]+\s*=/);
+    if (m) {
+      window.__BATCH = undefined;
+      (0, eval)(text.replace(/^(const|let|var)\s+[A-Za-z0-9_$]+\s*=/, "window.__BATCH ="));
+      return window.__BATCH;
+    }
+    return (0, eval)("(" + text + ")");
+  }
+
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+
+  function render(r) {
+    var el = $("report");
+    el.style.display = "block";
+    if (r.fatal) { el.innerHTML = '<div class="status fail">FATAL</div><div class="list err">' + esc(r.fatal) + "</div>"; return; }
+
+    var h = "";
+    h += '<div class="status ' + (r.ok ? "pass" : "fail") + '">' + (r.ok ? "✓ PASS — safe to merge" : "✗ FAIL — fix errors before merging") + "</div>";
+
+    h += '<div class="grid">';
+    h += stat("Total", r.total);
+    h += stat("Unique IDs", r.uniqueIds + (r.duplicateIds.length ? " ⚠" : ""));
+    h += stat("Correct A/B/C/D", r.correctDistribution.A0 + "/" + r.correctDistribution.B1 + "/" + r.correctDistribution.C2 + "/" + r.correctDistribution.D3);
+    h += stat("Errors", r.errors.length);
+    h += stat("Warnings", r.warnings.length);
+    h += stat("Explain avg/max", r.explain.avg + " / " + r.explain.max);
+    h += stat("Dup prompts", r.duplicatePromptFindings.length);
+    h += stat("Dup options", r.optionDuplicateFindings.length);
+    h += stat("Cert names", r.certificationFindings.length);
+    h += stat("Consecutive same", r.consecutiveSameCount);
+    h += "</div>";
+
+    h += '<div class="section-title">Tier distribution</div><div class="list">' + esc(JSON.stringify(r.tierDistribution)) + "</div>";
+    h += '<div class="section-title">Topic distribution</div><div class="list">' + esc(JSON.stringify(r.topicDistribution)) + "</div>";
+
+    h += '<div class="section-title">Errors (' + r.errors.length + ")</div>";
+    h += r.errors.length
+      ? '<div class="list">' + r.errors.map(function (e) { return '<div class="err">✗ ' + esc((e.id ? e.id + ": " : "") + e.msg) + "</div>"; }).join("") + "</div>"
+      : '<div class="list ok">None ✓</div>';
+
+    h += '<div class="section-title">Warnings (' + r.warnings.length + ")</div>";
+    h += r.warnings.length
+      ? '<div class="list">' + r.warnings.map(function (w) { return '<div class="warn">⚠ ' + esc((w.id ? w.id + ": " : "") + w.msg) + "</div>"; }).join("") + "</div>"
+      : '<div class="list ok">None ✓</div>';
+
+    el.innerHTML = h;
+  }
+  function stat(k, v) { return '<div class="stat"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + "</div></div>"; }
+
+  $("run").addEventListener("click", function () {
+    var batch;
+    try { batch = extractBatch($("batch").value); }
+    catch (e) { render({ fatal: "Could not parse batch: " + e.message }); return; }
+    var opts = {};
+    if ($("topic").value.trim()) opts.topic = $("topic").value.trim();
+    if ($("prefix").value.trim()) opts.idPrefix = $("prefix").value.trim();
+    render(validateQuestions(batch, opts));
+  });
+
+  $("loadFileBtn").addEventListener("click", function () { $("file").click(); });
+  $("file").addEventListener("change", function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () { $("batch").value = rd.result; $("run").click(); };
+    rd.readAsText(f);
+  });
+</script>
+</body>
+</html>
