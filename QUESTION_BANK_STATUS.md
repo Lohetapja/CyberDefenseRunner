@@ -140,7 +140,22 @@ Target topics:
 
 ## All topic files complete
 
-_All eight topic files are generated and validated — 800/800 questions. Nothing is merged into questions.js yet._
+_All eight topic files are generated and validated — 800/800 questions._
+
+## Integration status
+
+✅ **The 800 validated questions are now integrated into the live Quiz Training system.**
+
+- `index.html` loads the eight `questions-<topic>.js` banks, then `questions.js` combines them
+  into the live `QUESTIONS` array (800 questions).
+- `app.js` `TOPIC_ORDER`, `STUDY_RECS`, and `CERT_TRACK_TOPICS` now use the eight new topics;
+  each Learning Path maps 1:1 to its topic, and Mixed draws from all 800.
+- The Topic dropdown in `index.html` lists the eight new topics.
+- The eight standalone validated files are unchanged and remain the validated source of truth.
+- Verified live: total 800, 8 topics × 100, unique IDs, valid fields/correct/tiers, all filters
+  work, quiz/report/Defense Mission/How-to-Play all function, no console errors.
+
+Defense Mission (`mission.js`) was not modified by the integration.
 
 ---
 

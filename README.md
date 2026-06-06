@@ -39,11 +39,13 @@ beyond a simple local web server.
 
 ## Question bank status
 
-**800 / 800 questions complete and validated** (8 topics × 100 questions each).
+**800 / 800 questions complete and validated** (8 topics × 100 questions each), and **now
+integrated into the live Quiz Training system.**
 
-These live in standalone files (`questions-<topic>.js`) and are **not yet merged** into the
-game's live `questions.js`. They are kept separate on purpose while the project is a
-work in progress.
+The questions live in standalone files (`questions-<topic>.js`) that are loaded in
+`index.html` and combined by `questions.js` into the game's live `QUESTIONS` array. Keeping
+the topic files separate preserves each as an independently validated source of truth.
+The Learning Path buttons and Topic dropdown map directly to these eight topics.
 
 Each topic file is validated for:
 

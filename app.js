@@ -16,37 +16,35 @@ const CONFIG = {
 
 // ── Topic / cert-track data ───────────────────────────────────────────────────
 
+// Topic strings match the eight validated question banks AND the Learning Path names.
 const TOPIC_ORDER = [
-  "Networking", "Ports", "DNS", "Firewall", "Subnetting",
-  "Blue Team", "Red Team", "SOC Investigation", "Malware", "Identity"
+  "Networking Basics", "Defending Systems", "Attacking Concepts", "Alert Investigation",
+  "Cloud & DevOps", "AI & Automation Safety", "Identity & Logins", "Malware Basics"
 ];
 
 const STUDY_RECS = {
-  "Networking":        "Review IP addressing, private vs public ranges, default gateway, and basic traffic flow.",
-  "Ports":             "Review common ports such as 22, 53, 80, 443, 445, 3389 and what services they usually represent.",
-  "DNS":               "Review DNS queries, domain reputation, suspicious domains, and how DNS logs help investigations.",
-  "Firewall":          "Review allow/deny logic, inbound vs outbound rules, least privilege, and exposed services.",
-  "Subnetting":        "Review CIDR notation, network ranges, broadcast addresses, and whether two hosts are in the same subnet.",
-  "Blue Team":         "Review detection, logging, triage, containment, and false positive handling.",
-  "Red Team":          "Review attack stages: recon, initial access, privilege escalation, lateral movement, and exfiltration.",
-  "SOC Investigation": "Review how to gather context, collect evidence, and separate facts from assumptions.",
-  "Malware":           "Review suspicious process behavior, persistence techniques, C2 communication, and malware triage.",
-  "Identity":          "Review MFA, account compromise, privileged access, brute force, impossible travel, and identity logs."
+  "Networking Basics":      "Review IP addressing, subnets, DNS, DHCP, common ports, routing, NAT, and basic traffic flow.",
+  "Defending Systems":      "Review firewalls, IDS/IPS, EDR, patching, backups, hardening, logging, monitoring, and least privilege.",
+  "Attacking Concepts":     "Review recon, phishing, exploitation, privilege escalation, lateral movement, persistence, C2, and exfiltration.",
+  "Alert Investigation":    "Review triage, severity, false positives, evidence, timelines, process trees, and what a SOC analyst should ask.",
+  "Cloud & DevOps":         "Review shared responsibility, IAM, storage, containers, CI/CD, secrets, infrastructure as code, and deployment safety.",
+  "AI & Automation Safety": "Review AI tool risks, prompt injection, secret exposure, human approval gates, least privilege, and verifying AI output.",
+  "Identity & Logins":      "Review authentication, authorization, MFA, passwords, sessions, tokens, credential theft, and least privilege.",
+  "Malware Basics":         "Review malware types, persistence, suspicious process behavior, IOCs, sandboxing, and containment basics."
 };
 
-// Visible label === data-value === key here. The two newer paths (Cloud & DevOps,
-// AI & Automation Safety) are mapped onto existing question topics so filters keep
-// working without modifying questions.js.
+// Each Learning Path maps to its own topic bank (1:1). Mixed (null) draws from all topics.
+// Visible label === data-value === key here.
 const CERT_TRACK_TOPICS = {
-  "Mixed":                   null,
-  "Networking Basics":       ["Networking", "Ports", "DNS", "Firewall", "Subnetting"],
-  "Defending Systems":       ["Blue Team", "SOC Investigation", "Malware", "Identity"],
-  "Attacking Concepts":      ["Red Team", "Malware", "Ports", "Networking"],
-  "Alert Investigation":     ["SOC Investigation", "Blue Team", "Malware", "Identity"],
-  "Cloud & DevOps":          ["Networking", "Ports", "Firewall", "Subnetting", "Identity"],
-  "AI & Automation Safety":  ["SOC Investigation", "Malware", "Identity", "Blue Team"],
-  "Identity & Logins":       ["Identity", "SOC Investigation", "Blue Team"],
-  "Malware Basics":          ["Malware", "Red Team", "SOC Investigation"],
+  "Mixed":                  null,
+  "Networking Basics":      ["Networking Basics"],
+  "Defending Systems":      ["Defending Systems"],
+  "Attacking Concepts":     ["Attacking Concepts"],
+  "Alert Investigation":    ["Alert Investigation"],
+  "Cloud & DevOps":         ["Cloud & DevOps"],
+  "AI & Automation Safety": ["AI & Automation Safety"],
+  "Identity & Logins":      ["Identity & Logins"],
+  "Malware Basics":         ["Malware Basics"],
 };
 
 // ── Network Defense Lane ──────────────────────────────────────────────────────

@@ -23,8 +23,9 @@
 
       <p class="tagline">Defend the network. Answer correctly. Stop the attacker.</p>
       <p class="description">
-        40 questions across Networking, Firewalls, DNS, Ports, Subnetting,
-        Blue Team, Red Team, SOC Investigation, Malware, and Identity.
+        800 questions across Networking Basics, Defending Systems, Attacking Concepts,
+        Alert Investigation, Cloud &amp; DevOps, AI &amp; Automation Safety,
+        Identity &amp; Logins, and Malware Basics.
       </p>
 
       <!-- ── Mission parameter filters ──────────────────────────────────── -->
@@ -51,16 +52,14 @@
             <div class="filter-label">TOPIC</div>
             <select class="filter-select" id="filter-topic">
               <option value="all">All Topics</option>
-              <option value="Networking">Networking</option>
-              <option value="Ports">Ports</option>
-              <option value="DNS">DNS</option>
-              <option value="Firewall">Firewall</option>
-              <option value="Subnetting">Subnetting</option>
-              <option value="Blue Team">Blue Team</option>
-              <option value="Red Team">Red Team</option>
-              <option value="SOC Investigation">SOC Investigation</option>
-              <option value="Malware">Malware</option>
-              <option value="Identity">Identity</option>
+              <option value="Networking Basics">Networking Basics</option>
+              <option value="Defending Systems">Defending Systems</option>
+              <option value="Attacking Concepts">Attacking Concepts</option>
+              <option value="Alert Investigation">Alert Investigation</option>
+              <option value="Cloud &amp; DevOps">Cloud &amp; DevOps</option>
+              <option value="AI &amp; Automation Safety">AI &amp; Automation Safety</option>
+              <option value="Identity &amp; Logins">Identity &amp; Logins</option>
+              <option value="Malware Basics">Malware Basics</option>
             </select>
           </div>
           <div class="filter-col">
@@ -88,12 +87,12 @@
 
       <div class="start-meta">
         <div class="meta-stat">
-          <span class="meta-num">40</span>
+          <span class="meta-num">800</span>
           <span class="meta-label">Questions</span>
         </div>
         <div class="meta-divider"></div>
         <div class="meta-stat">
-          <span class="meta-num">10</span>
+          <span class="meta-num">8</span>
           <span class="meta-label">Topics</span>
         </div>
         <div class="meta-divider"></div>
@@ -453,8 +452,18 @@
     </div>
   </div>
 
-  <script src="questions.js"></script>
-  <script src="app.js"></script>
+  <!-- Validated standalone question banks (loaded before questions.js, which combines them) -->
+  <script src="questions-networking-basics.js"></script>
+  <script src="questions-defending-systems.js"></script>
+  <script src="questions-attacking-concepts.js"></script>
+  <script src="questions-alert-investigation.js"></script>
+  <script src="questions-cloud-devops.js"></script>
+  <script src="questions-ai-automation-safety.js"></script>
+  <script src="questions-identity-logins.js"></script>
+  <script src="questions-malware-basics.js"></script>
+
+  <script src="questions.js?v=2"></script>
+  <script src="app.js?v=2"></script>
   <script src="mission.js"></script>
 </body>
 </html>
