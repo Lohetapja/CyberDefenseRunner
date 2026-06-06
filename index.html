@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cyber Defense Runner</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -147,6 +147,7 @@
           <span id="attacker-display" class="hud-value mono">1</span>
         </div>
         <button id="btn-help" class="btn-help" title="How to Play">? Help</button>
+        <button id="btn-quit-quiz" class="btn-help" title="Return to main menu">⟵ Return to Menu</button>
       </div>
     </div>
 
@@ -308,7 +309,10 @@
         </div>
       </div>
 
-      <div class="report-section">
+      <!-- Defenses Purchased belonged to the removed quiz upgrade shop (Defense Mission has
+           its own result screen), so it is hidden from the Quiz Training report. The
+           #r-purchases element is kept so app.js can still write to it harmlessly. -->
+      <div class="report-section" style="display:none">
         <div class="section-label-row">
           <span class="section-label">⚙ DEFENSES PURCHASED</span>
         </div>
@@ -463,7 +467,7 @@
   <script src="questions-malware-basics.js"></script>
 
   <script src="questions.js?v=2"></script>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=4"></script>
   <script src="mission.js"></script>
 </body>
 </html>

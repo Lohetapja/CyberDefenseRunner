@@ -35,9 +35,10 @@ Runs entirely from static files (no backend, no database, no external APIs, no f
 - Scoring, health, credits, explanations, modules earned, and the report screen all work.
 - If a selected filter combination has fewer questions than the chosen wave count, the existing
   "not enough questions" warning appears and blocks start (preserved behavior).
-- **Current missing UX issue:** there is **no clean Return to Menu / Abort Quiz button** after
-  a quiz has started. During an active quiz the only controls are "? Help" and "NEXT WAVE →".
-  A "↺ RETURN TO START" button exists, but only on the final report screen, not mid-quiz.
+- **Return to Menu (added):** during an active quiz the HUD now shows a **"⟵ Return to Menu"**
+  button. Clicking it asks "Abort this quiz and return to the main menu?" — Cancel keeps the quiz
+  unchanged, OK returns to the start screen **without** showing the report, and a new quiz can be
+  started cleanly afterward. (The "↺ RETURN TO START" button still exists on the report screen.)
 
 ### Defense Mission
 
@@ -125,7 +126,7 @@ Runs entirely from static files (no backend, no database, no external APIs, no f
 
 ## Known issues / next fixes
 
-1. Add a **Return to Menu / Abort Quiz** button to Quiz Training.
+1. ~~Add a **Return to Menu / Abort Quiz** button to Quiz Training.~~ ✅ **DONE.**
 2. Later: connect Quiz Training credits/resources to Defense Mission.
 3. Later: improve Defense Mission clarity and gameplay.
 4. Later: add deterministic/randomized question selection so **Mixed** does not always begin from file order.
@@ -138,17 +139,20 @@ Runs entirely from static files (no backend, no database, no external APIs, no f
 
 ## Recommended next technical step
 
-**Next task:** Add a visible **Return to Menu / Abort Quiz** button to Quiz Training.
+The previous recommended task — a **Return to Menu / Abort Quiz** button — is now **done**
+(see "Quiz Training" above and "Recent milestone" below).
 
-Requirements:
+**Next task (suggested):** Add deterministic/randomized question selection so **Mixed** does not
+always begin from file order (currently it slices the first N questions, which are all Networking
+Basics). Keep it small and optional, and preserve deterministic scoring.
+
+Requirements for the next change:
 
 - Small surgical change.
 - No game rewrite.
 - No question-bank changes.
 - No Defense Mission changes.
-- Confirmation prompt if simple.
-- Returns to the start screen **without** showing the report.
-- The quiz can start again cleanly afterward.
+- Validate after the change.
 
 ---
 
@@ -159,6 +163,9 @@ Requirements:
 - README and launch scripts added.
 - `.claude` removed from the public repo.
 - Project pushed to GitHub.
+- **"⟵ Return to Menu" button added to active Quiz Training** (HUD), with a confirm prompt;
+  returns to the start screen without showing the report. (Changed: `index.html` HUD + 1 listener
+  in `app.js`; `app.js` cache-bust bumped to `?v=3`. No scoring, question-bank, or Defense Mission changes.)
 
 ---
 

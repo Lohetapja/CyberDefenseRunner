@@ -871,17 +871,23 @@ function showReport() {
   // Strongest / weakest topic — tie-broken by TOPIC_ORDER
   let strongest = null, weakest = null;
   let bestAcc   = -1,   worstAcc = 2;
+  let playedCount = 0;
 
   TOPIC_ORDER.forEach(topic => {
     const s = state.topicStats[topic];
     if (s.total === 0) return;
+    playedCount++;
     const acc = s.correct / s.total;
     if (acc > bestAcc)  { bestAcc  = acc; strongest = topic; }
     if (acc < worstAcc) { worstAcc = acc; weakest   = topic; }
   });
 
-  el("r-strongest").textContent = strongest || "—";
-  el("r-weakest").textContent   = weakest   || "—";
+  // With only one topic played, strongest and weakest are the same topic.
+  // Show it as Strongest and leave Weakest blank to avoid duplicating it.
+  const weakestDisplay = (playedCount < 2) ? null : weakest;
+
+  el("r-strongest").textContent = strongest    || "—";
+  el("r-weakest").textContent   = weakestDisplay || "—";
 
   // Upgrade modules
   const upgradesEl  = el("r-upgrades");
@@ -928,6 +934,15 @@ el("btn-next").addEventListener("click", nextWave);
 el("btn-restart").addEventListener("click", () => {
   if (avatarTimer) clearTimeout(avatarTimer);
   showScreen("start");
+});
+
+// Return to Menu (abort an active quiz without showing the report)
+const btnQuitQuiz = el("btn-quit-quiz");
+if (btnQuitQuiz) btnQuitQuiz.addEventListener("click", () => {
+  if (confirm("Abort this quiz and return to the main menu?")) {
+    if (avatarTimer) clearTimeout(avatarTimer);
+    showScreen("start");
+  }
 });
 
 // Shop buttons
