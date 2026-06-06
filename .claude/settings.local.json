@@ -7,7 +7,10 @@
       "Bash(n/* placeholder-mission-css *)",
       "Bash(powershell -NoProfile -Command \"Add-Content -Path 'D:\\\\Projects\\\\CyberDefenseRunner\\\\style.css' -Value \\\\\"`n/* placeholder-mission-css */\\\\\" -Encoding utf8\")",
       "PowerShell($all = Get-Content 'D:\\\\Projects\\\\CyberDefenseRunner\\\\style.css'; $head = $all[0..2238]; $tail = Get-Content 'D:\\\\Projects\\\\CyberDefenseRunner\\\\_mission.css'; Set-Content -Path 'D:\\\\Projects\\\\CyberDefenseRunner\\\\style.css' -Value \\($head + $tail\\) -Encoding utf8; Remove-Item 'D:\\\\Projects\\\\CyberDefenseRunner\\\\_mission.css'; \"lines now: $\\(\\(Get-Content 'D:\\\\Projects\\\\CyberDefenseRunner\\\\style.css'\\).Length\\)\")",
-      "PowerShell(\"removed\")"
+      "PowerShell(\"removed\")",
+      "Bash(cd /d)",
+      "Bash(ls -1 \"D:/Projects/CyberDefenseRunner\")",
+      "Bash(grep -c '\\\\bid:\"' D:/Projects/CyberDefenseRunner/questions-__TRACKED_VAR__.js)"
     ]
   }
 }
