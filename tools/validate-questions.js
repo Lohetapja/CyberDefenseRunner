@@ -24,7 +24,11 @@
  *
  * The result object contains: ok, total, uniqueIds, correctDistribution,
  * tierDistribution, topicDistribution, duplicatePromptFindings,
- * optionDuplicateFindings, certificationFindings, errors[], warnings[].
+ * optionDuplicateFindings, certificationFindings, optionQualityFindings,
+ * errors[], warnings[].
+ *
+ * optionQualityFindings are ADVISORY warnings (prefixed "OPTION QUALITY:") that flag
+ * obvious-answer / lopsided-option smells. They never become errors and never block a merge.
  */
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory();
@@ -39,6 +43,70 @@
 
   function normalizePrompt(s) {
     return String(s).toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  // ── Option-quality helpers (advisory only) ──────────────────────────────────
+  function optStr(o) { return String(o == null ? "" : o).trim(); }
+  function optWordCount(o) { var s = optStr(o); return s ? s.split(/\s+/).length : 0; }
+  function optFirstWord(o) {
+    var s = optStr(o).toLowerCase().replace(/^[^a-z0-9]+/, "");
+    var m = s.match(/^[a-z0-9'+]+/);
+    return m ? m[0] : "";
+  }
+  function mean(arr) { return arr.length ? arr.reduce(function (a, b) { return a + b; }, 0) / arr.length : 0; }
+
+  // Adds advisory "OPTION QUALITY" warnings for obvious-answer / lopsided-option smells.
+  // Never produces errors, so it never blocks a merge.
+  function checkOptionQuality(q, id, warn) {
+    if (!Array.isArray(q.options) || q.options.length !== 4) return;
+    if (!Number.isInteger(q.correct) || q.correct < 0 || q.correct > 3) return;
+
+    var opts  = q.options.map(optStr);
+    var lens  = opts.map(function (o) { return o.length; });
+    var words = opts.map(optWordCount);
+    var firsts = opts.map(optFirstWord);
+    var ci = q.correct;
+
+    var correctLen = lens[ci];
+    var wrongLens  = lens.filter(function (_, k) { return k !== ci; });
+    var avgWrong   = mean(wrongLens);
+
+    // (Q1) correct answer much longer than the average wrong answer
+    if (avgWrong > 0 && correctLen >= avgWrong * 1.8 && (correctLen - avgWrong) >= 25) {
+      warn(id, "OPTION QUALITY: correct option (" + correctLen + " chars) is much longer than the average wrong option (" + Math.round(avgWrong) + " chars) — may give away the answer");
+    }
+
+    // (Q2) one option much longer than the others (only when it is NOT the correct one; that case is Q1)
+    var longestIdx = lens.indexOf(Math.max.apply(null, lens));
+    if (longestIdx !== ci) {
+      var othersAvg = mean(lens.filter(function (_, k) { return k !== longestIdx; }));
+      if (othersAvg > 0 && lens[longestIdx] >= othersAvg * 2.0 && (lens[longestIdx] - othersAvg) >= 30) {
+        warn(id, "OPTION QUALITY: option " + longestIdx + " is much longer than the others (" + lens[longestIdx] + " vs ~" + Math.round(othersAvg) + " chars)");
+      }
+    }
+
+    // (Q3) three very short options + one long definition-style option
+    var shortCount = lens.filter(function (L) { return L <= 22; }).length;
+    var longIdxs = [];
+    lens.forEach(function (L, k) { if (L >= 55) longIdxs.push(k); });
+    if (shortCount === 3 && longIdxs.length === 1) {
+      warn(id, "OPTION QUALITY: three short options and one long definition-style option" + (longIdxs[0] === ci ? " (the long one is the correct answer)" : ""));
+    }
+
+    // (Q4) duplicate opening words across options — only the *useful* asymmetric case:
+    // the three wrong options share an opening word that the correct one does not.
+    // (All four sharing an opener is usually intentional parallel structure, so it is NOT flagged.)
+    var wrongFirsts = firsts.filter(function (_, k) { return k !== ci; });
+    var wrongsSameFirst = wrongFirsts[0] && wrongFirsts.every(function (w) { return w === wrongFirsts[0]; });
+    if (wrongsSameFirst && firsts[ci] !== wrongFirsts[0]) {
+      warn(id, "OPTION QUALITY: the three wrong options all start with '" + wrongFirsts[0] + "' but the correct one starts with '" + firsts[ci] + "' — may telegraph the answer");
+    }
+
+    // (Q5) one-word distractors while the correct option is a full sentence
+    var wrongWords = words.filter(function (_, k) { return k !== ci; });
+    if (words[ci] >= 6 && wrongWords.every(function (w) { return w <= 2; })) {
+      warn(id, "OPTION QUALITY: correct option is a full sentence (" + words[ci] + " words) while all wrong options are 1-2 words");
+    }
   }
 
   function validateQuestions(batch, options) {
@@ -139,6 +207,9 @@
         if (promptSeen[n] !== undefined) err(id, "duplicate/near-duplicate prompt of " + promptSeen[n]);
         else promptSeen[n] = q.id || id;
       }
+
+      // (17) option-quality advisory checks (warnings only, never block)
+      checkOptionQuality(q, id, warn);
     });
 
     // (2) unique ids
@@ -179,6 +250,7 @@
       duplicatePromptFindings: errors.filter(function (e) { return /duplicate.*prompt/.test(e.msg); }),
       optionDuplicateFindings: errors.filter(function (e) { return /duplicate option/.test(e.msg); }),
       certificationFindings: errors.filter(function (e) { return /certification/.test(e.msg); }),
+      optionQualityFindings: warnings.filter(function (w) { return /OPTION QUALITY/.test(w.msg); }),
       errors: errors,
       warnings: warnings,
       issues: issues
@@ -199,6 +271,7 @@
     lines.push("Dup options:      " + r.optionDuplicateFindings.length);
     lines.push("Cert names:       " + r.certificationFindings.length);
     lines.push("Consecutive same: " + r.consecutiveSameCount);
+    lines.push("Option quality:   " + (r.optionQualityFindings ? r.optionQualityFindings.length : 0) + " advisory");
     lines.push("Errors:           " + r.errors.length);
     lines.push("Warnings:         " + r.warnings.length);
     lines.push("STATUS:           " + (r.ok ? "PASS" : "FAIL"));

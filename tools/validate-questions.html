@@ -83,8 +83,16 @@ Checks performed:
   duplicate prompts, no duplicate option text, topic match, valid tier,
   short explanations, no certification names, no empty strings, ID format.
 
-PASS means zero errors. Warnings are advisory (e.g. distribution slightly
-off, or two consecutive answers sharing an index) and do not block merge.
+Option-quality checks (ADVISORY warnings only, never block merge):
+  - correct answer much longer than the average wrong answer
+  - one option much longer than the others
+  - three short options + one long definition-style option
+  - the wrong options share an opening word the correct one does not
+  - one/two-word distractors while the correct option is a full sentence
+
+PASS means zero ERRORS. Warnings are advisory (distribution slightly off,
+consecutive answers sharing an index, or any "OPTION QUALITY" smell) and
+do not block merge.
 
 Programmatic / Node CLI usage is documented at the top of
 tools/validate-questions.js.
@@ -130,6 +138,7 @@ tools/validate-questions.js.
     h += stat("Dup options", r.optionDuplicateFindings.length);
     h += stat("Cert names", r.certificationFindings.length);
     h += stat("Consecutive same", r.consecutiveSameCount);
+    h += stat("Option quality ⚑", (r.optionQualityFindings ? r.optionQualityFindings.length : 0) + " advisory");
     h += "</div>";
 
     h += '<div class="section-title">Tier distribution</div><div class="list">' + esc(JSON.stringify(r.tierDistribution)) + "</div>";

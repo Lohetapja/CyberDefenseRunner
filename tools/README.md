@@ -57,9 +57,22 @@ Exit code is `0` on PASS, `1` on FAIL.
 15. No empty strings
 16. IDs follow the expected prefix format (e.g. `networking-basics-001`)
 
+### Option-quality checks (advisory warnings only — never block a merge)
+These flag "obvious answer" / lopsided-option smells that pass structural validation
+but can make a question too easy. Each emits a warning prefixed `OPTION QUALITY:` and is
+collected in `result.optionQualityFindings`:
+
+17. Correct answer much longer than the average wrong answer
+18. One option much longer than the others
+19. Three short options + one long definition-style option
+20. The three wrong options share an opening word the correct one does not
+    (all four sharing an opener is treated as intentional parallel structure and is NOT flagged)
+21. One/two-word distractors while the correct option is a full sentence
+
 ## Output summary
 total count · unique IDs · correct distribution · tier distribution ·
 topic distribution · duplicate-prompt findings · option-duplicate findings ·
-certification-name findings · errors · warnings · **PASS/FAIL**.
+certification-name findings · **option-quality findings** · errors · warnings · **PASS/FAIL**.
 
-**PASS = zero errors.** Warnings do not block a merge but are worth reviewing.
+**PASS = zero errors.** Warnings (including all `OPTION QUALITY` advisories) do not block a
+merge but are worth reviewing.
