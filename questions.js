@@ -1,6 +1,6 @@
 // questions.js — Live Quiz Training question set.
 //
-// The 800 validated questions live in eight standalone topic files
+// The validated questions live in eight standalone topic files
 // (questions-<topic>.js), which are loaded BEFORE this file in index.html.
 // This file simply combines those validated banks into the global QUESTIONS
 // array that app.js consumes. Keeping the topic files separate preserves them

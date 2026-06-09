@@ -986,3 +986,15 @@ document.querySelectorAll("[data-help-close]").forEach(elm => {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeHelp();
 });
+
+// Show the live question-bank size on the start screen (keeps the label from going stale).
+(function setQuestionCount() {
+  try {
+    if (typeof QUESTIONS === "undefined" || !Array.isArray(QUESTIONS)) return;
+    const total = QUESTIONS.length.toLocaleString();
+    ["meta-qcount", "desc-qcount"].forEach(id => {
+      const node = el(id);
+      if (node) node.textContent = total;
+    });
+  } catch (e) { /* non-fatal: leave the static label */ }
+})();
