@@ -2754,3 +2754,60 @@ body {
 /* tier group sits in a narrow column: tighter padding so all 4 fit one row */
 #filter-tier { gap: 4px; flex-wrap: nowrap; }
 #filter-tier .fbtn { padding: 4px 4px; min-width: 0; }
+
+/* ── Experimental panel: grouped sections + analyst-tool prototype cards ── */
+.exp-group-title {
+  margin: 12px 0 4px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
+.exp-group-title:first-child { margin-top: 0; }
+
+.proto-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.proto-card:hover { border-color: var(--border-hi); }
+.proto-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.4px;
+}
+.proto-desc {
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.planned-tag {
+  margin-left: auto;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #b48bf2;
+  border: 1px solid #b48bf2;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+.proto-modal-card { max-width: 380px; }
+.proto-modal-text { font-size: 0.8rem; line-height: 1.6; margin: 10px 0 18px; }

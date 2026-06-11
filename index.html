@@ -113,8 +113,32 @@
         🧪 Experimental Modes <span class="exp-caret">▾</span>
       </button>
       <div id="experimental-panel" class="experimental-panel hidden">
+        <div class="exp-group-title">Game Mode Experiments</div>
         <button id="btn-defense-mission" class="btn-secondary">🛡 Defense Mission <span class="beta-tag">BETA</span></button>
         <button id="btn-defense-v2" class="btn-secondary" onclick="location.href='defense-mission-v2.html'">🗼 Network Defense Mission <span class="beta-tag">v2 BETA</span></button>
+
+        <div class="exp-group-title">Analyst Tool Prototypes</div>
+        <button class="proto-card" onclick="openProtoModal('KQL Detection Assistant')">
+          <span class="proto-head">🔎 KQL Detection Assistant <span class="planned-tag">PLANNED</span></span>
+          <span class="proto-desc">Build, explain, and validate KQL detection ideas.</span>
+        </button>
+        <button class="proto-card" onclick="openProtoModal('SOC Alert Report Generator')">
+          <span class="proto-head">📄 SOC Alert Report Generator <span class="planned-tag">PLANNED</span></span>
+          <span class="proto-desc">Generate structured incident reports from alert evidence.</span>
+        </button>
+        <button class="proto-card" onclick="openProtoModal('Incident Timeline Builder')">
+          <span class="proto-head">🕒 Incident Timeline Builder <span class="planned-tag">PLANNED</span></span>
+          <span class="proto-desc">Turn event timestamps into a clear investigation timeline.</span>
+        </button>
+        <button class="proto-card" onclick="openProtoModal('Log Parser / SIEM Demo')">
+          <span class="proto-head">🧾 Log Parser / SIEM Demo <span class="planned-tag">PLANNED</span></span>
+          <span class="proto-desc">Paste sample logs and practice filtering, grouping, and investigation.</span>
+        </button>
+        <button class="proto-card" onclick="openProtoModal('AI Misuse Detection Demo')">
+          <span class="proto-head">🤖 AI Misuse Detection Demo <span class="planned-tag">PLANNED</span></span>
+          <span class="proto-desc">Explore signs of unsafe or suspicious AI tool usage in logs.</span>
+        </button>
+
         <p class="experimental-note">These modes are experimental prototypes and may change.</p>
       </div>
 
@@ -480,6 +504,27 @@
   </div>
 
   <!-- Validated standalone question banks (loaded before questions.js, which combines them) -->
+  <!-- ── Analyst Tool Prototype placeholder modal (navigation/roadmap only) ── -->
+  <div id="proto-modal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="proto-name">
+    <div class="help-backdrop" onclick="closeProtoModal()"></div>
+    <div class="help-card proto-modal-card">
+      <button class="help-close" onclick="closeProtoModal()" aria-label="Close">✕</button>
+      <h2 id="proto-name" class="help-title">Prototype</h2>
+      <p class="proto-modal-text">This prototype is planned. It will be added as a future analyst tool module.</p>
+      <button class="btn-primary help-got-it" onclick="closeProtoModal()">GOT IT ✓</button>
+    </div>
+  </div>
+  <script>
+    // Minimal placeholder-modal handlers for planned analyst tools (no game logic).
+    function openProtoModal(name) {
+      document.getElementById("proto-name").textContent = name;
+      document.getElementById("proto-modal").classList.remove("hidden");
+    }
+    function closeProtoModal() {
+      document.getElementById("proto-modal").classList.add("hidden");
+    }
+  </script>
+
   <script src="questions-networking-basics.js"></script>
   <script src="questions-defending-systems.js"></script>
   <script src="questions-attacking-concepts.js"></script>
