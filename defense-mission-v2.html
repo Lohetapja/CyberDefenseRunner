@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Defense Mission v2 — Cyber Defense Runner</title>
+  <link rel="stylesheet" href="defense-mission-v2.css" />
+</head>
+<body>
+
+  <!-- ── Top HUD ───────────────────────────────────────────────────────── -->
+  <header class="dm-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">NETWORK DEFENSE MISSION <span class="beta">v2 BETA</span></span>
+    </div>
+    <div class="hud-stats">
+      <div class="hud-stat"><span class="hud-label">CREDITS</span><span id="hud-credits" class="hud-value">100</span></div>
+      <div class="hud-stat">
+        <span class="hud-label">ESCALATION</span>
+        <div class="esc-bar"><div id="esc-fill" class="esc-fill"></div></div>
+        <span id="hud-escalation" class="hud-value">0%</span>
+      </div>
+      <div class="hud-stat"><span class="hud-label">SHIFT ENDS</span><span id="hud-timer" class="hud-value">2:00</span></div>
+    </div>
+  </header>
+
+  <main class="dm-main">
+    <!-- ── Network map: nodes, path, defense slots, moving packets ─────── -->
+    <section class="map-panel">
+      <div class="panel-title">▣ NETWORK TOPOLOGY — Gateway → DMZ → Switch → Workstations → Crown Jewel DB</div>
+      <div id="map" class="map">
+        <div class="path-line"></div>
+        <!-- nodes / slots / packets injected by defense-mission-v2.js -->
+      </div>
+      <div class="map-legend">
+        <span class="lg net">■ Network threat</span>
+        <span class="lg app">■ Application threat</span>
+        <span class="lg host">■ Host threat</span>
+        <span class="lg dim">Click an empty slot to build a defense</span>
+      </div>
+    </section>
+
+    <section class="dm-bottom">
+      <!-- ── SIEM log ──────────────────────────────────────────────────── -->
+      <div class="siem-panel">
+        <div class="panel-title">▣ SIEM — EVENT LOG</div>
+        <ul id="siem-log" class="siem-log"></ul>
+      </div>
+
+      <!-- ── Triage console: build/upgrade defenses, answer questions ──── -->
+      <div class="triage-panel">
+        <div class="panel-title">▣ TRIAGE CONSOLE</div>
+        <div id="t-idle" class="t-idle">No slot selected.<br/>Click an empty defense slot on the map to deploy a control.</div>
+
+        <!-- build offer -->
+        <div id="t-offer" class="t-offer hidden">
+          <div id="t-offer-title" class="t-offer-title"></div>
+          <p id="t-offer-text"></p>
+          <button id="btn-build" class="btn-build"></button>
+          <button id="btn-cancel" class="btn-cancel">CANCEL</button>
+        </div>
+
+        <!-- question -->
+        <div id="t-question" class="t-question hidden">
+          <div class="q-meta"><span id="q-context" class="q-context"></span><span id="q-timer" class="q-timer">20s</span></div>
+          <div id="q-prompt" class="q-prompt"></div>
+          <div id="q-options" class="q-options"></div>
+          <div id="q-feedback" class="q-feedback hidden"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── End-of-mission overlay ────────────────────────────────────────── -->
+  <div id="dm-overlay" class="dm-overlay hidden">
+    <div class="overlay-card">
+      <h2 id="overlay-title">MISSION OVER</h2>
+      <p id="overlay-text"></p>
+      <div id="overlay-stats" class="overlay-stats"></div>
+      <button id="btn-restart" class="btn-build">↺ RESTART MISSION</button>
+      <a class="btn-cancel" href="index.html">RETURN TO MENU</a>
+    </div>
+  </div>
+
+  <!-- Existing validated question banks (read-only; same files the quiz uses) -->
+  <script src="questions-networking-basics.js"></script>
+  <script src="questions-defending-systems.js"></script>
+  <script src="questions-attacking-concepts.js"></script>
+  <script src="questions-alert-investigation.js"></script>
+  <script src="questions-cloud-devops.js"></script>
+  <script src="questions-ai-automation-safety.js"></script>
+  <script src="questions-identity-logins.js"></script>
+  <script src="questions-malware-basics.js"></script>
+
+  <script src="defense-mission-v2.js"></script>
+</body>
+</html>

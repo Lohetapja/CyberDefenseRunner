@@ -2678,3 +2678,79 @@ body {
   .mzone { min-width: 158px; }
   .msoc-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Experimental Modes panel (main-menu grouping; navigation only) ──── */
+.experimental-panel {
+  margin: 6px auto 10px;
+  padding: 12px 14px;
+  max-width: 340px;
+  background: rgba(13, 22, 36, 0.85);
+  border: 1px dashed #2a3f5f;
+  border-radius: 10px;
+}
+.experimental-panel.hidden { display: none; }
+.experimental-panel .btn-secondary { display: block; width: 100%; margin: 6px 0; }
+.experimental-note {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b7f96;
+  line-height: 1.5;
+}
+.exp-caret { font-size: 11px; opacity: .7; }
+#btn-experimental.open .exp-caret { transform: rotate(180deg); display: inline-block; }
+
+/* ── Start-screen layout polish (scoped overrides; no logic changes) ──
+   1) Learning-Path chips: equal height + tidy wrap
+   2) Mission Parameters: aligned, full-width control rows
+   3) Menu actions: one consistent button column
+   4) Stronger vertical rhythm between sections                        */
+
+/* 1 ▸ chips */
+.filters-block .filter-btngroup { gap: 6px; }
+.filters-block .fbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+/* 2 ▸ aligned control section: tier + wave segments fill their row,
+       topic select matches the control height                        */
+#filter-tier, #filter-waves { width: 100%; }
+#filter-tier .fbtn, #filter-waves .fbtn { flex: 1 1 0; }
+.filters-block { gap: 16px; padding: 18px; }
+.filters-block .filter-row, .filters-block .filter-col { gap: 8px; }
+.filter-select { width: 100%; min-height: 30px; }
+
+/* 3 ▸ menu action column: primary CTA full width, secondaries uniform */
+.start-card .btn-primary {
+  width: min(380px, 100%);
+  min-height: 52px;
+}
+.start-card .btn-secondary {
+  width: min(380px, 100%);
+  min-height: 46px;
+}
+.experimental-panel {
+  max-width: min(380px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+.experimental-panel .btn-secondary {       /* equal size inside panel */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 8px 0 0;
+}
+.experimental-panel .btn-secondary:first-of-type { margin-top: 0; }
+
+/* 4 ▸ vertical rhythm */
+.start-meta { margin-top: 22px; margin-bottom: 22px; }
+.menu-caption { margin: 8px 0 6px; }
+/* tier group sits in a narrow column: tighter padding so all 4 fit one row */
+#filter-tier { gap: 4px; flex-wrap: nowrap; }
+#filter-tier .fbtn { padding: 4px 4px; min-width: 0; }

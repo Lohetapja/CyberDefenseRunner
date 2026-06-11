@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cyber Defense Runner</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -23,7 +23,7 @@
 
       <p class="tagline">Defend the network. Answer correctly. Stop the attacker.</p>
       <p class="description">
-        <span id="desc-qcount">800</span> questions across Networking Basics, Defending Systems, Attacking Concepts,
+        <span id="desc-qcount">3,200</span> questions across Networking Basics, Defending Systems, Attacking Concepts,
         Alert Investigation, Cloud &amp; DevOps, AI &amp; Automation Safety,
         Identity &amp; Logins, and Malware Basics.
       </p>
@@ -87,7 +87,7 @@
 
       <div class="start-meta">
         <div class="meta-stat">
-          <span class="meta-num" id="meta-qcount">800</span>
+          <span class="meta-num" id="meta-qcount">3,200</span>
           <span class="meta-label">Questions</span>
         </div>
         <div class="meta-divider"></div>
@@ -105,8 +105,18 @@
       <button id="btn-start" class="btn-primary"><span>▶ START QUIZ TRAINING</span></button>
       <p class="menu-caption">Answer questions · earn knowledge &amp; resources</p>
 
-      <button id="btn-defense-mission" class="btn-secondary">🛡 Defense Mission <span class="beta-tag">BETA</span></button>
-      <p class="menu-caption">Build defenses · spend resources · stop attacks</p>
+      <button id="btn-soc-dashboard" class="btn-secondary" onclick="location.href='soc-dashboard.html'">🖥 SOC Dashboard</button>
+      <p class="menu-caption">Timed incident response · after-action learning report</p>
+
+      <button id="btn-experimental" class="btn-secondary"
+              onclick="document.getElementById('experimental-panel').classList.toggle('hidden'); this.classList.toggle('open')">
+        🧪 Experimental Modes <span class="exp-caret">▾</span>
+      </button>
+      <div id="experimental-panel" class="experimental-panel hidden">
+        <button id="btn-defense-mission" class="btn-secondary">🛡 Defense Mission <span class="beta-tag">BETA</span></button>
+        <button id="btn-defense-v2" class="btn-secondary" onclick="location.href='defense-mission-v2.html'">🗼 Network Defense Mission <span class="beta-tag">v2 BETA</span></button>
+        <p class="experimental-note">These modes are experimental prototypes and may change.</p>
+      </div>
 
       <button id="btn-how-to-play" class="btn-secondary">❓ How to Play</button>
       <p class="start-hint">No account required · Runs locally · Opens in browser</p>
@@ -441,6 +451,19 @@
           <div class="help-body">
             <h3>If attackers get through</h3>
             <p>If attackers reach the Domain Controller, integrity drops. At zero integrity, the mission fails.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <span class="help-num">7</span>
+          <div class="help-body">
+            <h3>SOC Dashboard mode</h3>
+            <p>SOC Dashboard is a timed mode — full explanations are not shown under pressure.
+               If the After-Action Report is enabled (default ON), every missed question is
+               replayed after the shift with the correct answer, the explanation, and the topic
+               to review — like a real post-incident analyst learning report.
+               The response timer is configurable (10–45 seconds, default 20s, or “No timer”):
+               choose “No timer” to learn and review at your own pace, or a shorter timer to
+               simulate real incident-response pressure.</p>
           </div>
         </div>
         <div class="help-item help-item-note">

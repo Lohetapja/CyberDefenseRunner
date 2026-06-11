@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOC Dashboard — Cyber Defense Runner</title>
+  <link rel="stylesheet" href="soc-dashboard.css" />
+</head>
+<body>
+
+  <!-- ── Top HUD: credits / escalation / shift timer ───────────────────── -->
+  <header class="soc-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">SOC DASHBOARD <span class="beta">BETA</span></span>
+    </div>
+    <div class="hud-stats">
+      <div class="hud-stat"><span class="hud-label">CREDITS</span><span id="hud-credits" class="hud-value">0</span></div>
+      <div class="hud-stat hud-escalation">
+        <span class="hud-label">ESCALATION</span>
+        <div class="esc-bar"><div id="esc-fill" class="esc-fill"></div></div>
+        <span id="hud-escalation" class="hud-value">0%</span>
+      </div>
+      <div class="hud-stat"><span class="hud-label">SHIFT ENDS</span><span id="hud-timer" class="hud-value">2:00</span></div>
+      <div class="hud-stat timer-setting">
+        <span class="hud-label">RESPONSE TIMER</span>
+        <div class="timer-box">
+          <select id="timer-select" title="How long you get to answer each incident question">
+            <option value="10">10s</option>
+            <option value="15">15s</option>
+            <option value="20" selected>20s</option>
+            <option value="30">30s</option>
+            <option value="45">45s</option>
+            <option value="none">No timer</option>
+          </select>
+          <div class="timer-note">Use longer timers for training, shorter timers for challenge mode.</div>
+        </div>
+      </div>
+      <button id="btn-aar" class="aar-toggle" title="Show a post-shift learning report with missed questions and explanations">After-Action Report: <span id="aar-state">ON</span></button>
+    </div>
+  </header>
+
+  <!-- ── Center: the three defendable nodes ────────────────────────────── -->
+  <main class="soc-main">
+    <section class="node-row" id="node-row">
+      <!-- Node cards are filled in by soc-dashboard.js -->
+    </section>
+
+    <section class="soc-bottom">
+      <!-- Bottom-left: scrolling SIEM-style incident log -->
+      <div class="siem-panel">
+        <div class="panel-title">▣ SIEM — INCIDENT LOG</div>
+        <ul id="siem-log" class="siem-log"></ul>
+      </div>
+
+      <!-- Bottom-right: active question panel -->
+      <div class="question-panel">
+        <div class="panel-title">▣ INCIDENT RESPONSE</div>
+        <div id="q-idle" class="q-idle">No incident selected.<br/>Click a node under threat to respond.</div>
+        <div id="q-active" class="q-active hidden">
+          <div class="q-meta"><span id="q-node" class="q-node"></span><span id="q-timer" class="q-timer">20</span></div>
+          <div id="q-prompt" class="q-prompt"></div>
+          <div id="q-options" class="q-options"></div>
+          <div id="q-feedback" class="q-feedback hidden"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Game-over / win overlay ───────────────────────────────────────── -->
+  <div id="soc-overlay" class="soc-overlay hidden">
+    <div class="overlay-card">
+      <h2 id="overlay-title">SHIFT OVER</h2>
+      <p id="overlay-text"></p>
+      <div class="overlay-stats" id="overlay-stats"></div>
+      <button id="btn-restart" class="btn-restart">↺ RESTART SHIFT</button>
+      <a class="btn-menu" href="index.html">RETURN TO MENU</a>
+    </div>
+  </div>
+
+  <!-- ── After-Action Report (shown post-shift when the toggle is ON) ──── -->
+  <div id="aar-overlay" class="soc-overlay hidden">
+    <div class="overlay-card aar-card">
+      <h2 id="aar-title">AFTER-ACTION REPORT</h2>
+      <p id="aar-result" class="aar-result"></p>
+      <div class="aar-body">
+        <div id="aar-summary" class="aar-summary"></div>
+        <div id="aar-topics" class="aar-topics"></div>
+        <div id="aar-missed" class="aar-missed"></div>
+      </div>
+      <div class="aar-buttons">
+        <button id="btn-copy-report" class="btn-menu">⧉ COPY REPORT</button>
+        <button id="btn-aar-restart" class="btn-restart">↺ RESTART SHIFT</button>
+        <a class="btn-menu" href="index.html">BACK TO MENU</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Existing validated question banks (read-only; same files the quiz uses) -->
+  <script src="questions-networking-basics.js"></script>
+  <script src="questions-defending-systems.js"></script>
+  <script src="questions-attacking-concepts.js"></script>
+  <script src="questions-alert-investigation.js"></script>
+  <script src="questions-cloud-devops.js"></script>
+  <script src="questions-ai-automation-safety.js"></script>
+  <script src="questions-identity-logins.js"></script>
+  <script src="questions-malware-basics.js"></script>
+
+  <script src="soc-dashboard.js"></script>
+</body>
+</html>
