@@ -2811,3 +2811,5 @@ body {
 }
 .proto-modal-card { max-width: 380px; }
 .proto-modal-text { font-size: 0.8rem; line-height: 1.6; margin: 10px 0 18px; }
+/* live prototype tag: green instead of planned-purple */
+.planned-tag.proto-live { color: var(--accent); border-color: var(--accent); }

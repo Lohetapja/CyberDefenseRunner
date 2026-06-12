@@ -1,7 +1,7 @@
-# Cyber Defense Runner - local server launcher (PowerShell)
+# Cyber Defense Lab - local server launcher (PowerShell)
 # Does the same thing as start.bat: starts a local server on port 3900 and opens the game.
 
-Write-Host "Starting Cyber Defense Runner..."
+Write-Host "Starting Cyber Defense Lab..."
 Write-Host ""
 Write-Host "Recommended URL:"
 Write-Host "http://localhost:3900"

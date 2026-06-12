@@ -1,0 +1,119 @@
+/* report-generator.css — standalone styling for the SOC Alert Report Generator.
+   Same dark SOC palette as the other modes; separate file so the game is untouched. */
+
+:root {
+  --bg: #070b12;
+  --panel: #0d1420;
+  --panel-edge: #1c2a3f;
+  --text: #c8d6e5;
+  --dim: #6b7f96;
+  --accent: #38d39f;
+  --warn: #ffb020;
+  --danger: #ff4d5e;
+  --mono: "Consolas", "Courier New", monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header bar ────────────────────────────────────────────────────── */
+.rg-hud {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 18px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--panel-edge);
+  gap: 12px; flex-wrap: wrap;
+}
+.hud-left { display: flex; align-items: center; gap: 14px; }
+.hud-back { color: var(--dim); text-decoration: none; font-size: 13px; }
+.hud-back:hover { color: var(--text); }
+.hud-title { font-size: 14px; letter-spacing: 2px; color: var(--accent); }
+.beta { font-size: 10px; color: var(--warn); border: 1px solid var(--warn); padding: 1px 4px; border-radius: 3px; }
+
+.hud-actions { display: flex; gap: 8px; }
+.btn-act {
+  font-family: var(--mono); font-size: 12px;
+  padding: 8px 14px; border-radius: 6px; cursor: pointer; text-decoration: none;
+  background: transparent; border: 1px solid var(--panel-edge); color: var(--dim);
+}
+.btn-act:hover { color: var(--text); border-color: var(--dim); }
+.btn-act.primary { background: var(--accent); border: none; color: #06281c; font-weight: bold; }
+.btn-act.primary:hover { filter: brightness(1.15); }
+.btn-act.copied { color: var(--accent); border-color: var(--accent); }
+
+/* ── Two-panel layout ──────────────────────────────────────────────── */
+.rg-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(380px, 1fr) 1fr;
+  gap: 14px;
+  padding: 14px 18px;
+  min-height: 0;
+}
+.panel-title { font-size: 11px; letter-spacing: 2px; color: var(--dim); margin-bottom: 10px; }
+
+.form-panel, .preview-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 8px;
+  padding: 14px;
+  overflow-y: auto;
+  max-height: calc(100vh - 90px);
+}
+
+/* ── Form ──────────────────────────────────────────────────────────── */
+.fgroup {
+  border: 1px solid var(--panel-edge);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.fgroup-title {
+  font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase;
+  color: var(--warn); margin-bottom: 10px;
+}
+
+label { display: block; font-size: 11px; color: var(--dim); margin-bottom: 10px; }
+.hint { color: var(--dim); font-size: 10px; text-transform: none; letter-spacing: 0; }
+
+input, select, textarea {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  background: #131c2b;
+  border: 1px solid var(--panel-edge);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 7px 9px;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+textarea { resize: vertical; }
+
+.frow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.frow3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+
+/* ── Preview ───────────────────────────────────────────────────────── */
+.rg-preview {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .rg-main { grid-template-columns: 1fr; }
+  .form-panel, .preview-panel { max-height: none; }
+  .frow2, .frow3 { grid-template-columns: 1fr; }
+}

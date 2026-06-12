@@ -184,3 +184,21 @@ Repo: https://github.com/Lohetapja/CyberDefenseRunner
 - Keep the project beginner-friendly.
 - Keep the work-in-progress warning.
 - Do not add too many features before the core loop is stable.
+
+---
+
+## June 2026 addendum (post-expansion snapshot)
+
+The sections above predate the June 2026 expansion and are kept for history.
+Headline changes since:
+
+- **Public branding renamed to "Cyber Defense Lab"** (Blue Team Training Simulator).
+  Repo, file names, and URLs intentionally unchanged.
+- **Question banks expanded to 3,200** (8 × 400), deduplicated, re-tiered to 200/140/60,
+  ~40 mislabeled answer keys fixed, option-quality cleanup on original banks.
+- **New modes:** SOC Dashboard (timed incidents + configurable response timer) with
+  After-Action Report; Network Defense Mission v2 (layer-matching tower defense);
+  SOC Alert Report Generator (NIST-lifecycle Markdown reports + fictional sample loader).
+- **Main menu reorganized:** 4 primary actions; experiments + 5 planned analyst-tool
+  prototype cards grouped under "Experimental Modes".
+- Current docs: `README.md` (rewritten), `ROADMAP.md`, `TESTING.md`.

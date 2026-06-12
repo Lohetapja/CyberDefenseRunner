@@ -1,7 +1,7 @@
 @echo off
-title Cyber Defense Runner
+title Cyber Defense Lab
 
-echo Starting Cyber Defense Runner...
+echo Starting Cyber Defense Lab...
 echo.
 echo Recommended URL:
 echo http://localhost:3900

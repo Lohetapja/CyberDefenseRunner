@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOC Alert Report Generator — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="report-generator.css" />
+</head>
+<body>
+
+  <header class="rg-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">SOC ALERT REPORT GENERATOR <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <button id="btn-sample" class="btn-act" title="Fill the form with a fictional training incident">⤓ LOAD SAMPLE INCIDENT</button>
+      <button id="btn-copy" class="btn-act primary">⧉ COPY REPORT</button>
+      <button id="btn-clear" class="btn-act">✕ CLEAR FORM</button>
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <main class="rg-main">
+    <!-- ── Left: form inputs ─────────────────────────────────────────── -->
+    <section class="form-panel">
+      <div class="panel-title">▣ INCIDENT DETAILS — fields update the report live</div>
+      <form id="rg-form" autocomplete="off">
+
+        <div class="fgroup">
+          <div class="fgroup-title">Report header</div>
+          <div class="frow2">
+            <label>Report title<input id="f-title" type="text" placeholder="Suspicious PowerShell on WS-042" /></label>
+            <label>Report date<input id="f-date" type="date" /></label>
+          </div>
+          <div class="frow3">
+            <label>Analyst name<input id="f-analyst" type="text" placeholder="J. Analyst" /></label>
+            <label>Severity
+              <select id="f-severity">
+                <option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option>
+              </select>
+            </label>
+            <label>Status
+              <select id="f-status">
+                <option selected>Open</option><option>In Progress</option><option>Contained</option><option>Resolved</option><option>Closed</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <div class="fgroup-title">1 · Detection &amp; Analysis</div>
+          <div class="frow2">
+            <label>Alert source<input id="f-source" type="text" placeholder="EDR / SIEM / IDS / user report" /></label>
+            <label>Detection rule / alert name<input id="f-rule" type="text" placeholder="Encoded PowerShell download cradle" /></label>
+          </div>
+          <div class="frow2">
+            <label>Affected user<input id="f-user" type="text" placeholder="DOMAIN\\j.smith" /></label>
+            <label>Affected host<input id="f-host" type="text" placeholder="WS-042" /></label>
+          </div>
+          <div class="frow2">
+            <label>Source IP<input id="f-srcip" type="text" placeholder="10.20.30.40" /></label>
+            <label>Destination IP<input id="f-dstip" type="text" placeholder="203.0.113.66" /></label>
+          </div>
+          <label>Suspicious process<input id="f-process" type="text" placeholder="powershell.exe (parent: winword.exe)" /></label>
+          <label>Command line<textarea id="f-cmdline" rows="2" placeholder="powershell -enc JABjAGwa..."></textarea></label>
+          <label>Key evidence<textarea id="f-evidence" rows="3" placeholder="One item per line: hash, log entries, screenshots, related alerts…"></textarea></label>
+          <label>Timeline events <span class="hint">(one per line — e.g. “09:14 — phishing mail delivered”)</span>
+            <textarea id="f-timeline" rows="4" placeholder="09:14 — phishing mail delivered&#10;09:21 — attachment opened on WS-042&#10;09:22 — encoded PowerShell spawned"></textarea></label>
+          <label>Initial assessment<textarea id="f-assessment" rows="3" placeholder="What do you believe happened, and how confident are you?"></textarea></label>
+        </div>
+
+        <div class="fgroup">
+          <div class="fgroup-title">2 · Containment</div>
+          <label>Containment actions<textarea id="f-containment" rows="3" placeholder="One per line: host isolated from network, account disabled…"></textarea></label>
+        </div>
+
+        <div class="fgroup">
+          <div class="fgroup-title">3–4 · Eradication &amp; Recovery</div>
+          <label>Recommended next steps<textarea id="f-nextsteps" rows="3" placeholder="One per line: reimage host, rotate credentials, hunt for hash on other systems…"></textarea></label>
+        </div>
+
+        <div class="fgroup">
+          <div class="fgroup-title">5 · Post-Incident Activity</div>
+          <label>Lessons learned<textarea id="f-lessons" rows="3" placeholder="What should change: detection gaps, user training, process fixes…"></textarea></label>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- ── Right: generated Markdown preview ─────────────────────────── -->
+    <section class="preview-panel">
+      <div class="panel-title">▣ GENERATED REPORT (Markdown)</div>
+      <pre id="rg-preview" class="rg-preview"></pre>
+    </section>
+  </main>
+
+  <script src="report-generator.js"></script>
+</body>
+</html>
