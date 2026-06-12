@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Parser / SIEM Demo — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="log-parser.css" />
+</head>
+<body>
+
+  <header class="lp-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">LOG PARSER / SIEM DEMO <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <button id="btn-sample" class="btn-act" title="Load fictional training logs">⤓ LOAD SAMPLE LOGS</button>
+      <button id="btn-copy" class="btn-act primary">⧉ COPY FINDINGS (MD)</button>
+      <button id="btn-clear" class="btn-act">✕ CLEAR LOGS</button>
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <main class="lp-main">
+    <!-- ── Left: raw input + controls ────────────────────────────────── -->
+    <section class="input-panel">
+      <div class="panel-title">▣ RAW LOGS — paste below, one event per line</div>
+      <div class="format-hint">Format: <code>timestamp | source | host | user | event-type | severity | message</code></div>
+      <textarea id="raw-logs" spellcheck="false"
+        placeholder="2026-06-12T09:02:00Z | EmailGateway | MAIL-GW-01 | TRAINING-CORP\m.tamm | EmailDelivered | Low | Suspicious attachment delivered&#10;&#10;⚠ Practice tool — paste fictional/training logs only, never real production data."></textarea>
+      <button id="btn-parse" class="btn-parse">▶ PARSE LOGS</button>
+
+      <div class="panel-title filters-title">▣ FILTERS</div>
+      <label>Search keyword<input id="flt-keyword" type="text" placeholder="powershell, blocked, 203.0.113…" /></label>
+      <div class="frow2">
+        <label>Severity
+          <select id="flt-severity"><option value="">All</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </label>
+        <label>Event type<select id="flt-type"><option value="">All</option></select></label>
+      </div>
+      <div class="frow2">
+        <label>Host<select id="flt-host"><option value="">All</option></select></label>
+        <label>User<select id="flt-user"><option value="">All</option></select></label>
+      </div>
+    </section>
+
+    <!-- ── Right: parsed results + summary ───────────────────────────── -->
+    <section class="results-panel">
+      <div class="panel-title">▣ PARSED EVENTS — sorted by timestamp</div>
+      <div id="lp-summary" class="lp-summary">No logs parsed yet.</div>
+      <div id="lp-errors" class="lp-errors hidden"></div>
+      <div id="lp-list" class="lp-list">
+        <div class="lp-empty">Paste logs on the left (or ⤓ LOAD SAMPLE LOGS), then ▶ PARSE LOGS.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="log-parser.js"></script>
+</body>
+</html>
