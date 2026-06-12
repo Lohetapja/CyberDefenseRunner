@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Incident Timeline Builder — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="timeline-builder.css" />
+</head>
+<body>
+
+  <header class="tb-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">INCIDENT TIMELINE BUILDER <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <button id="btn-sample" class="btn-act" title="Load a fictional training timeline">⤓ LOAD SAMPLE TIMELINE</button>
+      <button id="btn-copy" class="btn-act primary">⧉ COPY TIMELINE (MD)</button>
+      <button id="btn-clear" class="btn-act">✕ CLEAR TIMELINE</button>
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <main class="tb-main">
+    <!-- ── Left: event input form ────────────────────────────────────── -->
+    <section class="form-panel">
+      <div class="panel-title">▣ ADD EVENT</div>
+      <form id="tb-form" autocomplete="off">
+        <div class="frow2">
+          <label>Timestamp *<input id="e-time" type="time" step="60" /></label>
+          <label>Severity
+            <select id="e-severity">
+              <option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option>
+            </select>
+          </label>
+        </div>
+        <div class="frow2">
+          <label>Source / log source<input id="e-source" type="text" placeholder="EDR / Email Gateway / Proxy…" /></label>
+          <label>Event type<input id="e-type" type="text" placeholder="Process Creation / Email Delivered…" /></label>
+        </div>
+        <div class="frow2">
+          <label>Host<input id="e-host" type="text" placeholder="WS-TRAINING-07" /></label>
+          <label>User<input id="e-user" type="text" placeholder="TRAINING-CORP\\m.tamm" /></label>
+        </div>
+        <label>Description<textarea id="e-desc" rows="2" placeholder="What happened at this moment?"></textarea></label>
+        <label>Evidence / notes <span class="hint">(optional — shown in the Evidence section)</span>
+          <textarea id="e-notes" rows="2" placeholder="Alert ID, hash, defanged URL, log line…"></textarea></label>
+        <div id="form-warning" class="form-warning hidden">⚠ Timestamp is required.</div>
+        <button type="button" id="btn-add" class="btn-add">＋ ADD EVENT</button>
+      </form>
+    </section>
+
+    <!-- ── Right: live timeline preview ──────────────────────────────── -->
+    <section class="preview-panel">
+      <div class="panel-title">▣ TIMELINE PREVIEW — sorted by timestamp</div>
+      <div id="tb-stats" class="tb-stats"></div>
+      <div id="tb-list" class="tb-list"></div>
+    </section>
+  </main>
+
+  <script src="timeline-builder.js"></script>
+</body>
+</html>
