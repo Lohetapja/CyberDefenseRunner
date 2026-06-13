@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Misuse Detection Demo — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="ai-misuse-demo.css" />
+</head>
+<body>
+
+  <header class="am-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">AI MISUSE DETECTION DEMO <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <button id="btn-sample" class="btn-act" title="Load fictional training logs">⤓ LOAD SAMPLE AI LOGS</button>
+      <button id="btn-analyze" class="btn-act primary">▶ ANALYZE LOGS</button>
+      <button id="btn-md" class="btn-act">⧉ COPY MARKDOWN</button>
+      <button id="btn-json" class="btn-act">⧉ COPY JSON</button>
+      <button id="btn-clear" class="btn-act">✕ CLEAR</button>
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <div class="am-banner">
+    ⓘ Defensive, educational simulation. Uses fictional sample logs only — no real monitoring, no AI provider calls,
+    no prompt or browser-history collection. Purpose: practice reasoning about risky AI usage from enterprise logs.
+  </div>
+
+  <details class="use-box" open>
+    <summary>Intended use</summary>
+    <div class="use-body">
+      <p><b>Purpose:</b> Practice identifying signs of risky AI tool usage from simulated enterprise logs — detect possible unauthorized AI usage, sensitive-data exposure, secret exposure, large uploads, and suspicious destinations using local demo rules only.</p>
+      <p><b>Demonstrates:</b> shadow-AI and data-loss reasoning from already-available logs.</p>
+      <p><b>Try first:</b> click <b>Load Sample AI Logs</b>, then <b>Analyze Logs</b>.</p>
+      <p><b>Does not:</b> monitor real users, inspect browser history, collect prompts, or call AI provider APIs.</p>
+      <p class="use-disc">Educational prototype. Uses simulated data only. Validate all logic before operational use.</p>
+    </div>
+  </details>
+
+  <main class="am-main">
+    <!-- ── Left: input + controls ────────────────────────────────────── -->
+    <section class="input-panel">
+      <div class="panel-title">▣ SIMULATED AI USAGE LOGS — one event per line</div>
+      <div class="format-hint">
+        Format: <code>timestamp | source | user | host | app | action | dataType | destination | sizeMB | message</code>
+      </div>
+      <textarea id="ai-logs" spellcheck="false"
+        placeholder="2026-06-12T10:15:00Z | Proxy | TRAINING-CORP\m.tamm | WS-TRAINING-07 | UnauthorizedAIChat | Upload | customer_data | ai-chat.example | 18 | pasted customer export into unauthorized AI tool&#10;&#10;⚠ Practice tool — fictional/training logs only."></textarea>
+
+      <div class="panel-title filters-title">▣ FILTERS</div>
+      <div class="frow2">
+        <label>Severity
+          <select id="flt-severity"><option value="">All</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select>
+        </label>
+        <label>User<select id="flt-user"><option value="">All</option></select></label>
+      </div>
+      <label>Destination<select id="flt-dest"><option value="">All</option></select></label>
+    </section>
+
+    <!-- ── Right: detection results ──────────────────────────────────── -->
+    <section class="result-panel">
+      <div class="panel-title">▣ DETECTION RESULTS</div>
+      <div id="am-result" class="am-result">
+        <div class="am-empty">
+          Paste simulated AI usage logs on the left (or ⤓ LOAD SAMPLE AI LOGS), then ▶ ANALYZE LOGS.<br/><br/>
+          This prototype runs local rules that flag unauthorized AI tools, sensitive-data uploads, possible
+          secret exposure, and large/repeated uploads — then explains the risk in plain SOC language with
+          recommended actions. No external calls.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="ai-misuse-demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KQL Detection Assistant — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="kql-assistant.css" />
+</head>
+<body>
+
+  <header class="kq-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">KQL DETECTION ASSISTANT <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <button id="btn-sample" class="btn-act" title="Load the Outlook→PowerShell sample">⤓ LOAD SAMPLE DETECTION</button>
+      <button id="btn-generate" class="btn-act primary">▶ GENERATE KQL</button>
+      <button id="btn-copy-kql" class="btn-act">⧉ COPY KQL</button>
+      <button id="btn-copy-notes" class="btn-act">⧉ COPY DETECTION NOTES</button>
+      <button id="btn-clear" class="btn-act">✕ CLEAR</button>
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <div class="kq-banner">
+    ⓘ Educational / demo only. Queries are generated locally from templates — they are <b>not</b> connected to
+    Sentinel, Defender, Azure, or any API, and have <b>not</b> been tested in a real SIEM.
+    Always validate field names, tables, and results before any production use.
+  </div>
+
+  <details class="use-box" open>
+    <summary>Intended use</summary>
+    <div class="use-body">
+      <p><b>Purpose:</b> Practice building defensive KQL detection ideas — generate template-based KQL queries, detection notes, false-positive considerations, MITRE mapping, triage steps, and validation checklists.</p>
+      <p><b>Demonstrates:</b> detection engineering and KQL fundamentals for blue teams.</p>
+      <p><b>Try first:</b> click <b>Load Sample Detection</b>, or pick a template and click <b>Generate KQL</b>.</p>
+      <p><b>Does not:</b> run queries against Sentinel, Defender, Azure, or any live environment.</p>
+      <p class="use-disc">Educational prototype. Uses simulated data only. Validate all logic before operational use.</p>
+    </div>
+  </details>
+
+  <main class="kq-main">
+    <!-- ── Left: detection builder inputs ────────────────────────────── -->
+    <section class="input-panel">
+      <div class="panel-title">▣ DETECTION BUILDER</div>
+
+      <label>Template
+        <select id="f-template">
+          <option value="outlook_powershell">Outlook spawning PowerShell</option>
+          <option value="office_cmd">Office application spawning cmd.exe</option>
+          <option value="encoded_powershell">Encoded PowerShell command</option>
+          <option value="hidden_powershell">PowerShell with hidden / no-profile flags</option>
+          <option value="failed_logins">Multiple failed logins</option>
+          <option value="rare_outbound">Rare process making outbound connection</option>
+        </select>
+      </label>
+
+      <label>Detection name<input id="f-name" type="text" placeholder="Outlook spawning PowerShell" /></label>
+
+      <div class="frow2">
+        <label>Data source<input id="f-source" type="text" placeholder="Microsoft Defender for Endpoint" /></label>
+        <label>Table name
+          <select id="f-table">
+            <option>DeviceProcessEvents</option>
+            <option>DeviceNetworkEvents</option>
+            <option>DeviceLogonEvents</option>
+            <option>SecurityEvent</option>
+            <option>SigninLogs</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="frow2">
+        <label>Time range<input id="f-time" type="text" placeholder="7d" /></label>
+        <label>Severity
+          <select id="f-severity"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select>
+        </label>
+      </div>
+
+      <div class="frow2">
+        <label>Parent process<input id="f-parent" type="text" placeholder="OUTLOOK.EXE" /></label>
+        <label>Child process<input id="f-child" type="text" placeholder="powershell.exe" /></label>
+      </div>
+
+      <label>Command-line contains<input id="f-cmd" type="text" placeholder="-enc, -w hidden (optional)" /></label>
+
+      <div class="frow2">
+        <label>Account field<input id="f-account" type="text" placeholder="AccountName" /></label>
+        <label>Device field<input id="f-device" type="text" placeholder="DeviceName" /></label>
+      </div>
+
+      <label>MITRE technique<input id="f-mitre" type="text" placeholder="T1059.001 PowerShell" /></label>
+      <label>False positive notes<textarea id="f-fp" rows="3" placeholder="Known admin scripts, sanctioned automation…"></textarea></label>
+    </section>
+
+    <!-- ── Right: generated KQL + notes ──────────────────────────────── -->
+    <section class="result-panel">
+      <div class="panel-title">▣ GENERATED DETECTION</div>
+      <div id="kq-result" class="kq-result">
+        <div class="kq-empty">
+          Pick a template and fill in the builder (or ⤓ LOAD SAMPLE DETECTION), then ▶ GENERATE KQL.<br/><br/>
+          The assistant produces a defensive KQL query plus a full detection note: goal, data source,
+          why it matters, false positives, triage steps, MITRE mapping, tuning ideas, limitations, and a
+          validation checklist. Everything is generated locally — nothing runs against a real SIEM.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="kql-assistant.js"></script>
+</body>
+</html>

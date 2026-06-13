@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOAR-Lite Alert Triage — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="alert-triage.css" />
+</head>
+<body>
+
+  <header class="at-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">SOAR-LITE ALERT TRIAGE <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <button id="btn-sample" class="btn-act" title="Load fictional training alert">⤓ LOAD SAMPLE ALERT</button>
+      <button id="btn-analyze" class="btn-act primary">▶ ANALYZE ALERT</button>
+      <button id="btn-md" class="btn-act">⧉ COPY MARKDOWN</button>
+      <button id="btn-json" class="btn-act">⧉ COPY JSON</button>
+      <button id="btn-clear" class="btn-act">✕ CLEAR</button>
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <details class="use-box" open>
+    <summary>Intended use</summary>
+    <div class="use-body">
+      <p><b>Purpose:</b> Practice alert triage logic on a simulated security alert — normalize the alert, apply local detection rules, add mock enrichment, assign severity/verdict, map possible MITRE ATT&CK techniques, and generate Markdown/JSON output.</p>
+      <p><b>Demonstrates:</b> alert triage, detection reasoning, severity/verdict decisions, and MITRE ATT&CK mapping.</p>
+      <p><b>Try first:</b> click <b>Load Sample Alert</b>, then <b>Analyze Alert</b>.</p>
+      <p><b>Does not:</b> connect to a real SIEM, EDR, or threat-intelligence service.</p>
+      <p class="use-disc">Educational prototype. Uses simulated data only. Validate all logic before operational use.</p>
+    </div>
+  </details>
+
+  <main class="at-main">
+    <!-- ── Left: alert input ─────────────────────────────────────────── -->
+    <section class="input-panel">
+      <div class="panel-title">▣ SIMULATED ALERT — paste a JSON alert object</div>
+      <div class="format-hint">
+        Detection scope (MVP): <code>Outlook spawning encoded PowerShell</code>.
+        Fields: timestamp, alertName, alertSource, host, user, parentProcess, processName,
+        commandLine, sourceIp, destinationIp, fileHash, domain, emailSubject.
+      </div>
+      <textarea id="alert-json" spellcheck="false"
+        placeholder='{ "alertName": "Outlook spawned encoded PowerShell", "host": "WS-TRAINING-07", ... }&#10;&#10;⚠ Practice tool — use fictional/training alerts only, never real data.'></textarea>
+      <div id="at-parse-error" class="at-parse-error hidden"></div>
+    </section>
+
+    <!-- ── Right: triage result ──────────────────────────────────────── -->
+    <section class="result-panel">
+      <div class="panel-title">▣ TRIAGE RESULT</div>
+      <div id="at-result" class="at-result">
+        <div class="at-empty">
+          Paste a JSON alert on the left (or ⤓ LOAD SAMPLE ALERT), then ▶ ANALYZE ALERT.<br/><br/>
+          This prototype runs a small set of local detection rules for the
+          <b>Outlook → PowerShell</b> scenario, applies mock enrichment, and produces a
+          verdict, severity, MITRE ATT&amp;CK mapping, and copyable Markdown/JSON. No external calls.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="alert-triage.js"></script>
+</body>
+</html>

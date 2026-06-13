@@ -117,3 +117,14 @@ textarea { resize: vertical; }
   .form-panel, .preview-panel { max-height: none; }
   .frow2, .frow3 { grid-template-columns: 1fr; }
 }
+/* ── Intended-use box (shared doc polish) ──────────────────────────── */
+.use-box { margin: 12px 18px 0; background: #0a111b; border: 1px solid var(--panel-edge); border-radius: 8px; font-size: 11px; }
+.use-box > summary { cursor: pointer; padding: 8px 14px; color: var(--accent); letter-spacing: 1px; list-style: none; }
+.use-box > summary::-webkit-details-marker { display: none; }
+.use-box > summary::before { content: "▸ "; color: var(--dim); }
+.use-box[open] > summary::before { content: "▾ "; }
+.use-box[open] > summary { border-bottom: 1px solid var(--panel-edge); }
+.use-box .use-body { padding: 10px 14px; color: var(--dim); line-height: 1.7; }
+.use-box .use-body b { color: var(--text); }
+.use-box .use-body p { margin-bottom: 5px; }
+.use-box .use-disc { color: var(--warn); margin-top: 8px; margin-bottom: 0; }
