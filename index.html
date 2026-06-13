@@ -291,17 +291,11 @@
         <div class="companion-card tier-monitoring" id="companion-card">
           <div class="avatar avatar--idle" id="avatar">
             <div class="avatar-ring">
-              <svg class="avatar-svg" viewBox="0 0 80 84" xmlns="http://www.w3.org/2000/svg">
-                <path class="av-body" d="M40 4 L71 17 L71 50 Q71 72 40 80 Q9 72 9 50 L9 17 Z"/>
-                <rect class="av-eye" x="20" y="33" width="14" height="8" rx="4"/>
-                <rect class="av-eye" x="46" y="33" width="14" height="8" rx="4"/>
-                <rect class="av-visor" x="23" y="50" width="34" height="4" rx="2"/>
-                <circle class="av-node" cx="17" cy="52" r="2.5"/>
-                <circle class="av-node" cx="63" cy="52" r="2.5"/>
-              </svg>
+              <div class="avatar-glyph" id="avatar-glyph">🛡️</div>
             </div>
           </div>
           <div class="comp-name" id="comp-name">SENTINEL</div>
+          <div class="comp-type-line" id="comp-type">Type · Sentinel</div>
           <div class="comp-title hidden" id="comp-title"></div>
           <div class="comp-state" id="comp-state">Monitoring</div>
           <p class="avatar-status" id="avatar-status">Monitoring traffic...</p>
@@ -355,6 +349,11 @@
           <label class="comp-title-row">Title
             <select id="comp-title-select" class="comp-name-input"></select>
           </label>
+        </section>
+
+        <section class="comp-modal-sec">
+          <h4>Companion Type</h4>
+          <div id="companion-types" class="ctype-grid"></div>
         </section>
 
         <section class="comp-modal-sec">
@@ -603,7 +602,7 @@
   <script src="questions-malware-basics.js"></script>
 
   <script src="questions.js?v=2"></script>
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=9"></script>
   <script src="mission.js"></script>
 </body>
 </html>

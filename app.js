@@ -857,7 +857,7 @@ const COSMETICS = [
 ];
 
 function defaultCompanion() {
-  return { name: "SENTINEL", title: "", energy: 50, credits: 0, modules: [],
+  return { name: "SENTINEL", title: "", type: "sentinel", energy: 50, credits: 0, modules: [],
            topicCorrect: {}, lifetimeCorrect: 0, bestStreak: 0, unlocks: [], toolUnlocks: [] };
 }
 
@@ -868,6 +868,7 @@ function loadCompanion() {
   return {
     name:            typeof c.name === "string" && c.name.trim() ? c.name : d.name,
     title:           typeof c.title === "string" ? c.title : "",
+    type:            typeof c.type === "string" && c.type ? c.type : "sentinel",
     energy:          typeof c.energy === "number" ? clampEnergy(c.energy) : d.energy,
     credits:         typeof c.credits === "number" ? c.credits : d.credits,
     modules:         Array.isArray(c.modules) ? c.modules : [],
@@ -889,6 +890,35 @@ const TOOL_BADGES = [
   { id: "shadow_ai_watcher", label: "Shadow AI Watcher", hint: "Use AI Misuse Detection Demo" },
   { id: "detection_builder", label: "Detection Builder", hint: "Use KQL Detection Assistant" },
 ];
+
+// Selectable companion types (cosmetic only). Unlock tests read existing
+// companion progress — no gameplay effect, no extra tracking added.
+const COMPANION_TYPES = [
+  { id: "sentinel",        name: "Sentinel",        icon: "🛡️", desc: "General SOC assistant",      unlock: "Always available",
+    test: () => true },
+  { id: "packet_owl",      name: "Packet Owl",      icon: "🦉", desc: "Networking specialist",       unlock: "Answer 10 Networking Basics questions correctly",
+    test: c => (c.modules || []).includes("Networking Basics") },
+  { id: "log_fox",         name: "Log Fox",         icon: "🦊", desc: "Log analysis specialist",     unlock: "Use Log Parser / SIEM Demo",
+    test: c => (c.toolUnlocks || []).some(u => u && u.id === "log_hunter") },
+  { id: "malware_raven",   name: "Malware Raven",   icon: "🐦‍⬛", desc: "Malware analysis specialist", unlock: "Answer 10 Malware Basics questions correctly",
+    test: c => (c.modules || []).includes("Malware Basics") },
+  { id: "firewall_dragon", name: "Firewall Dragon", icon: "🐉", desc: "Defense specialist",          unlock: "Complete a SOC Dashboard shift",
+    test: () => false },   // placeholder — SOC shift completion isn't tracked yet
+  { id: "triage_drone",    name: "Triage Drone",    icon: "🤖", desc: "Alert triage specialist",     unlock: "Use SOAR-Lite Alert Triage",
+    test: c => (c.toolUnlocks || []).some(u => u && u.id === "triage_operator") },
+];
+
+function companionType() {
+  // Selected type, falling back to Sentinel if missing or not (yet) unlocked.
+  const t = COMPANION_TYPES.find(x => x.id === companion.type && x.test(companion));
+  return t || COMPANION_TYPES[0];
+}
+
+// Large avatar glyph for a given companion type id (used in sidebar + cards).
+function getCompanionIcon(typeId) {
+  const t = COMPANION_TYPES.find(x => x.id === typeId);
+  return t ? t.icon : COMPANION_TYPES[0].icon;
+}
 
 function saveCompanion() {
   try { localStorage.setItem(COMPANION_KEY, JSON.stringify(companion)); } catch (e) { /* storage off — stay in-memory */ }
@@ -967,6 +997,11 @@ function renderCompanion() {
   el("comp-state").textContent = label;
   el("comp-credits").textContent = companion.credits;
 
+  // Selected companion type (cosmetic) — the avatar glyph itself changes
+  const type = companionType();
+  const glyph = el("avatar-glyph"); if (glyph) glyph.textContent = type.icon;
+  const typeName = el("comp-type");  if (typeName) typeName.textContent = "Type · " + type.name;
+
   // Selected title (optional)
   const titleEl = el("comp-title");
   if (titleEl) {
@@ -1022,6 +1057,26 @@ function renderCompanion() {
   }
 
   renderTitleOptions();
+  renderCompanionTypes();
+}
+
+// Render the selectable companion-type cards in the Customize modal.
+function renderCompanionTypes() {
+  const wrap = el("companion-types");
+  if (!wrap) return;
+  wrap.innerHTML = COMPANION_TYPES.map(t => {
+    const unlocked = t.test(companion);
+    const selected = unlocked && companion.type === t.id;
+    const cls = ["ctype-card"];
+    if (!unlocked) cls.push("locked");
+    if (selected)  cls.push("selected");
+    return `<button class="${cls.join(" ")}" data-type="${t.id}" ${unlocked ? "" : "disabled"}>
+      <span class="ctype-icon">${unlocked ? getCompanionIcon(t.id) : "🔒"}</span>
+      <span class="ctype-name">${escapeHtml(t.name)}</span>
+      <span class="ctype-desc">${escapeHtml(t.desc)}</span>
+      <span class="ctype-cond">${unlocked ? (selected ? "Selected" : "Tap to select") : escapeHtml(t.unlock)}</span>
+    </button>`;
+  }).join("");
 }
 
 // Populate the modal title selector from currently unlocked badge labels.
@@ -1063,6 +1118,19 @@ if (el("comp-reset")) el("comp-reset").addEventListener("click", resetCompanion)
 if (el("comp-title-select")) {
   el("comp-title-select").addEventListener("change", e => {
     companion.title = e.target.value || "";
+    saveCompanion();
+    renderCompanion();
+  });
+}
+
+// Companion type selection (only unlocked types are selectable)
+if (el("companion-types")) {
+  el("companion-types").addEventListener("click", e => {
+    const card = e.target.closest(".ctype-card");
+    if (!card) return;
+    const t = COMPANION_TYPES.find(x => x.id === card.dataset.type);
+    if (!t || !t.test(companion)) return;   // locked → ignore
+    companion.type = t.id;
     saveCompanion();
     renderCompanion();
   });

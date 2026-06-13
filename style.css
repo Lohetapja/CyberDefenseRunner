@@ -865,6 +865,34 @@ body {
 .comp-title-row { display: block; font-size: 0.65rem; color: var(--text-muted); margin-top: 10px; }
 .comp-title-row select { margin-top: 4px; }
 
+/* Companion type: the avatar glyph is the companion itself */
+.avatar-glyph {
+  font-size: 2.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.4));
+}
+.companion-card .comp-type-line {
+  font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted);
+}
+
+/* Companion type selector cards (in the modal) — compact 3-up grid */
+.ctype-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ctype-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 6px; cursor: pointer; font-family: 'Consolas', monospace; color: var(--text);
+  transition: border-color .2s, box-shadow .2s;
+}
+.ctype-card:hover:not(.locked) { border-color: var(--accent); }
+.ctype-card.selected { border-color: var(--accent); box-shadow: 0 0 12px rgba(0, 232, 122, 0.22); }
+.ctype-card.locked { opacity: 0.5; cursor: not-allowed; }
+.ctype-icon { font-size: 1.7rem; line-height: 1.2; }
+.ctype-name { font-size: 0.7rem; color: var(--accent); }
+.ctype-card.locked .ctype-name { color: var(--text-muted); }
+.ctype-desc { font-size: 0.55rem; color: var(--text-muted); line-height: 1.3; }
+.ctype-cond { font-size: 0.52rem; color: var(--text-dim); margin-top: 2px; line-height: 1.3; }
+.ctype-card.selected .ctype-cond { color: var(--accent); }
+
 /* =================================================================================================================================================================================================================================
    REPORT SCREEN
 ================================================================================================================================================================================================================================= */
