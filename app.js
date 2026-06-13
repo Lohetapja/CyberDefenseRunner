@@ -218,7 +218,18 @@ function buildFilteredQuestions() {
   }
 
   hideFilterWarning();
-  return pool.slice(0, waveCount);
+  // Randomize each session: shuffle the filtered COPY (never the global bank),
+  // then take the first waveCount. Distinct questions → no in-session repeats.
+  return shuffle(pool).slice(0, waveCount);
+}
+
+// Fisher-Yates shuffle, in place on the passed array (a local copy).
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 function showFilterWarning(found, needed) {
@@ -830,6 +841,7 @@ function handleAnswer(chosen) {
   // Feed the Analyst Companion (energy/credits/modules/unlocks) from this answer.
   const earnedSomething = updateCompanionForAnswer(correct, q.topic, state.streak);
 
+  flashCompanion(correct ? (earnedSomething ? "unlock" : "correct") : "wrong");
   triggerAvatarReaction(correct, correct && earnedSomething ? "Module earned." : undefined);
   updateHUD();
   updateShop();
@@ -891,6 +903,83 @@ const TOOL_BADGES = [
   { id: "detection_builder", label: "Detection Builder", hint: "Use KQL Detection Assistant" },
 ];
 
+// While true, every companion type is selectable regardless of unlock state —
+// handy for visually testing all avatars. Flip to false for normal unlocking.
+const COMPANION_TYPES_TEST_UNLOCK = true;
+
+// Distinct inline-SVG faces (single source of truth). All draw with
+// currentColor so they inherit the avatar's state colour (idle/correct/wrong),
+// and sit inside the shared circular frame. viewBox is 0 0 64 64.
+// Each is a small stylized character portrait (filled head mass + silhouette
+// features + readable eyes), drawn with the type's --cav/--cav2 palette.
+const COMPANION_SVG = {
+  // Shield-bot head: panelled helm, visor band with two glowing eyes, antenna.
+  sentinel: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
+    <path class="cav-line" d="M32 9 V3"/><circle class="cav-fill" cx="32" cy="2.5" r="1.8"/>
+    <path class="cav-body" d="M19 9 H45 L52 17 V39 Q52 51 32 56 Q12 51 12 39 V17 Z"/>
+    <path class="cav-line" d="M19 9 H45 L52 17 V39 Q52 51 32 56 Q12 51 12 39 V17 Z"/>
+    <path class="cav-line" d="M12 24 H7 M52 24 H57"/>
+    <rect class="cav-dark" x="17" y="23" width="30" height="11" rx="5.5"/>
+    <g class="s-eyes">
+      <rect class="cav-accent" x="21" y="26" width="8" height="5" rx="2.5"/>
+      <rect class="cav-accent" x="35" y="26" width="8" height="5" rx="2.5"/>
+    </g>
+    <path class="cav-line" d="M25 43 H39"/><path class="cav-soft" d="M22 47 H42"/></svg>`,
+  // Owl face: round head, ear tufts, brow, big socketed eyes, beak, chest.
+  packet_owl: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
+    <path class="cav-line" d="M18 16 L13 6 M46 16 L51 6"/>
+    <path class="cav-body" d="M14 26 Q14 12 32 12 Q50 12 50 26 V37 Q50 54 32 54 Q14 54 14 37 Z"/>
+    <path class="cav-line" d="M14 26 Q14 12 32 12 Q50 12 50 26 V37 Q50 54 32 54 Q14 54 14 37 Z"/>
+    <path class="cav-line" d="M23 24 Q32 19 41 24"/>
+    <g class="owl-eyes">
+      <circle class="cav-dark" cx="25" cy="31" r="8"/><circle class="cav-line" cx="25" cy="31" r="8"/><circle class="cav-accent" cx="25" cy="31" r="3.6"/>
+      <circle class="cav-dark" cx="39" cy="31" r="8"/><circle class="cav-line" cx="39" cy="31" r="8"/><circle class="cav-accent" cx="39" cy="31" r="3.6"/>
+    </g>
+    <path class="cav-fill" d="M32 36 l-3.5 5 h7 z"/>
+    <path class="cav-soft" d="M23 47 q9 5 18 0"/></svg>`,
+  // Fox face: pointed ears, tapered muzzle, slim alert eyes, nose, light cheeks.
+  log_fox: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
+    <g class="fox-ears">
+      <path class="cav-body" d="M13 12 L25 27 L17 28 Z"/><path class="cav-line" d="M13 12 L25 27 L17 28 Z"/>
+      <path class="cav-body" d="M51 12 L39 27 L47 28 Z"/><path class="cav-line" d="M51 12 L39 27 L47 28 Z"/>
+    </g>
+    <path class="cav-body" d="M17 26 Q21 24 25 26 H39 Q43 24 47 26 L42 40 Q37 51 32 53 Q27 51 22 40 Z"/>
+    <path class="cav-line" d="M17 26 Q21 24 25 26 H39 Q43 24 47 26 L42 40 Q37 51 32 53 Q27 51 22 40 Z"/>
+    <path class="cav-soft" d="M28 40 H36 L32 51 Z"/>
+    <path class="cav-line" d="M23 31 l5 2 M41 31 l-5 2"/>
+    <circle class="cav-accent" cx="27" cy="32.5" r="1.7"/><circle class="cav-accent" cx="37" cy="32.5" r="1.7"/>
+    <circle class="cav-fill" cx="32" cy="44" r="2.4"/></svg>`,
+  // Raven head: feather crest, rounded skull, hooked beak, sharp socketed eye.
+  malware_raven: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
+    <path class="cav-line" d="M18 17 L22 9 M26 15 L30 8 M34 15 L38 9"/>
+    <path class="cav-body" d="M18 20 Q32 12 44 22 Q50 28 46 39 Q41 51 29 50 Q17 48 15 33 Q14 25 18 20 Z"/>
+    <path class="cav-line" d="M18 20 Q32 12 44 22 Q50 28 46 39 Q41 51 29 50 Q17 48 15 33 Q14 25 18 20 Z"/>
+    <path class="cav-body" d="M44 24 L62 29 L44 34 Z"/><path class="cav-line" d="M44 24 L62 29 L44 34 Z"/>
+    <path class="cav-line" d="M58 29 q-2 3.5 -6 3.5"/>
+    <circle class="cav-dark" cx="33" cy="28" r="5"/><circle class="raven-eye cav-accent" cx="33" cy="28" r="3"/>
+    <path class="cav-soft" d="M21 41 q9 5 17 1"/></svg>`,
+  // Dragon head: horns, plated brow/cheek, angular eye, snout, nostril, ember.
+  firewall_dragon: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
+    <path class="cav-line" d="M26 17 L21 4 L29 14"/><path class="cav-line" d="M40 16 L46 4 L43 15"/>
+    <path class="cav-body" d="M14 41 Q12 24 27 19 Q41 14 49 24 L61 30 L49 34 Q53 40 46 43 L53 50 L36 46 Q22 51 14 41 Z"/>
+    <path class="cav-line" d="M14 41 Q12 24 27 19 Q41 14 49 24 L61 30 L49 34 Q53 40 46 43 L53 50 L36 46 Q22 51 14 41 Z"/>
+    <path class="cav-line" d="M24 22 Q31 26 26 33 M30 39 Q37 41 41 37"/>
+    <path class="cav-dark" d="M29 25 L41 28 L34 33 Z"/>
+    <path class="dragon-eye cav-accent" d="M31 27 L39 29 L34 31.5 Z"/>
+    <circle class="cav-fill" cx="56" cy="31" r="1.3"/>
+    <circle class="cav-ember" cx="48" cy="41" r="3.2"/></svg>`,
+  // Drone: rotor arms, rounded chassis, antenna, central scanning lens, lights.
+  triage_drone: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
+    <path class="cav-line" d="M20 27 L8 20 M44 27 L56 20"/>
+    <ellipse class="cav-soft" cx="8" cy="19" rx="5" ry="2"/><ellipse class="cav-soft" cx="56" cy="19" rx="5" ry="2"/>
+    <path class="cav-line" d="M32 23 V16"/><circle class="cav-fill" cx="32" cy="15.5" r="1.6"/>
+    <rect class="cav-body" x="18" y="23" width="28" height="21" rx="8"/>
+    <rect class="cav-line" x="18" y="23" width="28" height="21" rx="8"/>
+    <circle class="cav-dark" cx="32" cy="33" r="7.5"/><circle class="cav-line" cx="32" cy="33" r="7.5"/>
+    <circle class="cav-lens" cx="32" cy="33" r="3.2"/>
+    <circle class="cav-accent" cx="23" cy="40" r="1.5"/><circle class="cav-accent" cx="41" cy="40" r="1.5"/></svg>`,
+};
+
 // Selectable companion types (cosmetic only). Unlock tests read existing
 // companion progress — no gameplay effect, no extra tracking added.
 const COMPANION_TYPES = [
@@ -908,16 +997,20 @@ const COMPANION_TYPES = [
     test: c => (c.toolUnlocks || []).some(u => u && u.id === "triage_operator") },
 ];
 
+// A type is selectable if test mode is on, or its unlock condition is met.
+function isTypeUnlocked(t) {
+  return COMPANION_TYPES_TEST_UNLOCK || (t && t.test(companion));
+}
+
 function companionType() {
   // Selected type, falling back to Sentinel if missing or not (yet) unlocked.
-  const t = COMPANION_TYPES.find(x => x.id === companion.type && x.test(companion));
+  const t = COMPANION_TYPES.find(x => x.id === companion.type && isTypeUnlocked(x));
   return t || COMPANION_TYPES[0];
 }
 
-// Large avatar glyph for a given companion type id (used in sidebar + cards).
-function getCompanionIcon(typeId) {
-  const t = COMPANION_TYPES.find(x => x.id === typeId);
-  return t ? t.icon : COMPANION_TYPES[0].icon;
+// Distinct SVG face markup for a type id (used in sidebar + modal cards).
+function getCompanionAvatar(typeId) {
+  return COMPANION_SVG[typeId] || COMPANION_SVG.sentinel;
 }
 
 function saveCompanion() {
@@ -999,8 +1092,10 @@ function renderCompanion() {
 
   // Selected companion type (cosmetic) — the avatar glyph itself changes
   const type = companionType();
-  const glyph = el("avatar-glyph"); if (glyph) glyph.textContent = type.icon;
+  const glyph = el("avatar-glyph"); if (glyph) glyph.innerHTML = getCompanionAvatar(type.id);
   const typeName = el("comp-type");  if (typeName) typeName.textContent = "Type · " + type.name;
+  const roleEl = el("comp-role");    if (roleEl) roleEl.textContent = type.desc;
+  const card0 = el("companion-card"); if (card0) card0.dataset.ctype = type.id;  // drives type-flavor CSS
 
   // Selected title (optional)
   const titleEl = el("comp-title");
@@ -1065,13 +1160,13 @@ function renderCompanionTypes() {
   const wrap = el("companion-types");
   if (!wrap) return;
   wrap.innerHTML = COMPANION_TYPES.map(t => {
-    const unlocked = t.test(companion);
+    const unlocked = isTypeUnlocked(t);
     const selected = unlocked && companion.type === t.id;
     const cls = ["ctype-card"];
     if (!unlocked) cls.push("locked");
     if (selected)  cls.push("selected");
     return `<button class="${cls.join(" ")}" data-type="${t.id}" ${unlocked ? "" : "disabled"}>
-      <span class="ctype-icon">${unlocked ? getCompanionIcon(t.id) : "🔒"}</span>
+      <span class="ctype-icon">${unlocked ? getCompanionAvatar(t.id) : "🔒"}</span>
       <span class="ctype-name">${escapeHtml(t.name)}</span>
       <span class="ctype-desc">${escapeHtml(t.desc)}</span>
       <span class="ctype-cond">${unlocked ? (selected ? "Selected" : "Tap to select") : escapeHtml(t.unlock)}</span>
@@ -1092,6 +1187,18 @@ function renderTitleOptions() {
 
 function escapeHtml(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Short-lived answer/unlock feedback animation on the companion card.
+let compFlashTimer = null;
+function flashCompanion(kind) {
+  const card = el("companion-card");
+  if (!card) return;
+  card.classList.remove("companion-feedback-correct", "companion-feedback-wrong", "companion-feedback-unlock");
+  void card.offsetWidth;   // force reflow so the animation restarts on rapid answers
+  card.classList.add("companion-feedback-" + kind);
+  if (compFlashTimer) clearTimeout(compFlashTimer);
+  compFlashTimer = setTimeout(() => card.classList.remove("companion-feedback-" + kind), 1100);
 }
 
 function resetCompanion() {
@@ -1129,7 +1236,7 @@ if (el("companion-types")) {
     const card = e.target.closest(".ctype-card");
     if (!card) return;
     const t = COMPANION_TYPES.find(x => x.id === card.dataset.type);
-    if (!t || !t.test(companion)) return;   // locked → ignore
+    if (!t || !isTypeUnlocked(t)) return;   // locked → ignore
     companion.type = t.id;
     saveCompanion();
     renderCompanion();
