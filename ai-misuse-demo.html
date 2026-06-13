@@ -76,6 +76,14 @@
     </section>
   </main>
 
+  <script src="companion-unlocks.js"></script>
   <script src="ai-misuse-demo.js"></script>
+  <script>
+    // Companion (Phase 2): award the Shadow AI Watcher badge on sample load.
+    (function () {
+      var b = document.getElementById("btn-sample");
+      if (b) b.addEventListener("click", function () { unlockCompanionBadge("shadow_ai_watcher", "Shadow AI Watcher"); });
+    })();
+  </script>
 </body>
 </html>

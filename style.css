@@ -791,6 +791,79 @@ body {
 .comp-btn:hover { color: var(--text); border-color: var(--accent); }
 .comp-btn-danger { border-color: var(--red); color: var(--red); }
 .comp-btn-danger:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
+.comp-btn-accent { width: 100%; border-color: var(--accent); color: var(--accent); margin-top: 2px; }
+.comp-btn-accent:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+/* ── Compact companion card (avatar + glow + identity + message) ───────────── */
+.companion-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 14px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: box-shadow .4s ease, border-color .4s ease;
+}
+.companion-card .avatar { padding: 2px 0; gap: 0; }
+.companion-card .avatar-ring { width: 92px; height: 92px; }
+.companion-card .avatar-svg { width: 58px; height: 61px; }
+
+.companion-card .comp-name {
+  font-size: 1rem; color: var(--accent); font-weight: 700;
+  letter-spacing: 1px; font-family: 'Consolas', monospace; margin-top: 6px;
+}
+.companion-card .comp-title {
+  font-size: 0.6rem; letter-spacing: 1.2px; text-transform: uppercase; color: var(--amber);
+}
+.companion-card .comp-state {
+  font-size: 0.56rem; letter-spacing: 1.6px; text-transform: uppercase; color: var(--text-muted);
+}
+.companion-card .avatar-status {
+  margin-top: 7px; width: 100%; text-align: center;
+  font-size: 0.66rem; color: var(--text); opacity: 0.92;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 8px;
+}
+
+/* Energy/state glow tiers around the companion card */
+.companion-card.tier-tired       { border-color: var(--border); box-shadow: none; }
+.companion-card.tier-tired .avatar { opacity: 0.5; }
+.companion-card.tier-monitoring  { border-color: var(--border-hi); box-shadow: 0 0 14px rgba(0, 212, 255, 0.12); }
+.companion-card.tier-focused     { border-color: var(--accent);    box-shadow: 0 0 18px rgba(0, 232, 122, 0.18); }
+.companion-card.tier-overcharged { border-color: var(--amber);     box-shadow: 0 0 26px rgba(255, 179, 0, 0.28); animation: comp-pulse 2.2s ease-in-out infinite; }
+@keyframes comp-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 179, 0, 0.22); }
+  50%      { box-shadow: 0 0 32px rgba(255, 179, 0, 0.42); }
+}
+
+/* ── Customize Companion modal ─────────────────────────────────────────────── */
+.comp-modal {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(4, 7, 12, 0.8);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.comp-modal.hidden { display: none; }
+.comp-modal-card {
+  background: var(--surface); border: 1px solid var(--border-hi); border-radius: var(--radius-lg);
+  width: 100%; max-width: 460px; max-height: 88vh;
+  display: flex; flex-direction: column; box-shadow: 0 12px 44px rgba(0, 0, 0, 0.6);
+}
+.comp-modal-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  font-family: 'Consolas', monospace; letter-spacing: 2px; color: var(--accent); font-size: 0.72rem;
+}
+.comp-modal-x { background: transparent; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; line-height: 1; }
+.comp-modal-x:hover { color: var(--text); }
+.comp-modal-body { padding: 16px 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+.comp-modal-sec h4 {
+  font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-muted); font-family: 'Consolas', monospace; margin-bottom: 8px;
+}
+.comp-title-row { display: block; font-size: 0.65rem; color: var(--text-muted); margin-top: 10px; }
+.comp-title-row select { margin-top: 4px; }
 
 /* =================================================================================================================================================================================================================================
    REPORT SCREEN

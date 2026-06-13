@@ -857,8 +857,8 @@ const COSMETICS = [
 ];
 
 function defaultCompanion() {
-  return { name: "SENTINEL", energy: 50, credits: 0, modules: [],
-           topicCorrect: {}, lifetimeCorrect: 0, bestStreak: 0, unlocks: [] };
+  return { name: "SENTINEL", title: "", energy: 50, credits: 0, modules: [],
+           topicCorrect: {}, lifetimeCorrect: 0, bestStreak: 0, unlocks: [], toolUnlocks: [] };
 }
 
 function loadCompanion() {
@@ -867,6 +867,7 @@ function loadCompanion() {
   const d = defaultCompanion();
   return {
     name:            typeof c.name === "string" && c.name.trim() ? c.name : d.name,
+    title:           typeof c.title === "string" ? c.title : "",
     energy:          typeof c.energy === "number" ? clampEnergy(c.energy) : d.energy,
     credits:         typeof c.credits === "number" ? c.credits : d.credits,
     modules:         Array.isArray(c.modules) ? c.modules : [],
@@ -874,8 +875,20 @@ function loadCompanion() {
     lifetimeCorrect: typeof c.lifetimeCorrect === "number" ? c.lifetimeCorrect : 0,
     bestStreak:      typeof c.bestStreak === "number" ? c.bestStreak : 0,
     unlocks:         Array.isArray(c.unlocks) ? c.unlocks : [],
+    // Tool-based badges earned from the analyst tools (written by companion-unlocks.js).
+    toolUnlocks:     Array.isArray(c.toolUnlocks) ? c.toolUnlocks : [],
   };
 }
+
+// Catalog of tool-based field badges (id → label) for locked/unlocked display.
+const TOOL_BADGES = [
+  { id: "report_writer",     label: "Report Writer",     hint: "Use SOC Alert Report Generator" },
+  { id: "timeline_analyst",  label: "Timeline Analyst",  hint: "Use Incident Timeline Builder" },
+  { id: "log_hunter",        label: "Log Hunter",        hint: "Use Log Parser / SIEM Demo" },
+  { id: "triage_operator",   label: "Triage Operator",   hint: "Use SOAR-Lite Alert Triage" },
+  { id: "shadow_ai_watcher", label: "Shadow AI Watcher", hint: "Use AI Misuse Detection Demo" },
+  { id: "detection_builder", label: "Detection Builder", hint: "Use KQL Detection Assistant" },
+];
 
 function saveCompanion() {
   try { localStorage.setItem(COMPANION_KEY, JSON.stringify(companion)); } catch (e) { /* storage off — stay in-memory */ }
@@ -937,36 +950,89 @@ function evaluateCosmeticUnlocks() {
   return added;
 }
 
+// Flat list of every earned badge label, in earn order (modules → cosmetics → field).
+function earnedBadgeLabels() {
+  const labels = [];
+  (companion.modules || []).forEach(m => labels.push(m));
+  COSMETICS.forEach(cos => { if (companion.unlocks.includes(cos.id)) labels.push(cos.name); });
+  (companion.toolUnlocks || []).forEach(u => { if (u && u.label) labels.push(u.label); });
+  return labels;
+}
+
 function renderCompanion() {
   if (!el("comp-name")) return;   // only present on the quiz screen
-  el("comp-name").textContent  = companion.name;
   const label = companionStateLabel(companion.energy);
+
+  el("comp-name").textContent  = companion.name;
   el("comp-state").textContent = label;
   el("comp-credits").textContent = companion.credits;
 
+  // Selected title (optional)
+  const titleEl = el("comp-title");
+  if (titleEl) {
+    if (companion.title) { titleEl.textContent = companion.title; titleEl.classList.remove("hidden"); }
+    else { titleEl.textContent = ""; titleEl.classList.add("hidden"); }
+  }
+
+  // Energy bar + avatar glow tier
   const pct = Math.round(companion.energy);
   el("comp-energy-pct").textContent = pct + "%";
   const fill = el("comp-energy-fill");
   fill.style.width = pct + "%";
   fill.className = "comp-energy-fill tier-" + label.toLowerCase();
-
-  // Modules (persistent learning badges)
-  const mod = el("companion-modules");
-  if (companion.modules.length === 0) {
-    mod.innerHTML = '<p class="no-upgrades">No modules earned yet. Answer correctly or explore tools to collect learning modules.</p>';
-  } else {
-    mod.innerHTML = companion.modules
-      .map(m => `<div class="upgrade-chip">◈ ${escapeHtml(m)}</div>`).join("");
+  const card = el("companion-card");
+  if (card) {
+    card.classList.remove("tier-tired", "tier-monitoring", "tier-focused", "tier-overcharged");
+    card.classList.add("tier-" + label.toLowerCase());
   }
 
-  // Cosmetic unlocks (locked = preview with hint)
-  el("companion-cosmetics").innerHTML = COSMETICS.map(cos => {
-    const unlocked = companion.unlocks.includes(cos.id);
-    return `<div class="cosmetic ${unlocked ? "unlocked" : "locked"}">
-      <span class="cos-name">${unlocked ? "✦" : "🔒"} ${escapeHtml(cos.name)}</span>
-      <span class="cos-hint">${unlocked ? "Unlocked" : escapeHtml(cos.hint)}</span>
-    </div>`;
-  }).join("");
+  // Recent badges (latest 2–3 only) — sidebar
+  const recent = el("companion-recent");
+  if (recent) {
+    const all = earnedBadgeLabels();
+    if (all.length === 0) {
+      recent.innerHTML = '<p class="no-upgrades">No badges yet. Answer correctly or explore tools to unlock them.</p>';
+    } else {
+      recent.innerHTML = all.slice(-3).reverse()
+        .map(l => `<div class="cosmetic unlocked"><span class="cos-name">✦ ${escapeHtml(l)}</span></div>`).join("");
+    }
+  }
+
+  // Full cosmetic + field-badge lists — modal (only rendered if the modal exists)
+  const cosEl = el("companion-cosmetics");
+  if (cosEl) {
+    cosEl.innerHTML = COSMETICS.map(cos => {
+      const unlocked = companion.unlocks.includes(cos.id);
+      return `<div class="cosmetic ${unlocked ? "unlocked" : "locked"}">
+        <span class="cos-name">${unlocked ? "✦" : "🔒"} ${escapeHtml(cos.name)}</span>
+        <span class="cos-hint">${unlocked ? "Unlocked" : escapeHtml(cos.hint)}</span>
+      </div>`;
+    }).join("");
+  }
+  const badgesEl = el("companion-badges");
+  if (badgesEl) {
+    const earnedIds = (companion.toolUnlocks || []).map(u => u && u.id);
+    badgesEl.innerHTML = TOOL_BADGES.map(b => {
+      const unlocked = earnedIds.includes(b.id);
+      return `<div class="cosmetic ${unlocked ? "unlocked" : "locked"}">
+        <span class="cos-name">${unlocked ? "✦" : "🔒"} ${escapeHtml(b.label)}</span>
+        <span class="cos-hint">${unlocked ? "Unlocked" : escapeHtml(b.hint)}</span>
+      </div>`;
+    }).join("");
+  }
+
+  renderTitleOptions();
+}
+
+// Populate the modal title selector from currently unlocked badge labels.
+function renderTitleOptions() {
+  const sel = el("comp-title-select");
+  if (!sel) return;
+  const labels = earnedBadgeLabels();
+  const opts = ['<option value="">None</option>']
+    .concat(labels.map(l => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`));
+  sel.innerHTML = opts.join("");
+  sel.value = companion.title || "";
 }
 
 function escapeHtml(s) {
@@ -981,7 +1047,7 @@ function resetCompanion() {
   renderCompanion();
 }
 
-// Customize controls (present on the quiz page)
+// Customize controls (live inside the Customize Companion modal)
 if (el("comp-rename")) {
   el("comp-rename").addEventListener("click", () => {
     const v = el("comp-name-input").value.trim();
@@ -993,6 +1059,21 @@ if (el("comp-rename")) {
   });
 }
 if (el("comp-reset")) el("comp-reset").addEventListener("click", resetCompanion);
+
+if (el("comp-title-select")) {
+  el("comp-title-select").addEventListener("change", e => {
+    companion.title = e.target.value || "";
+    saveCompanion();
+    renderCompanion();
+  });
+}
+
+// Customize Companion modal open/close
+function openCompModal()  { const m = el("comp-modal"); if (m) { renderCompanion(); m.classList.remove("hidden"); } }
+function closeCompModal() { const m = el("comp-modal"); if (m) m.classList.add("hidden"); }
+if (el("comp-customize"))   el("comp-customize").addEventListener("click", openCompModal);
+if (el("comp-modal-close")) el("comp-modal-close").addEventListener("click", closeCompModal);
+if (el("comp-modal")) el("comp-modal").addEventListener("click", e => { if (e.target.id === "comp-modal") closeCompModal(); });
 
 // Show saved companion immediately on load (before any quiz starts).
 renderCompanion();

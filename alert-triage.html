@@ -65,6 +65,15 @@
     </section>
   </main>
 
+  <script src="companion-unlocks.js"></script>
   <script src="alert-triage.js"></script>
+  <script>
+    // Companion (Phase 2): award the Triage Operator badge on sample load or analyze.
+    (function () {
+      var fire = function () { unlockCompanionBadge("triage_operator", "Triage Operator"); };
+      var s = document.getElementById("btn-sample");   if (s) s.addEventListener("click", fire);
+      var a = document.getElementById("btn-analyze");  if (a) a.addEventListener("click", fire);
+    })();
+  </script>
 </body>
 </html>
