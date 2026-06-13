@@ -248,4 +248,33 @@ $("btn-copy").addEventListener("click", copyFindings);
 ["flt-keyword", "flt-severity", "flt-type", "flt-host", "flt-user"]
   .forEach(id => $(id).addEventListener("input", render));
 
+/* ── Local file load (browser-side FileReader only; no upload) ─────── */
+function wireFileLoad(textareaId) {
+  const MAX_MB = 5;   // log files can be larger
+  const input = $("file-input"), status = $("file-status");
+  $("btn-file").addEventListener("click", () => input.click());
+  input.addEventListener("change", () => {
+    const f = input.files[0];
+    if (!f) return;
+    if (f.size > MAX_MB * 1024 * 1024) {
+      status.textContent = `⚠ File too large for this demo. Max size: ${MAX_MB} MB.`;
+      status.className = "file-status warn";
+      input.value = ""; return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      $(textareaId).value = reader.result;
+      status.textContent = "Loaded file locally. Nothing was uploaded.";
+      status.className = "file-status ok";
+    };
+    reader.onerror = () => {
+      status.textContent = "⚠ Could not read that file — try a plain text file.";
+      status.className = "file-status warn";
+    };
+    reader.readAsText(f);
+    input.value = "";   // allow re-loading the same file
+  });
+}
+wireFileLoad("raw-logs");
+
 render();

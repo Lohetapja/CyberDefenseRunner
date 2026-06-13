@@ -15,6 +15,8 @@
     </div>
     <div class="hud-actions">
       <button id="btn-sample" class="btn-act" title="Load fictional training alert">⤓ LOAD SAMPLE ALERT</button>
+      <button id="btn-file" class="btn-act" title="Read a local .json/.txt file">📂 LOAD FILE</button>
+      <input id="file-input" type="file" accept=".json,.txt" class="hidden" />
       <button id="btn-analyze" class="btn-act primary">▶ ANALYZE ALERT</button>
       <button id="btn-md" class="btn-act">⧉ COPY MARKDOWN</button>
       <button id="btn-json" class="btn-act">⧉ COPY JSON</button>
@@ -43,6 +45,7 @@
         Fields: timestamp, alertName, alertSource, host, user, parentProcess, processName,
         commandLine, sourceIp, destinationIp, fileHash, domain, emailSubject.
       </div>
+      <div class="file-note">Files are read locally in your browser and are not uploaded. <span id="file-status" class="file-status"></span></div>
       <textarea id="alert-json" spellcheck="false"
         placeholder='{ "alertName": "Outlook spawned encoded PowerShell", "host": "WS-TRAINING-07", ... }&#10;&#10;⚠ Practice tool — use fictional/training alerts only, never real data.'></textarea>
       <div id="at-parse-error" class="at-parse-error hidden"></div>

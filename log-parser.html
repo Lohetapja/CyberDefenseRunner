@@ -15,6 +15,8 @@
     </div>
     <div class="hud-actions">
       <button id="btn-sample" class="btn-act" title="Load fictional training logs">⤓ LOAD SAMPLE LOGS</button>
+      <button id="btn-file" class="btn-act" title="Read a local .txt/.log/.csv file">📂 LOAD FILE</button>
+      <input id="file-input" type="file" accept=".txt,.log,.csv" class="hidden" />
       <button id="btn-copy" class="btn-act primary">⧉ COPY FINDINGS (MD)</button>
       <button id="btn-clear" class="btn-act">✕ CLEAR LOGS</button>
       <a class="btn-act" href="index.html">BACK TO MENU</a>
@@ -37,6 +39,7 @@
     <section class="input-panel">
       <div class="panel-title">▣ RAW LOGS — paste below, one event per line</div>
       <div class="format-hint">Format: <code>timestamp | source | host | user | event-type | severity | message</code></div>
+      <div class="file-note">Files are read locally in your browser and are not uploaded. <span id="file-status" class="file-status"></span></div>
       <textarea id="raw-logs" spellcheck="false"
         placeholder="2026-06-12T09:02:00Z | EmailGateway | MAIL-GW-01 | TRAINING-CORP\m.tamm | EmailDelivered | Low | Suspicious attachment delivered&#10;&#10;⚠ Practice tool — paste fictional/training logs only, never real production data."></textarea>
       <button id="btn-parse" class="btn-parse">▶ PARSE LOGS</button>

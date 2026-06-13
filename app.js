@@ -105,25 +105,29 @@ const TD_TOWER_DEFS = {
 
 const AVATAR_MESSAGES = {
   idle:    "Monitoring traffic...",
-  correct: "Threat contained.",
-  wrong:   "Breach pressure rising.",
+  correct: "Good response.",
+  wrong:   "Review needed.",
   victory: "Network secured.",
   defeat:  "Defenses failed."
 };
 
 let avatarTimer = null;
 
-function setAvatarState(stateName) {
+// msgOverride lets a caller show a one-off line (e.g. "Module earned.")
+// while keeping the visual state colour.
+function setAvatarState(stateName, msgOverride) {
   const avatarEl = el("avatar");
   const statusEl = el("avatar-status");
   if (!avatarEl || !statusEl) return;
   avatarEl.className = `avatar avatar--${stateName}`;
-  statusEl.textContent = AVATAR_MESSAGES[stateName] || "";
+  // The idle line reflects the companion's current energy tier.
+  const base = stateName === "idle" ? companionIdleMsg() : AVATAR_MESSAGES[stateName];
+  statusEl.textContent = msgOverride || base || "";
 }
 
-function triggerAvatarReaction(isCorrect) {
+function triggerAvatarReaction(isCorrect, msgOverride) {
   if (avatarTimer) clearTimeout(avatarTimer);
-  setAvatarState(isCorrect ? "correct" : "wrong");
+  setAvatarState(isCorrect ? "correct" : "wrong", msgOverride);
   avatarTimer = setTimeout(() => setAvatarState("idle"), 2200);
 }
 
@@ -143,6 +147,8 @@ function initState(questions) {
     attackerLevel:    CONFIG.startAttackerLevel,
     correctAnswers:   0,
     wrongAnswers:     0,
+    streak:           0,        // current consecutive-correct streak
+    bestStreak:       0,        // best streak this session
     upgrades:         [],       // defensive module chips (from correct answers)
     topicStats,
     questions,
@@ -258,6 +264,24 @@ function updateHUD() {
 
   const waveFill = el("wave-progress");
   if (waveFill) waveFill.style.width = (state.wave / state.questions.length * 100) + "%";
+
+  // Cosmetic panels must never be able to abort the core quiz loop.
+  try { renderAnalystStats(); renderCompanion(); }
+  catch (e) { console.warn("Companion panel render skipped:", e); }
+}
+
+// ── Analyst Status panel (client-side, derived from session state) ────────────
+
+function renderAnalystStats() {
+  if (!el("as-answered")) return;   // panel only exists on the quiz screen
+  const answered = state.correctAnswers + state.wrongAnswers;
+  const accuracy = answered ? Math.round((state.correctAnswers / answered) * 100) : null;
+  const q        = state.questions && state.questions[state.wave];
+
+  el("as-answered").textContent = answered;
+  el("as-accuracy").textContent = accuracy === null ? "—" : accuracy + "%";
+  el("as-streak").textContent   = state.streak;
+  el("as-path").textContent     = q ? q.topic : "—";
 }
 
 // ── Defense Lane ──────────────────────────────────────────────────────────────
@@ -746,14 +770,16 @@ function handleAnswer(chosen) {
     // ── Correct answer ──────────────────────────────────────────────────────
     state.correctAnswers++;
     state.topicStats[q.topic].correct++;
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
 
     const bonus        = state.attackerLevel * CONFIG.scoreAttackerBonus;
     state.score       += CONFIG.scorePerCorrect + bonus;
     state.health       = Math.min(CONFIG.maxHealth, state.health + CONFIG.healthGainCorrect);
     const creditsEarned = addCreditsForQuestion(q);
 
+    // Report screen still lists per-session reward modules.
     if (!state.upgrades.includes(q.reward)) state.upgrades.push(q.reward);
-    addUpgradeChip(q.reward);
 
     feedback.className   = "feedback-banner correct";
     feedback.textContent =
@@ -762,6 +788,7 @@ function handleAnswer(chosen) {
   } else {
     // ── Wrong answer ────────────────────────────────────────────────────────
     state.wrongAnswers++;
+    state.streak = 0;
 
     const rawDamage = CONFIG.damageBase + CONFIG.damagePerLevel * state.attackerLevel;
     state.attackerLevel++;
@@ -800,27 +827,175 @@ function handleAnswer(chosen) {
     el("btn-next").textContent = "VIEW REPORT →";
   }
 
-  triggerAvatarReaction(correct);
+  // Feed the Analyst Companion (energy/credits/modules/unlocks) from this answer.
+  const earnedSomething = updateCompanionForAnswer(correct, q.topic, state.streak);
+
+  triggerAvatarReaction(correct, correct && earnedSomething ? "Module earned." : undefined);
   updateHUD();
   updateShop();
   updateDefenseLane();
 }
 
-// ── Upgrade chips (modules earned from correct answers) ───────────────────────
+// ── Analyst Companion (Phase 1: client-side progression, localStorage) ────────
+// A lightweight cyber-assistant powered by learning activity. Persists across
+// sessions in localStorage only — no backend, no accounts, cosmetic-only unlocks.
 
-function addUpgradeChip(name) {
-  const list        = el("upgrades-list");
-  const placeholder = list.querySelector(".no-upgrades");
-  if (placeholder) placeholder.remove();
+const COMPANION_KEY = "cdl_companion_v1";
 
-  const chips = Array.from(list.querySelectorAll(".upgrade-chip"));
-  if (chips.some(c => c.textContent === name)) return;
+// Energy / credit tuning (kept gentle so progress feels earned, not grindy).
+const ENERGY_CORRECT = 8;     // energy gained per correct answer
+const ENERGY_WRONG   = 5;     // energy lost per wrong answer
+const CREDITS_CORRECT = 5;    // cosmetic credits per correct answer
+const STREAK_BONUS    = 10;   // bonus credits every 5-in-a-row
+const MODULE_THRESHOLD = 10;  // correct answers in a topic to earn its module badge
 
-  const chip       = document.createElement("div");
-  chip.className   = "upgrade-chip";
-  chip.textContent = name;
-  list.appendChild(chip);
+// Cosmetic unlocks — quiz-detectable in Phase 1 (tool-based ones are roadmap).
+const COSMETICS = [
+  { id: "packet_watcher", name: "Packet Watcher",  hint: "10 correct answers",  test: c => c.lifetimeCorrect >= 10 },
+  { id: "neon_shield",    name: "Neon Shield Skin", hint: "10-answer streak",    test: c => c.bestStreak >= 10 },
+  { id: "terminal_glow",  name: "Terminal Glow",    hint: "reach Overcharged",   test: c => c.energy >= 100 },
+];
+
+function defaultCompanion() {
+  return { name: "SENTINEL", energy: 50, credits: 0, modules: [],
+           topicCorrect: {}, lifetimeCorrect: 0, bestStreak: 0, unlocks: [] };
 }
+
+function loadCompanion() {
+  let c = {};
+  try { c = JSON.parse(localStorage.getItem(COMPANION_KEY)) || {}; } catch (e) { c = {}; }
+  const d = defaultCompanion();
+  return {
+    name:            typeof c.name === "string" && c.name.trim() ? c.name : d.name,
+    energy:          typeof c.energy === "number" ? clampEnergy(c.energy) : d.energy,
+    credits:         typeof c.credits === "number" ? c.credits : d.credits,
+    modules:         Array.isArray(c.modules) ? c.modules : [],
+    topicCorrect:    (c.topicCorrect && typeof c.topicCorrect === "object") ? c.topicCorrect : {},
+    lifetimeCorrect: typeof c.lifetimeCorrect === "number" ? c.lifetimeCorrect : 0,
+    bestStreak:      typeof c.bestStreak === "number" ? c.bestStreak : 0,
+    unlocks:         Array.isArray(c.unlocks) ? c.unlocks : [],
+  };
+}
+
+function saveCompanion() {
+  try { localStorage.setItem(COMPANION_KEY, JSON.stringify(companion)); } catch (e) { /* storage off — stay in-memory */ }
+}
+
+const clampEnergy = v => Math.max(0, Math.min(100, v));
+
+let companion = loadCompanion();
+
+function companionStateLabel(e) {
+  if (e <= 20) return "Tired";
+  if (e <= 60) return "Monitoring";
+  if (e <= 90) return "Focused";
+  return "Overcharged";
+}
+
+function companionIdleMsg() {
+  const e = companion ? companion.energy : 50;
+  if (e <= 20) return "Need more clean responses.";
+  if (e <= 60) return "Monitoring traffic...";
+  if (e <= 90) return "Good rhythm. Keep going.";
+  return "Excellent streak.";
+}
+
+// Apply one answer's effects; returns true if a new module/cosmetic was earned.
+function updateCompanionForAnswer(correct, topic, streak) {
+  let earned = false;
+  if (correct) {
+    companion.energy = clampEnergy(companion.energy + ENERGY_CORRECT);
+    companion.credits += CREDITS_CORRECT;
+    if (streak > 0 && streak % 5 === 0) companion.credits += STREAK_BONUS;
+    companion.lifetimeCorrect++;
+    if (streak > companion.bestStreak) companion.bestStreak = streak;
+
+    if (topic) {
+      companion.topicCorrect[topic] = (companion.topicCorrect[topic] || 0) + 1;
+      if (companion.topicCorrect[topic] >= MODULE_THRESHOLD && !companion.modules.includes(topic)) {
+        companion.modules.push(topic);
+        earned = true;
+      }
+    }
+  } else {
+    companion.energy = clampEnergy(companion.energy - ENERGY_WRONG);
+  }
+  if (evaluateCosmeticUnlocks()) earned = true;
+  saveCompanion();
+  return earned;
+}
+
+// Persist any cosmetics whose conditions are now met; returns true if any new.
+function evaluateCosmeticUnlocks() {
+  let added = false;
+  COSMETICS.forEach(cos => {
+    if (!companion.unlocks.includes(cos.id) && cos.test(companion)) {
+      companion.unlocks.push(cos.id);
+      added = true;
+    }
+  });
+  return added;
+}
+
+function renderCompanion() {
+  if (!el("comp-name")) return;   // only present on the quiz screen
+  el("comp-name").textContent  = companion.name;
+  const label = companionStateLabel(companion.energy);
+  el("comp-state").textContent = label;
+  el("comp-credits").textContent = companion.credits;
+
+  const pct = Math.round(companion.energy);
+  el("comp-energy-pct").textContent = pct + "%";
+  const fill = el("comp-energy-fill");
+  fill.style.width = pct + "%";
+  fill.className = "comp-energy-fill tier-" + label.toLowerCase();
+
+  // Modules (persistent learning badges)
+  const mod = el("companion-modules");
+  if (companion.modules.length === 0) {
+    mod.innerHTML = '<p class="no-upgrades">No modules earned yet. Answer correctly or explore tools to collect learning modules.</p>';
+  } else {
+    mod.innerHTML = companion.modules
+      .map(m => `<div class="upgrade-chip">◈ ${escapeHtml(m)}</div>`).join("");
+  }
+
+  // Cosmetic unlocks (locked = preview with hint)
+  el("companion-cosmetics").innerHTML = COSMETICS.map(cos => {
+    const unlocked = companion.unlocks.includes(cos.id);
+    return `<div class="cosmetic ${unlocked ? "unlocked" : "locked"}">
+      <span class="cos-name">${unlocked ? "✦" : "🔒"} ${escapeHtml(cos.name)}</span>
+      <span class="cos-hint">${unlocked ? "Unlocked" : escapeHtml(cos.hint)}</span>
+    </div>`;
+  }).join("");
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function resetCompanion() {
+  if (!confirm("Reset all Analyst Companion progress?\nThis clears the name, energy, credits, modules, and cosmetic unlocks.")) return;
+  companion = defaultCompanion();
+  try { localStorage.removeItem(COMPANION_KEY); } catch (e) { /* ignore */ }
+  setAvatarState("idle");
+  renderCompanion();
+}
+
+// Customize controls (present on the quiz page)
+if (el("comp-rename")) {
+  el("comp-rename").addEventListener("click", () => {
+    const v = el("comp-name-input").value.trim();
+    if (!v) return;
+    companion.name = v.slice(0, 18);
+    saveCompanion();
+    el("comp-name-input").value = "";
+    renderCompanion();
+  });
+}
+if (el("comp-reset")) el("comp-reset").addEventListener("click", resetCompanion);
+
+// Show saved companion immediately on load (before any quiz starts).
+renderCompanion();
 
 // ── Wave progression ──────────────────────────────────────────────────────────
 
@@ -916,10 +1091,11 @@ el("btn-start").addEventListener("click", () => {
 
   endTdWave();
   initState(questions);
-  el("upgrades-list").innerHTML = '<p class="no-upgrades">None collected yet</p>';
-  setAvatarState("idle");
-  showScreen("game");
+  showScreen("game");   // switch to the quiz view first — must always happen
   loadQuestion();
+  // Companion progress is cosmetic; never let it block the quiz from starting.
+  try { setAvatarState("idle"); renderCompanion(); }
+  catch (e) { console.warn("Companion init skipped:", e); }
 });
 
 // Tower Defense event listeners
@@ -939,10 +1115,8 @@ el("btn-restart").addEventListener("click", () => {
 // Return to Menu (abort an active quiz without showing the report)
 const btnQuitQuiz = el("btn-quit-quiz");
 if (btnQuitQuiz) btnQuitQuiz.addEventListener("click", () => {
-  if (confirm("Abort this quiz and return to the main menu?")) {
-    if (avatarTimer) clearTimeout(avatarTimer);
-    showScreen("start");
-  }
+  if (avatarTimer) clearTimeout(avatarTimer);
+  showScreen("start");
 });
 
 // Shop buttons

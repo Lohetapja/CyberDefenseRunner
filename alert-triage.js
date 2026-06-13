@@ -483,3 +483,31 @@ $("btn-analyze").addEventListener("click", analyze);
 $("btn-clear").addEventListener("click", clearAll);
 $("btn-md").addEventListener("click", copyMarkdown);
 $("btn-json").addEventListener("click", copyJson);
+
+/* ── Local file load (browser-side FileReader only; no upload) ─────── */
+(function wireFileLoad() {
+  const MAX_MB = 1;   // JSON alerts should be small
+  const input = $("file-input"), status = $("file-status");
+  $("btn-file").addEventListener("click", () => input.click());
+  input.addEventListener("change", () => {
+    const f = input.files[0];
+    if (!f) return;
+    if (f.size > MAX_MB * 1024 * 1024) {
+      status.textContent = `⚠ File too large for this demo. Max size: ${MAX_MB} MB.`;
+      status.className = "file-status warn";
+      input.value = ""; return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      $("alert-json").value = reader.result;
+      status.textContent = "Loaded file locally. Nothing was uploaded.";
+      status.className = "file-status ok";
+    };
+    reader.onerror = () => {
+      status.textContent = "⚠ Could not read that file — try a plain text/JSON file.";
+      status.className = "file-status warn";
+    };
+    reader.readAsText(f);
+    input.value = "";   // allow re-loading the same file
+  });
+})();

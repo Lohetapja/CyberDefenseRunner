@@ -281,7 +281,13 @@
       <!-- Sidebar -->
       <aside class="sidebar">
 
-        <!-- Digital defender avatar -->
+        <!-- Analyst Companion header -->
+        <div class="sidebar-header">
+          <span class="sidebar-icon">▣</span>
+          <span class="sidebar-title">ANALYST COMPANION</span>
+        </div>
+
+        <!-- Companion avatar -->
         <div class="avatar avatar--idle" id="avatar">
           <div class="avatar-ring">
             <svg class="avatar-svg" viewBox="0 0 80 84" xmlns="http://www.w3.org/2000/svg">
@@ -296,15 +302,58 @@
           <p class="avatar-status" id="avatar-status">Monitoring traffic...</p>
         </div>
 
+        <!-- Companion identity + energy state -->
+        <div class="comp-id">
+          <span class="comp-name" id="comp-name">SENTINEL</span>
+          <span class="comp-state" id="comp-state">Monitoring</span>
+        </div>
+
+        <!-- Energy bar -->
+        <div class="comp-energy">
+          <div class="comp-energy-top"><span>ENERGY</span><span id="comp-energy-pct">50%</span></div>
+          <div class="comp-energy-track"><div id="comp-energy-fill" class="comp-energy-fill"></div></div>
+        </div>
+
+        <!-- Live stats (client-side, derived from session + companion) -->
+        <dl class="analyst-stats">
+          <div><dt>Credits</dt><dd id="comp-credits" class="stat-cr">0</dd></div>
+          <div><dt>Streak</dt><dd id="as-streak">0</dd></div>
+          <div><dt>Accuracy</dt><dd id="as-accuracy">—</dd></div>
+          <div><dt>Answered</dt><dd id="as-answered">0</dd></div>
+          <div class="stat-wide"><dt>Learning path</dt><dd id="as-path">—</dd></div>
+        </dl>
+
         <div class="sidebar-divider"></div>
 
-        <!-- Defensive modules (upgrades earned from correct answers) -->
+        <!-- Learning modules (persistent badges) -->
         <div class="sidebar-header">
           <span class="sidebar-icon">◈</span>
-          <span class="sidebar-title">MODULES EARNED</span>
+          <span class="sidebar-title">MODULES</span>
         </div>
-        <div id="upgrades-list" class="upgrades-list">
-          <p class="no-upgrades">None collected yet</p>
+        <div id="companion-modules" class="upgrades-list">
+          <p class="no-upgrades">No modules earned yet. Answer correctly or explore tools to collect learning modules.</p>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <!-- Cosmetic unlocks (preview) -->
+        <div class="sidebar-header">
+          <span class="sidebar-icon">✦</span>
+          <span class="sidebar-title">COSMETIC UNLOCKS</span>
+        </div>
+        <div id="companion-cosmetics" class="cosmetic-list"></div>
+
+        <div class="sidebar-divider"></div>
+
+        <!-- Customize -->
+        <div class="sidebar-header">
+          <span class="sidebar-icon">⚙</span>
+          <span class="sidebar-title">CUSTOMIZE</span>
+        </div>
+        <div class="comp-customize">
+          <input id="comp-name-input" class="comp-name-input" type="text" maxlength="18" placeholder="Rename companion…" />
+          <button id="comp-rename" class="comp-btn">Save name</button>
+          <button id="comp-reset" class="comp-btn comp-btn-danger">Reset Companion Progress</button>
         </div>
 
       </aside>

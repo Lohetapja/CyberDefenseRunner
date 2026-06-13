@@ -190,3 +190,8 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 .use-box .use-body b { color: var(--text); }
 .use-box .use-body p { margin-bottom: 5px; }
 .use-box .use-disc { color: var(--warn); margin-top: 8px; margin-bottom: 0; }
+/* ── Local file-load note/status (browser-side only) ───────────────── */
+.file-note { font-size: 10px; color: var(--dim); margin-bottom: 8px; line-height: 1.5; }
+.file-status { display: inline; }
+.file-status.ok { color: var(--accent); }
+.file-status.warn { color: var(--warn); }

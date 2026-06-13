@@ -648,7 +648,149 @@ body {
   font-size: 0.78rem;
   color: var(--text-dim);
   font-style: italic;
+  line-height: 1.5;
 }
+
+/* Analyst Status — live training stats */
+.analyst-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 2px 0 4px;
+}
+.analyst-stats > div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+}
+.analyst-stats .stat-wide { grid-column: 1 / -1; }
+.analyst-stats dt {
+  font-size: 0.55rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+  margin-bottom: 2px;
+}
+.analyst-stats dd {
+  font-size: 1.05rem;
+  color: var(--text);
+  font-family: 'Consolas', monospace;
+}
+.analyst-stats .stat-wide dd { font-size: 0.8rem; }
+.analyst-stats dd.stat-good { color: var(--green); }
+.analyst-stats dd.stat-bad  { color: var(--red); }
+.analyst-stats dd.stat-cr   { color: var(--amber); }
+
+/* =================================================================================================================================================================================================================================
+   ANALYST COMPANION
+================================================================================================================================================================================================================================= */
+.comp-id {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 2px 0;
+}
+.comp-name {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-family: 'Consolas', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.comp-state {
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.comp-energy { margin: 4px 0 2px; }
+.comp-energy-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.55rem;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+  margin-bottom: 4px;
+}
+.comp-energy-track {
+  height: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.comp-energy-fill {
+  height: 100%;
+  width: 50%;
+  background: var(--accent);
+  transition: width .3s ease, background .3s ease;
+}
+.comp-energy-fill.tier-tired       { background: var(--red); }
+.comp-energy-fill.tier-monitoring  { background: var(--accent); }
+.comp-energy-fill.tier-focused     { background: var(--green); }
+.comp-energy-fill.tier-overcharged { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+
+/* Cosmetic unlocks */
+.cosmetic-list { display: flex; flex-direction: column; gap: 6px; }
+.cosmetic {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+}
+.cosmetic.unlocked {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.cosmetic .cos-name {
+  font-size: 0.72rem;
+  color: var(--text);
+}
+.cosmetic.unlocked .cos-name { color: var(--accent); }
+.cosmetic .cos-hint {
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+.cosmetic.unlocked .cos-hint { color: var(--text-muted); }
+
+/* Customize controls */
+.comp-customize { display: flex; flex-direction: column; gap: 6px; }
+.comp-name-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Consolas', monospace;
+  font-size: 0.75rem;
+  padding: 6px 8px;
+}
+.comp-name-input:focus { outline: none; border-color: var(--accent); }
+.comp-btn {
+  background: transparent;
+  border: 1px solid var(--border-hi);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+  font-size: 0.7rem;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.comp-btn:hover { color: var(--text); border-color: var(--accent); }
+.comp-btn-danger { border-color: var(--red); color: var(--red); }
+.comp-btn-danger:hover { background: var(--red-dim); color: var(--red); border-color: var(--red); }
 
 /* =================================================================================================================================================================================================================================
    REPORT SCREEN
