@@ -202,12 +202,15 @@
       <div id="wave-progress" class="wave-fill"></div>
     </div>
 
-    <!-- ── Network Defense Lane ────────────────────────────────────────────── -->
-    <!-- Populated by updateDefenseLane() in app.js -->
-    <div id="defense-lane" class="defense-lane"></div>
+    <!-- ── Retired in-quiz tower-defense layer ─────────────────────────────────
+         The Network Defense Lane and Blue Team Bastion map are NOT used in Main
+         Quiz Training (tower defense lives only in the standalone Defense Mission
+         pages). Kept in the DOM so existing app.js render calls stay harmless,
+         but hidden at BOTH the markup level (hidden attribute) and in CSS so the
+         dead/disabled controls (e.g. the firewall tower button) never show. -->
+    <div id="defense-lane" class="defense-lane" hidden aria-hidden="true"></div>
 
-    <!-- ── Blue Team Bastion — Tower Defense Map ──────────────────────────── -->
-    <div id="td-map" class="td-map">
+    <div id="td-map" class="td-map" hidden aria-hidden="true">
       <div class="td-map-inner">
 
         <div class="td-map-header">
