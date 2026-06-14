@@ -8,6 +8,10 @@ entirely in the browser.
 > ⚠️ **Work in progress.** This is a personal learning and portfolio project. Mechanics,
 > visuals, and content are actively evolving. Some experimental modes are rough by design.
 
+**Who this is for:** SOC / blue-team learners practising the fundamentals, aspiring junior
+analysts who want hands-on reps, and portfolio reviewers / recruiters / hiring managers
+looking at how I think about detection, triage, and incident work.
+
 **Live demo:** https://lohetapja.github.io/CyberDefenseRunner/
 *(The repository keeps its original `CyberDefenseRunner` name so existing links stay valid;
 the public-facing name of the project is Cyber Defense Lab.)*
@@ -34,13 +38,39 @@ the public-facing name of the project is Cyber Defense Lab.)*
 | **Quiz Training** | Stable | Core knowledge across 8 learning paths, with topic / tier / wave-count filters, scoring, and a results report. |
 | **SOC Dashboard** | Stable | Timed incident response: defend three nodes, triage threats under a configurable response timer (10s–45s or untimed). |
 | **After-Action Report** | Stable | Post-shift review inside SOC Dashboard: every missed question replayed with the correct answer, explanation, and topic to review. Copyable as Markdown. |
+| **Analyst Companion** | Stable | Lightweight learning-progression layer in Quiz Training (see below). |
+
+The main menu groups the rest into two sections: **Analyst Tools** (the six tools below)
+and **Experimental Game Modes**.
+
+## Analyst Tools
+
+Six standalone, browser-only utilities a junior analyst would actually reach for. All are
+working **prototypes** — local, client-side, and fed with safe simulated data only.
+
+| Tool | Status | What it trains |
+|---|---|---|
+| **SOAR-Lite Alert Triage** | Prototype | Auto-triage a simulated alert: enrichment, severity reasoning, verdict, and MITRE ATT&CK mapping, with Markdown/JSON output. |
+| **KQL Detection Assistant** | Prototype | Build and explain template-based KQL detection ideas with detection notes, false-positive considerations, and a validation checklist. *(Generates queries locally — not connected to a real SIEM.)* |
 | **SOC Alert Report Generator** | Prototype | Structured incident reporting: a form that produces a clean Markdown report following the NIST incident-handling lifecycle, with a fictional sample incident loader. |
+| **Incident Timeline Builder** | Prototype | Turn timestamped investigation events into a sorted, exportable Markdown timeline. |
+| **Log Parser / SIEM Demo** | Prototype | Paste pipe-delimited sample logs, filter and group them, highlight suspicious activity, and export investigation notes. |
+| **AI Misuse Detection Demo** | Prototype | A defensive demo for spotting risky / shadow-AI usage and possible data exposure in simulated enterprise logs. |
+
+## Experimental Game Modes
+
+| Mode | Status | What it trains |
+|---|---|---|
 | **Defense Mission** | Experimental | Topology-based tower defense (preparation → attack phases). |
 | **Network Defense Mission v2** | Experimental | Layer-matching tower defense: NGFW vs network threats, WAF vs application threats, EDR vs host threats — mismatched layers are bypassed and logged. |
 
-Experimental modes are grouped under **Experimental Modes** on the main menu, alongside
-planned analyst tool prototypes (KQL Detection Assistant, Incident Timeline Builder,
-Log Parser / SIEM Demo, AI Misuse Detection Demo).
+## Analyst Companion
+
+A small, optional progression layer in Quiz Training, styled as a cyber analyst assistant
+(not a cartoon pet). It tracks **energy**, **credits**, and **badges** earned from answering,
+lets you set a **companion name** and pick a **companion type**, and persists everything in
+the browser via **localStorage** — no account or backend. It's a light UX/engagement layer
+and does not affect scoring or question difficulty.
 
 ## Learning paths
 
@@ -54,6 +84,24 @@ Cloud & DevOps · AI & Automation Safety · Identity & Logins · Malware Basics
 - **GitHub Pages** for hosting (pure static site)
 - A reusable **question validator** (`tools/`) that runs in the browser or Node
 
+## Skills demonstrated
+
+A rough map of which part of the project exercises which SOC / blue-team skill:
+
+| Project part | Skill it reflects |
+|---|---|
+| **Quiz Training** | Cybersecurity fundamentals across 8 topics |
+| **SOC Dashboard** | Timed triage and incident-response decision-making under pressure |
+| **SOAR-Lite Alert Triage** | Alert triage, enrichment, and severity/verdict reasoning |
+| **KQL Detection Assistant** | Detection logic and KQL practice |
+| **SOC Alert Report Generator** | Structured incident reporting (NIST lifecycle) |
+| **Incident Timeline Builder** | Event sequencing and timeline reconstruction |
+| **Log Parser / SIEM Demo** | Log analysis and filtering |
+| **AI Misuse Detection Demo** | Shadow-AI / data-exposure awareness |
+| **Analyst Companion** | Learning-progression design and front-end UX |
+
+These are practice and demonstration exercises, not production tooling.
+
 ## What I learned
 
 - Designing deterministic game rules so learning content stays verifiable and fair
@@ -64,10 +112,9 @@ Cloud & DevOps · AI & Automation Safety · Identity & Logins · Malware Basics
 
 ## Current status
 
-- Quiz Training, SOC Dashboard, and the After-Action Report are stable.
-- SOC Alert Report Generator is a working prototype.
+- Quiz Training, SOC Dashboard, the After-Action Report, and the Analyst Companion are stable.
+- All six Analyst Tools are working prototypes (local, simulated data only — not production tools).
 - Defense Mission modes are playable experiments, not yet balanced.
-- Four more analyst tools are planned (visible as roadmap cards in the menu).
 
 See [`ROADMAP.md`](ROADMAP.md) for what's next and [`TESTING.md`](TESTING.md) for the
 pre-commit manual test checklist.
