@@ -3101,7 +3101,15 @@ body {
   line-height: 1.5;
 }
 .exp-caret { font-size: 11px; opacity: .7; }
-#btn-experimental.open .exp-caret { transform: rotate(180deg); display: inline-block; }
+#btn-experimental.open .exp-caret,
+#btn-analyst-tools.open .exp-caret { transform: rotate(180deg); display: inline-block; }
+
+/* Analyst Tools = primary professional section (accent emphasis) */
+#btn-analyst-tools.section-primary {
+  border-color: var(--accent);
+  color: var(--text);
+}
+#btn-analyst-tools.section-primary:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ── Start-screen layout polish (scoped overrides; no logic changes) ──
    1) Learning-Path chips: equal height + tidy wrap

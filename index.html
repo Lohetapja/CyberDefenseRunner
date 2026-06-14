@@ -108,16 +108,13 @@
       <button id="btn-soc-dashboard" class="btn-secondary" onclick="location.href='soc-dashboard.html'">🖥 SOC Dashboard</button>
       <p class="menu-caption">Timed incident response · after-action learning report</p>
 
-      <button id="btn-experimental" class="btn-secondary"
-              onclick="document.getElementById('experimental-panel').classList.toggle('hidden'); this.classList.toggle('open')">
-        🧪 Experimental Modes <span class="exp-caret">▾</span>
+      <!-- ── Analyst Tools — primary professional section ─────────────────── -->
+      <button id="btn-analyst-tools" class="btn-secondary section-primary"
+              onclick="document.getElementById('analyst-tools-panel').classList.toggle('hidden'); this.classList.toggle('open')">
+        🧰 Analyst Tools <span class="exp-caret">▾</span>
       </button>
-      <div id="experimental-panel" class="experimental-panel hidden">
-        <div class="exp-group-title">Game Mode Experiments</div>
-        <button id="btn-defense-mission" class="btn-secondary">🛡 Defense Mission <span class="beta-tag">BETA</span></button>
-        <button id="btn-defense-v2" class="btn-secondary" onclick="location.href='defense-mission-v2.html'">🗼 Network Defense Mission <span class="beta-tag">v2 BETA</span></button>
-
-        <div class="exp-group-title">Analyst Tool Prototypes</div>
+      <p class="menu-caption">Six blue-team analyst tools · local · safe simulated data</p>
+      <div id="analyst-tools-panel" class="experimental-panel hidden">
         <button class="proto-card" onclick="location.href='alert-triage.html'">
           <span class="proto-head">🛡️ SOAR-Lite Alert Triage <span class="planned-tag proto-live">PROTOTYPE</span></span>
           <span class="proto-desc">Auto-triage a simulated alert: verdict, severity, MITRE mapping.</span>
@@ -142,8 +139,19 @@
           <span class="proto-head">🤖 AI Misuse Detection Demo <span class="planned-tag proto-live">PROTOTYPE</span></span>
           <span class="proto-desc">Explore signs of unsafe or suspicious AI tool usage in logs.</span>
         </button>
+        <p class="experimental-note">Working prototypes · client-side only · safe simulated data.</p>
+      </div>
 
-        <p class="experimental-note">These modes are experimental prototypes and may change.</p>
+      <!-- ── Experimental Game Modes — secondary ──────────────────────────── -->
+      <button id="btn-experimental" class="btn-secondary"
+              onclick="document.getElementById('experimental-panel').classList.toggle('hidden'); this.classList.toggle('open')">
+        🧪 Experimental Game Modes <span class="exp-caret">▾</span>
+      </button>
+      <div id="experimental-panel" class="experimental-panel hidden">
+        <div class="exp-group-title">Game Mode Experiments</div>
+        <button id="btn-defense-mission" class="btn-secondary">🛡 Defense Mission <span class="beta-tag">BETA</span></button>
+        <button id="btn-defense-v2" class="btn-secondary" onclick="location.href='defense-mission-v2.html'">🗼 Network Defense Mission <span class="beta-tag">v2 BETA</span></button>
+        <p class="experimental-note">Unfinished game-mode experiments · may change or break.</p>
       </div>
 
       <button id="btn-how-to-play" class="btn-secondary">❓ How to Play</button>
