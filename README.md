@@ -121,8 +121,35 @@ pre-commit manual test checklist.
 
 ## Screenshots
 
-*(Screenshots coming — main menu, SOC Dashboard mid-shift, After-Action Report,
-Report Generator with sample incident.)*
+**Main menu — Analyst Tools section**
+
+![Cyber Defense Lab main menu with the Analyst Tools section expanded](assets/screenshots/main-menu.jpg)
+
+**Main Quiz Training with the Analyst Companion**
+
+![Quiz Training screen showing a question and the Analyst Companion panel](assets/screenshots/quiz-companion.jpg)
+
+**SOC Dashboard — timed incident response**
+
+![SOC Dashboard with node defense and the response timer](assets/screenshots/soc-dashboard.jpg)
+
+**After-Action Report — post-shift learning review**
+
+![After-Action Report listing missed questions with explanations](assets/screenshots/after-action-report.jpg)
+
+**SOAR-Lite Alert Triage — verdict, severity & MITRE mapping**
+
+![SOAR-Lite Alert Triage result with verdict, severity, and MITRE ATT&CK mapping](assets/screenshots/soar-lite-triage.jpg)
+
+**KQL Detection Assistant — generated query & detection notes**
+
+![KQL Detection Assistant output with a generated query and detection notes](assets/screenshots/kql-assistant.jpg)
+
+**SOC Alert Report Generator — structured Markdown report**
+
+![SOC Alert Report Generator output as a structured Markdown incident report](assets/screenshots/report-generator.jpg)
+
+*All screenshots use fictional, simulated training data only.*
 
 ## How to run locally
 
