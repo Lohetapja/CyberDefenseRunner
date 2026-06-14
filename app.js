@@ -869,7 +869,7 @@ const COSMETICS = [
 ];
 
 function defaultCompanion() {
-  return { name: "SENTINEL", title: "", type: "sentinel", energy: 50, credits: 0, modules: [],
+  return { name: "", title: "", type: "sentinel", energy: 50, credits: 0, modules: [],
            topicCorrect: {}, lifetimeCorrect: 0, bestStreak: 0, unlocks: [], toolUnlocks: [] };
 }
 
@@ -912,72 +912,89 @@ const COMPANION_TYPES_TEST_UNLOCK = true;
 // and sit inside the shared circular frame. viewBox is 0 0 64 64.
 // Each is a small stylized character portrait (filled head mass + silhouette
 // features + readable eyes), drawn with the type's --cav/--cav2 palette.
+// Full-colour layered SVG portraits — each a recognizable cyber companion
+// (multiple fills, silhouette + face structure), readable at card size.
+// Colours are inline per type; only the animated parts carry hook classes.
 const COMPANION_SVG = {
-  // Shield-bot head: panelled helm, visor band with two glowing eyes, antenna.
+  // Sentinel — steel guardian helm, dark visor, twin cyan eyes, mouth grille.
   sentinel: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
-    <path class="cav-line" d="M32 9 V3"/><circle class="cav-fill" cx="32" cy="2.5" r="1.8"/>
-    <path class="cav-body" d="M19 9 H45 L52 17 V39 Q52 51 32 56 Q12 51 12 39 V17 Z"/>
-    <path class="cav-line" d="M19 9 H45 L52 17 V39 Q52 51 32 56 Q12 51 12 39 V17 Z"/>
-    <path class="cav-line" d="M12 24 H7 M52 24 H57"/>
-    <rect class="cav-dark" x="17" y="23" width="30" height="11" rx="5.5"/>
+    <path d="M32 4 L36 11 H28 Z" fill="#9fb6c9"/>
+    <path d="M16 14 Q32 4 48 14 L50 35 Q50 50 32 57 Q14 50 14 35 Z" fill="#6f8aa6"/>
+    <path d="M16 14 Q32 4 48 14 L50 35 Q50 50 32 57 Q14 50 14 35 Z" fill="none" stroke="#243a4f" stroke-width="2"/>
+    <path d="M32 6 V19" stroke="#9fc3d6" stroke-width="2"/>
+    <rect x="8" y="26" width="6" height="11" rx="2" fill="#4a6680"/>
+    <rect x="50" y="26" width="6" height="11" rx="2" fill="#4a6680"/>
+    <path d="M17 24 H47 L44 37 H20 Z" fill="#0c2740"/>
     <g class="s-eyes">
-      <rect class="cav-accent" x="21" y="26" width="8" height="5" rx="2.5"/>
-      <rect class="cav-accent" x="35" y="26" width="8" height="5" rx="2.5"/>
+      <rect x="21" y="27" width="9" height="5.5" rx="2.7" fill="#36e0ff"/>
+      <rect x="34" y="27" width="9" height="5.5" rx="2.7" fill="#36e0ff"/>
     </g>
-    <path class="cav-line" d="M25 43 H39"/><path class="cav-soft" d="M22 47 H42"/></svg>`,
-  // Owl face: round head, ear tufts, brow, big socketed eyes, beak, chest.
+    <path d="M26 45 H38 M28 49 H36" stroke="#243a4f" stroke-width="2"/>
+    <path d="M19 21 H45" stroke="#2aa7d6" stroke-width="1.3" opacity=".65"/></svg>`,
+  // Packet Owl — deep-blue head, gold tufts/beak, gold-ringed cyan eyes.
   packet_owl: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
-    <path class="cav-line" d="M18 16 L13 6 M46 16 L51 6"/>
-    <path class="cav-body" d="M14 26 Q14 12 32 12 Q50 12 50 26 V37 Q50 54 32 54 Q14 54 14 37 Z"/>
-    <path class="cav-line" d="M14 26 Q14 12 32 12 Q50 12 50 26 V37 Q50 54 32 54 Q14 54 14 37 Z"/>
-    <path class="cav-line" d="M23 24 Q32 19 41 24"/>
+    <path d="M16 17 L20 6 L26 17 Z" fill="#e8b73e"/>
+    <path d="M48 17 L44 6 L38 17 Z" fill="#e8b73e"/>
+    <path d="M13 26 Q13 11 32 11 Q51 11 51 26 V37 Q51 54 32 55 Q13 54 13 37 Z" fill="#284a7a"/>
+    <path d="M19 27 Q19 18 32 18 Q45 18 45 27 V33 Q45 43 32 44 Q19 43 19 33 Z" fill="#35608f"/>
     <g class="owl-eyes">
-      <circle class="cav-dark" cx="25" cy="31" r="8"/><circle class="cav-line" cx="25" cy="31" r="8"/><circle class="cav-accent" cx="25" cy="31" r="3.6"/>
-      <circle class="cav-dark" cx="39" cy="31" r="8"/><circle class="cav-line" cx="39" cy="31" r="8"/><circle class="cav-accent" cx="39" cy="31" r="3.6"/>
+      <circle cx="25" cy="30" r="7.5" fill="#e8b73e"/><circle cx="25" cy="30" r="5" fill="#08233a"/><circle cx="25" cy="30" r="2.6" fill="#2ad4ff"/>
+      <circle cx="39" cy="30" r="7.5" fill="#e8b73e"/><circle cx="39" cy="30" r="5" fill="#08233a"/><circle cx="39" cy="30" r="2.6" fill="#2ad4ff"/>
     </g>
-    <path class="cav-fill" d="M32 36 l-3.5 5 h7 z"/>
-    <path class="cav-soft" d="M23 47 q9 5 18 0"/></svg>`,
-  // Fox face: pointed ears, tapered muzzle, slim alert eyes, nose, light cheeks.
+    <path d="M32 34 l-4 5 4 3 4 -3 z" fill="#f0c14a"/>
+    <path d="M22 48 q10 7 20 0" fill="none" stroke="#cfe0f2" stroke-width="2" opacity=".7"/></svg>`,
+  // Log Fox — orange head, amber inner ears, white muzzle, cyan slit eyes.
   log_fox: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
     <g class="fox-ears">
-      <path class="cav-body" d="M13 12 L25 27 L17 28 Z"/><path class="cav-line" d="M13 12 L25 27 L17 28 Z"/>
-      <path class="cav-body" d="M51 12 L39 27 L47 28 Z"/><path class="cav-line" d="M51 12 L39 27 L47 28 Z"/>
+      <path d="M12 9 L26 26 L16 27 Z" fill="#ff7a2f"/><path d="M15 14 L23 24 L18 25 Z" fill="#ffba73"/>
+      <path d="M52 9 L38 26 L48 27 Z" fill="#ff7a2f"/><path d="M49 14 L41 24 L46 25 Z" fill="#ffba73"/>
     </g>
-    <path class="cav-body" d="M17 26 Q21 24 25 26 H39 Q43 24 47 26 L42 40 Q37 51 32 53 Q27 51 22 40 Z"/>
-    <path class="cav-line" d="M17 26 Q21 24 25 26 H39 Q43 24 47 26 L42 40 Q37 51 32 53 Q27 51 22 40 Z"/>
-    <path class="cav-soft" d="M28 40 H36 L32 51 Z"/>
-    <path class="cav-line" d="M23 31 l5 2 M41 31 l-5 2"/>
-    <circle class="cav-accent" cx="27" cy="32.5" r="1.7"/><circle class="cav-accent" cx="37" cy="32.5" r="1.7"/>
-    <circle class="cav-fill" cx="32" cy="44" r="2.4"/></svg>`,
-  // Raven head: feather crest, rounded skull, hooked beak, sharp socketed eye.
+    <path d="M16 25 Q22 22 26 25 H38 Q42 22 48 25 L41 41 Q36 51 32 53 Q28 51 23 41 Z" fill="#ff7a2f"/>
+    <path d="M16 25 Q22 22 26 25 H38 Q42 22 48 25 L41 41 Q36 51 32 53 Q28 51 23 41 Z" fill="none" stroke="#d85a12" stroke-width="1.6"/>
+    <path d="M24 38 H40 L32 52 Z" fill="#f2e9df"/>
+    <path d="M22 31 l6 2.4 -2 3 z" fill="#08233a"/><circle cx="26" cy="32" r="1.9" fill="#2ad4ff"/>
+    <path d="M42 31 l-6 2.4 2 3 z" fill="#08233a"/><circle cx="38" cy="32" r="1.9" fill="#2ad4ff"/>
+    <path d="M32 43 l-3.2 -3.4 h6.4 z" fill="#2a1d14"/></svg>`,
+  // Malware Raven — slate skull, purple sheen, hooked beak, glowing cyan eye.
   malware_raven: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
-    <path class="cav-line" d="M18 17 L22 9 M26 15 L30 8 M34 15 L38 9"/>
-    <path class="cav-body" d="M18 20 Q32 12 44 22 Q50 28 46 39 Q41 51 29 50 Q17 48 15 33 Q14 25 18 20 Z"/>
-    <path class="cav-line" d="M18 20 Q32 12 44 22 Q50 28 46 39 Q41 51 29 50 Q17 48 15 33 Q14 25 18 20 Z"/>
-    <path class="cav-body" d="M44 24 L62 29 L44 34 Z"/><path class="cav-line" d="M44 24 L62 29 L44 34 Z"/>
-    <path class="cav-line" d="M58 29 q-2 3.5 -6 3.5"/>
-    <circle class="cav-dark" cx="33" cy="28" r="5"/><circle class="raven-eye cav-accent" cx="33" cy="28" r="3"/>
-    <path class="cav-soft" d="M21 41 q9 5 17 1"/></svg>`,
-  // Dragon head: horns, plated brow/cheek, angular eye, snout, nostril, ember.
+    <path d="M20 16 L23 7 L27 15 L31 6 L34 15 L38 8 L40 17 Z" fill="#3a3460"/>
+    <path d="M17 20 Q31 12 44 22 Q50 28 46 39 Q41 51 28 50 Q16 47 15 33 Q14 25 17 20 Z" fill="#2b2742"/>
+    <path d="M21 22 Q31 17 40 23 Q44 27 42 33 Q33 26 22 30 Q19 26 21 22 Z" fill="#6f4bd0" opacity=".5"/>
+    <path d="M44 24 L63 29 L44 33 Z" fill="#9a93b8"/>
+    <path d="M44 29 L63 29 L44 33 Z" fill="#6b6486"/>
+    <path d="M59 29 q-2 4 -7 3.4" fill="none" stroke="#2b2742" stroke-width="2"/>
+    <circle cx="33" cy="28" r="5.5" fill="#08111f"/>
+    <circle class="raven-eye" cx="33" cy="28" r="3" fill="#25e0ff"/>
+    <path d="M19 42 q9 5 18 1" fill="none" stroke="#6f4bd0" stroke-width="2" opacity=".55"/></svg>`,
+  // Firewall Dragon — horned, plated head, gold eye, snout + nostril, ember.
   firewall_dragon: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
-    <path class="cav-line" d="M26 17 L21 4 L29 14"/><path class="cav-line" d="M40 16 L46 4 L43 15"/>
-    <path class="cav-body" d="M14 41 Q12 24 27 19 Q41 14 49 24 L61 30 L49 34 Q53 40 46 43 L53 50 L36 46 Q22 51 14 41 Z"/>
-    <path class="cav-line" d="M14 41 Q12 24 27 19 Q41 14 49 24 L61 30 L49 34 Q53 40 46 43 L53 50 L36 46 Q22 51 14 41 Z"/>
-    <path class="cav-line" d="M24 22 Q31 26 26 33 M30 39 Q37 41 41 37"/>
-    <path class="cav-dark" d="M29 25 L41 28 L34 33 Z"/>
-    <path class="dragon-eye cav-accent" d="M31 27 L39 29 L34 31.5 Z"/>
-    <circle class="cav-fill" cx="56" cy="31" r="1.3"/>
-    <circle class="cav-ember" cx="48" cy="41" r="3.2"/></svg>`,
-  // Drone: rotor arms, rounded chassis, antenna, central scanning lens, lights.
+    <path d="M24 16 Q18 6 20 3 Q26 7 28 15 Z" fill="#f4c145"/>
+    <path d="M40 15 Q47 6 45 3 Q39 8 37 14 Z" fill="#f4c145"/>
+    <path d="M30 13 l3 -6 3 6 z" fill="#d8381f"/>
+    <path d="M14 40 Q11 24 27 19 Q42 14 49 24 L62 30 L50 34 Q54 40 47 43 L54 51 L36 47 Q21 51 14 40 Z" fill="#d8381f"/>
+    <path d="M27 21 Q41 17 48 25 L40 27 Q33 23 26 26 Z" fill="#ff7a2f" opacity=".85"/>
+    <path d="M22 22 Q30 20 38 24 L36 30 Q29 26 23 29 Z" fill="#5a1f15" opacity=".7"/>
+    <path d="M20 34 Q26 33 30 36 L28 41 Q23 40 20 37 Z" fill="#5a1f15" opacity=".55"/>
+    <path d="M28 27 L40 29 L33 33 Z" fill="#1c0a06"/>
+    <path class="dragon-eye" d="M30 28 L38 30 L33 31.8 Z" fill="#ffe08a"/>
+    <ellipse cx="56" cy="31" rx="1.7" ry="1.1" fill="#1c0a06"/>
+    <path d="M30 44 Q40 46 48 43" fill="none" stroke="#5a1f15" stroke-width="1.6" opacity=".7"/>
+    <path d="M18 30 Q24 33 22 38" fill="none" stroke="#29c7ff" stroke-width="1.3" opacity=".7"/>
+    <circle class="fd-ember" cx="49" cy="41" r="3.4" fill="#ffd36b"/>
+    <circle class="fd-ember" cx="45" cy="46" r="1.5" fill="#ffb020"/></svg>`,
+  // Triage Drone — teal chassis, rotor arms, antenna, central green lens.
   triage_drone: `<svg class="cav" viewBox="0 0 64 64" aria-hidden="true">
-    <path class="cav-line" d="M20 27 L8 20 M44 27 L56 20"/>
-    <ellipse class="cav-soft" cx="8" cy="19" rx="5" ry="2"/><ellipse class="cav-soft" cx="56" cy="19" rx="5" ry="2"/>
-    <path class="cav-line" d="M32 23 V16"/><circle class="cav-fill" cx="32" cy="15.5" r="1.6"/>
-    <rect class="cav-body" x="18" y="23" width="28" height="21" rx="8"/>
-    <rect class="cav-line" x="18" y="23" width="28" height="21" rx="8"/>
-    <circle class="cav-dark" cx="32" cy="33" r="7.5"/><circle class="cav-line" cx="32" cy="33" r="7.5"/>
-    <circle class="cav-lens" cx="32" cy="33" r="3.2"/>
-    <circle class="cav-accent" cx="23" cy="40" r="1.5"/><circle class="cav-accent" cx="41" cy="40" r="1.5"/></svg>`,
+    <path d="M20 27 L7 19 M44 27 L57 19" stroke="#2aa597" stroke-width="2.4"/>
+    <ellipse cx="7" cy="18" rx="6" ry="2.2" fill="#2fd0ff" opacity=".8"/>
+    <ellipse cx="57" cy="18" rx="6" ry="2.2" fill="#2fd0ff" opacity=".8"/>
+    <path d="M32 23 V15" stroke="#aee7df" stroke-width="2"/><circle cx="32" cy="14" r="2" fill="#39ffb0"/>
+    <rect x="17" y="23" width="30" height="22" rx="9" fill="#1d6e63"/>
+    <rect x="17" y="23" width="30" height="22" rx="9" fill="none" stroke="#aee7df" stroke-width="2"/>
+    <path d="M21 44 L18 50 M43 44 L46 50" stroke="#2aa597" stroke-width="2.4"/>
+    <circle cx="32" cy="34" r="9" fill="#062b27"/>
+    <circle cx="32" cy="34" r="9" fill="none" stroke="#2aa597" stroke-width="2"/>
+    <circle class="td-lens" cx="32" cy="34" r="3.6" fill="#39ffb0"/>
+    <circle cx="23" cy="40" r="1.5" fill="#2fd0ff"/><circle cx="41" cy="40" r="1.5" fill="#2fd0ff"/></svg>`,
 };
 
 // Selectable companion types (cosmetic only). Unlock tests read existing
@@ -1008,9 +1025,32 @@ function companionType() {
   return t || COMPANION_TYPES[0];
 }
 
-// Distinct SVG face markup for a type id (used in sidebar + modal cards).
+// Companion art mode. Default = painted PNG portrait (→ inline SVG fallback if
+// the image is missing). Set this to true to re-enable the experimental
+// pixel-art animated sprites instead.
+const COMPANION_USE_SPRITES = false;
+
+// Asset paths for a type id (filenames are hyphenated).
+function companionAsset(typeId)  { return "assets/companions/" + String(typeId).replace(/_/g, "-") + ".png"; }
+function companionSprite(typeId) { return "assets/companions/sprites/" + String(typeId).replace(/_/g, "-") + ".png"; }
+
+// Companion art markup (used in sidebar + modal cards).
 function getCompanionAvatar(typeId) {
-  return COMPANION_SVG[typeId] || COMPANION_SVG.sentinel;
+  const safe = COMPANION_SVG[typeId] ? typeId : "sentinel";
+  if (COMPANION_USE_SPRITES) {
+    // Animated 4-frame pixel sprite; if it fails to load, swap to PNG portrait.
+    return `<span class="cav-sprite" role="img" aria-label=""
+              style="background-image:url('${companionSprite(safe)}')"
+              data-type="${safe}"></span>`;
+  }
+  return `<img class="cav-img" src="${companionAsset(safe)}" alt="" draggable="false"
+            onerror="companionImgFallback(this,'${safe}')">`;
+}
+
+// Fallback: swap a failed image for the type's inline SVG (no crash).
+function companionImgFallback(img, typeId) {
+  const wrap = img.parentElement;
+  if (wrap) wrap.innerHTML = COMPANION_SVG[typeId] || COMPANION_SVG.sentinel;
 }
 
 function saveCompanion() {
@@ -1086,12 +1126,14 @@ function renderCompanion() {
   if (!el("comp-name")) return;   // only present on the quiz screen
   const label = companionStateLabel(companion.energy);
 
-  el("comp-name").textContent  = companion.name;
+  // Selected companion type (cosmetic) — the avatar/portrait + role come from it
+  const type = companionType();
+
+  // Main name = the player's nickname if set, otherwise the companion type name.
+  const nickname = (companion.name || "").trim();
+  el("comp-name").textContent  = nickname || type.name;
   el("comp-state").textContent = label;
   el("comp-credits").textContent = companion.credits;
-
-  // Selected companion type (cosmetic) — the avatar glyph itself changes
-  const type = companionType();
   const glyph = el("avatar-glyph"); if (glyph) glyph.innerHTML = getCompanionAvatar(type.id);
   const typeName = el("comp-type");  if (typeName) typeName.textContent = "Type · " + type.name;
   const roleEl = el("comp-role");    if (roleEl) roleEl.textContent = type.desc;

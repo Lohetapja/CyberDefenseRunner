@@ -806,8 +806,9 @@ body {
   background: var(--surface);
   transition: box-shadow .4s ease, border-color .4s ease;
 }
-.companion-card .avatar { padding: 2px 0; gap: 0; }
-.companion-card .avatar-ring { width: 92px; height: 92px; }
+.companion-card { padding-top: 18px; }
+.companion-card .avatar { padding: 4px 0 2px; gap: 0; }
+.companion-card .avatar-ring { width: 128px; height: 128px; }   /* hero portrait */
 .companion-card .avatar-svg { width: 58px; height: 61px; }
 
 .companion-card .comp-name {
@@ -907,9 +908,9 @@ body {
   animation: owl-blink 4.5s ease-in-out infinite;
 }
 @keyframes owl-blink { 0%,92%,100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
-.companion-card[data-ctype="firewall_dragon"] .cav-ember { animation: ember-pulse 2.2s ease-in-out infinite; }
+.companion-card[data-ctype="firewall_dragon"] .fd-ember { animation: ember-pulse 2.2s ease-in-out infinite; }
 @keyframes ember-pulse { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
-.companion-card[data-ctype="triage_drone"] .cav-lens { animation: lens-pulse 1.8s ease-in-out infinite; }
+.companion-card[data-ctype="triage_drone"] .td-lens { animation: lens-pulse 1.8s ease-in-out infinite; }
 @keyframes lens-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 .companion-card[data-ctype="sentinel"] .s-eyes { animation: scan-blink 4s ease-in-out infinite; }
 @keyframes scan-blink { 0%,90%,100% { opacity: 1; } 95% { opacity: 0.25; } }
@@ -926,8 +927,8 @@ body {
   .avatar-glyph,
   .companion-card,
   .companion-card .avatar-ring::after,
-  .owl-eyes, .cav-ember, .cav-lens,
-  .s-eyes, .fox-ears, .raven-eye { animation: none !important; }
+  .owl-eyes, .fd-ember, .td-lens,
+  .s-eyes, .fox-ears, .raven-eye, .cav-sprite { animation: none !important; }
 }
 
 /* ── Customize Companion modal ─────────────────────────────────────────────── */
@@ -962,7 +963,27 @@ body {
   line-height: 0;
   filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.4));
 }
-.avatar-glyph .cav { width: 52px; height: 52px; display: block; }
+.avatar-glyph .cav { width: 88px; height: 88px; display: block; }   /* ~1.7x larger hero art (SVG fallback) */
+/* Illustrated image portrait — hero size in the sidebar */
+.avatar-glyph .cav-img {
+  width: 112px; height: 112px; display: block;
+  object-fit: cover; border-radius: 50%;
+}
+
+/* Animated pixel-art sprite (4-frame sheet, stepped) */
+.cav-sprite {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 400% 100%;            /* 4 frames across */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  animation: cav-sprite-run 0.9s steps(4) infinite;
+}
+@keyframes cav-sprite-run { from { background-position-x: 0%; } to { background-position-x: 100%; } }
+.avatar-glyph .cav-sprite { width: 104px; height: 104px; }
+.ctype-icon  .cav-sprite { width: 76px;  height: 76px; }
+/* Clean joins for the layered portrait art */
+.cav path, .cav rect, .cav circle, .cav ellipse { stroke-linejoin: round; stroke-linecap: round; }
 /* Faces use their own per-type colours (var --cav / --cav2), set on the
    card by data-ctype below — NOT the shared cyan currentColor. */
 .cav-line   { fill: none; stroke: var(--cav, var(--accent)); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
@@ -990,20 +1011,21 @@ body {
   font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted);
 }
 
-/* Companion type selector cards (in the modal) — compact 3-up grid */
-.ctype-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+/* Companion type selector cards (in the modal) — 2-up grid, art-forward */
+.ctype-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .ctype-card {
-  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px;
   background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
-  padding: 10px 6px; cursor: pointer; font-family: 'Consolas', monospace; color: var(--text);
+  padding: 14px 8px 10px; cursor: pointer; font-family: 'Consolas', monospace; color: var(--text);
   transition: border-color .2s, box-shadow .2s;
 }
 .ctype-card:hover:not(.locked) { border-color: var(--accent); }
 .ctype-card.selected { border-color: var(--accent); box-shadow: 0 0 12px rgba(0, 232, 122, 0.22); }
 .ctype-card.locked { opacity: 0.5; cursor: not-allowed; }
-.ctype-icon { font-size: 1.7rem; line-height: 1.2; }
-.ctype-icon svg.cav { width: 32px; height: 32px; display: block; }
-.ctype-name { font-size: 0.7rem; color: var(--accent); }
+.ctype-icon { font-size: 3rem; line-height: 1; margin-bottom: 2px; }
+.ctype-icon svg.cav { width: 64px; height: 64px; display: block; }   /* 2x larger card art (SVG fallback) */
+.ctype-icon .cav-img { width: 78px; height: 78px; display: block; object-fit: cover; border-radius: 50%; }
+.ctype-name { font-size: 0.74rem; color: var(--accent); }
 .ctype-card.locked .ctype-name { color: var(--text-muted); }
 .ctype-desc { font-size: 0.55rem; color: var(--text-muted); line-height: 1.3; }
 .ctype-cond { font-size: 0.52rem; color: var(--text-dim); margin-top: 2px; line-height: 1.3; }
