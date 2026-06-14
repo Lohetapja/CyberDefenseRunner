@@ -1,3 +1,5 @@
+> **Historical document** — predates the current Cyber Defense Lab structure, 3,200-question bank, SOC Dashboard, Analyst Companion, and analyst tools. See README.md and CLAUDE.md for the current project state.
+
 # Cyber Defense Runner — Question Bank Status
 
 > Progress tracker for the question-bank expansion. Nothing here is merged into

@@ -7,9 +7,10 @@ Then re-check the live site after pushing.
 ## Main menu
 - [ ] Page loads with dark theme, title shows **Cyber Defense Lab / Blue Team Training Simulator**
 - [ ] Question count shows **3,200** (stat box and description line)
-- [ ] Exactly 4 actions visible: Start Quiz Training · SOC Dashboard · Experimental Modes · How to Play
-- [ ] Experimental Modes opens/closes; shows **Game Mode Experiments** (2 buttons) and **Analyst Tool Prototypes** (5 cards)
-- [ ] A PLANNED card (e.g. KQL) opens the "prototype is planned" modal; closes via ✕ / backdrop / GOT IT
+- [ ] Actions visible: Start Quiz Training · SOC Dashboard · Analyst Tools · Experimental Game Modes · How to Play
+- [ ] **Analyst Tools** opens/closes; shows **6 live PROTOTYPE** tools (SOAR-Lite Alert Triage, KQL Detection Assistant, SOC Alert Report Generator, Incident Timeline Builder, Log Parser / SIEM Demo, AI Misuse Detection Demo)
+- [ ] Each of the 6 Analyst Tools opens its page directly (no "planned" modal)
+- [ ] **Experimental Game Modes** opens/closes; shows **2 BETA** modes (Defense Mission, Network Defense Mission v2)
 - [ ] How to Play opens; includes SOC Dashboard item (timers + after-action explanation); closes
 - [ ] No errors in browser console (F12)
 
@@ -38,7 +39,7 @@ Then re-check the live site after pushing.
 - [ ] Network Defense Mission v2: packets move; build via question; matching threat intercepted; mismatch logs "Layer mismatch"; restart works
 
 ## SOC Alert Report Generator
-- [ ] Opens from Experimental Modes (PROTOTYPE tag)
+- [ ] Opens from the Analyst Tools section (PROTOTYPE tag)
 - [ ] Typing in any field updates the preview live
 - [ ] **Load Sample Incident** fills the fictional Outlook/PowerShell scenario
 - [ ] **Copy Report** → "✔ COPIED"; paste renders as proper Markdown (tables, bullets, code fence)

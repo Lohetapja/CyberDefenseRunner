@@ -1,3 +1,5 @@
+> **Historical document** — predates the current Cyber Defense Lab structure, 3,200-question bank, SOC Dashboard, Analyst Companion, and analyst tools. See README.md and CLAUDE.md for the current project state.
+
 # Cyber Defense Runner — Project Snapshot
 
 > Point-in-time snapshot of the project so work can resume later without losing context.

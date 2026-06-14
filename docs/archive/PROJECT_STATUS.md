@@ -1,3 +1,5 @@
+> **Historical document** — predates the current Cyber Defense Lab structure, 3,200-question bank, SOC Dashboard, Analyst Companion, and analyst tools. See README.md and CLAUDE.md for the current project state.
+
 # PROJECT_STATUS.md
 # Cyber Defense Runner — project handoff document
 # Paste this into a new Claude chat to resume without losing context.
