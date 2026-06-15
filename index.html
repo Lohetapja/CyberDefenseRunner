@@ -17,11 +17,11 @@
         <span class="logo-icon">🛡</span>
         <div>
           <h1>Cyber Defense Lab</h1>
-          <p class="logo-sub">BLUE TEAM TRAINING SIMULATOR</p>
+          <p class="logo-sub">Blue-Team / Junior SOC Portfolio Lab</p>
         </div>
       </div>
 
-      <p class="tagline">Defend the network. Answer correctly. Stop the attacker.</p>
+      <p class="tagline">Browser-based blue-team lab for simulated junior SOC workflows.<br>Triage alerts. Investigate evidence. Build reports. Draft detections.</p>
       <p class="description">
         <span id="desc-qcount">3,200</span> questions across Networking Basics, Defending Systems, Attacking Concepts,
         Alert Investigation, Cloud &amp; DevOps, AI &amp; Automation Safety,
@@ -30,7 +30,7 @@
 
       <!-- ── Mission parameter filters ──────────────────────────────────── -->
       <div class="filters-block">
-        <div class="filters-title">MISSION PARAMETERS</div>
+        <div class="filters-title">Quiz Setup (optional)</div>
 
         <div class="filter-row">
           <div class="filter-label">LEARNING PATH</div>
@@ -47,29 +47,13 @@
           </div>
         </div>
 
-        <div class="filter-row filter-2col">
-          <div class="filter-col">
-            <div class="filter-label">TOPIC</div>
-            <select class="filter-select" id="filter-topic">
-              <option value="all">All Topics</option>
-              <option value="Networking Basics">Networking Basics</option>
-              <option value="Defending Systems">Defending Systems</option>
-              <option value="Attacking Concepts">Attacking Concepts</option>
-              <option value="Alert Investigation">Alert Investigation</option>
-              <option value="Cloud &amp; DevOps">Cloud &amp; DevOps</option>
-              <option value="AI &amp; Automation Safety">AI &amp; Automation Safety</option>
-              <option value="Identity &amp; Logins">Identity &amp; Logins</option>
-              <option value="Malware Basics">Malware Basics</option>
-            </select>
-          </div>
-          <div class="filter-col">
-            <div class="filter-label">TIER</div>
-            <div class="filter-btngroup" id="filter-tier">
-              <button type="button" class="fbtn active" data-value="All">All</button>
-              <button type="button" class="fbtn" data-value="Beginner">Beg</button>
-              <button type="button" class="fbtn" data-value="Intermediate">Int</button>
-              <button type="button" class="fbtn" data-value="Advanced">Adv</button>
-            </div>
+        <div class="filter-row">
+          <div class="filter-label">TIER</div>
+          <div class="filter-btngroup" id="filter-tier">
+            <button type="button" class="fbtn active" data-value="All">All</button>
+            <button type="button" class="fbtn" data-value="Beginner">Beg</button>
+            <button type="button" class="fbtn" data-value="Intermediate">Int</button>
+            <button type="button" class="fbtn" data-value="Advanced">Adv</button>
           </div>
         </div>
 
@@ -97,52 +81,54 @@
         </div>
         <div class="meta-divider"></div>
         <div class="meta-stat">
-          <span class="meta-num">9</span>
-          <span class="meta-label">Learning Paths</span>
+          <span class="meta-num">3</span>
+          <span class="meta-label">Tiers</span>
         </div>
       </div>
 
-      <button id="btn-start" class="btn-primary"><span>▶ START QUIZ TRAINING</span></button>
-      <p class="menu-caption">Answer questions · earn knowledge &amp; resources</p>
+      <button id="btn-start" class="btn-primary"><span>📚 Security Foundations (Quiz)</span></button>
+      <p class="menu-caption">Practice cybersecurity fundamentals across 8 topics.</p>
 
-      <button id="btn-soc-dashboard" class="btn-secondary" onclick="location.href='soc-dashboard.html'">🖥 SOC Dashboard</button>
-      <p class="menu-caption">Timed incident response · after-action learning report</p>
+      <button id="btn-soc-dashboard" class="btn-secondary" onclick="location.href='soc-dashboard.html'">🖥 SOC Shift Simulator</button>
+      <p class="menu-caption">Timed incident-response practice · after-action learning report.</p>
 
       <!-- ── Analyst Tools — primary professional section ─────────────────── -->
-      <button id="btn-analyst-tools" class="btn-secondary section-primary"
+      <button id="btn-analyst-tools" class="btn-secondary section-primary open"
               onclick="document.getElementById('analyst-tools-panel').classList.toggle('hidden'); this.classList.toggle('open')">
         🧰 Analyst Tools <span class="exp-caret">▾</span>
       </button>
-      <p class="menu-caption">Six blue-team analyst tools · local · safe simulated data</p>
-      <div id="analyst-tools-panel" class="experimental-panel hidden">
+      <p class="menu-caption">Alert triage · timeline building · reporting · KQL drafting · log investigation · AI-misuse review.</p>
+      <div id="analyst-tools-panel" class="experimental-panel">
         <button class="proto-card" onclick="location.href='alert-triage.html'">
-          <span class="proto-head">🛡️ SOAR-Lite Alert Triage <span class="planned-tag proto-live">PROTOTYPE</span></span>
+          <span class="proto-head">🛡️ SOAR-Lite Alert Triage</span>
           <span class="proto-desc">Auto-triage a simulated alert: verdict, severity, MITRE mapping.</span>
         </button>
         <button class="proto-card" onclick="location.href='kql-assistant.html'">
-          <span class="proto-head">🔎 KQL Detection Assistant <span class="planned-tag proto-live">PROTOTYPE</span></span>
+          <span class="proto-head">🔎 KQL Detection Assistant</span>
           <span class="proto-desc">Build, explain, and validate KQL detection ideas.</span>
         </button>
         <button class="proto-card" onclick="location.href='report-generator.html'">
-          <span class="proto-head">📄 SOC Alert Report Generator <span class="planned-tag proto-live">PROTOTYPE</span></span>
+          <span class="proto-head">📄 SOC Alert Report Generator</span>
           <span class="proto-desc">Generate structured incident reports from alert evidence.</span>
         </button>
         <button class="proto-card" onclick="location.href='timeline-builder.html'">
-          <span class="proto-head">🕒 Incident Timeline Builder <span class="planned-tag proto-live">PROTOTYPE</span></span>
+          <span class="proto-head">🕒 Incident Timeline Builder</span>
           <span class="proto-desc">Turn event timestamps into a clear investigation timeline.</span>
         </button>
         <button class="proto-card" onclick="location.href='log-parser.html'">
-          <span class="proto-head">🧾 Log Parser / SIEM Demo <span class="planned-tag proto-live">PROTOTYPE</span></span>
+          <span class="proto-head">🧾 Log Parser / SIEM Demo</span>
           <span class="proto-desc">Paste sample logs and practice filtering, grouping, and investigation.</span>
         </button>
         <button class="proto-card" onclick="location.href='ai-misuse-demo.html'">
-          <span class="proto-head">🤖 AI Misuse Detection Demo <span class="planned-tag proto-live">PROTOTYPE</span></span>
+          <span class="proto-head">🤖 AI Misuse Detection Demo</span>
           <span class="proto-desc">Explore signs of unsafe or suspicious AI tool usage in logs.</span>
         </button>
-        <p class="experimental-note">Working prototypes · client-side only · safe simulated data.</p>
+        <p class="experimental-note">Prototype workbenches using simulated data.</p>
       </div>
 
-      <!-- ── Experimental Game Modes — secondary ──────────────────────────── -->
+      <button id="btn-how-to-play" class="btn-secondary">🎬 Recommended Demo</button>
+
+      <!-- ── Experimental Game Modes — secondary, demoted below the main path ── -->
       <button id="btn-experimental" class="btn-secondary"
               onclick="document.getElementById('experimental-panel').classList.toggle('hidden'); this.classList.toggle('open')">
         🧪 Experimental Game Modes <span class="exp-caret">▾</span>
@@ -154,8 +140,7 @@
         <p class="experimental-note">Unfinished game-mode experiments · may change or break.</p>
       </div>
 
-      <button id="btn-how-to-play" class="btn-secondary">❓ How to Play</button>
-      <p class="start-hint">No account required · Runs locally · Opens in browser</p>
+      <p class="start-hint">No account · runs locally · safe simulated data · no real systems are touched.</p>
     </div>
   </div>
 
@@ -510,70 +495,57 @@
     <div class="help-card">
       <button class="help-close" id="btn-help-close" aria-label="Close help">✕</button>
 
-      <h2 id="help-title" class="help-title">How to Play</h2>
-      <p class="help-loop">Answer questions → earn credits → build defenses → stop attackers.</p>
+      <h2 id="help-title" class="help-title">Recommended Demo</h2>
+      <p class="help-loop">A short walkthrough of the analyst workflow on safe, simulated data.</p>
 
       <div class="help-sections">
         <div class="help-item">
           <span class="help-num">1</span>
           <div class="help-body">
-            <h3>Your mission</h3>
-            <p>Protect the Domain Controller — the critical system at the end of the network path.</p>
+            <h3>Open Analyst Tools</h3>
+            <p>From the main menu, open the Analyst Tools section.</p>
           </div>
         </div>
         <div class="help-item">
           <span class="help-num">2</span>
           <div class="help-body">
-            <h3>The attacker</h3>
-            <p>Red-team attackers start at the Internet and move through the network toward the Domain Controller.</p>
+            <h3>Start with SOAR-Lite Alert Triage</h3>
+            <p>Open the SOAR-Lite Alert Triage tool.</p>
           </div>
         </div>
         <div class="help-item">
           <span class="help-num">3</span>
           <div class="help-body">
-            <h3>Earn credits</h3>
-            <p>Answer cybersecurity questions correctly to earn credits. Use credits to buy defenses. Wrong answers do not give credits and may help the attacker advance.</p>
+            <h3>Load the sample alert</h3>
+            <p>Click “Load Sample Alert” to load the fictional “Invoice 4471” phishing → encoded-PowerShell scenario.</p>
           </div>
         </div>
         <div class="help-item">
           <span class="help-num">4</span>
           <div class="help-body">
-            <h3>Build defenses</h3>
-            <p>Place blue-team defenses on build slots near the path. Defenses attack or slow enemies.</p>
+            <h3>Review the triage result</h3>
+            <p>Read the verdict, severity, evidence, MITRE ATT&amp;CK mapping, false-positive notes, and recommended next steps.</p>
           </div>
         </div>
         <div class="help-item">
           <span class="help-num">5</span>
           <div class="help-body">
-            <h3>Start the wave</h3>
-            <p>Click “Start Defense Wave” to launch an attack. Watch whether your defenses stop it.</p>
+            <h3>Continue the workflow</h3>
+            <p>Continue with the Incident Timeline Builder and SOC Alert Report Generator as the scenario workflow is expanded.</p>
           </div>
         </div>
         <div class="help-item">
           <span class="help-num">6</span>
           <div class="help-body">
-            <h3>If attackers get through</h3>
-            <p>If attackers reach the Domain Controller, integrity drops. At zero integrity, the mission fails.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <span class="help-num">7</span>
-          <div class="help-body">
-            <h3>SOC Dashboard mode</h3>
-            <p>SOC Dashboard is a timed mode — full explanations are not shown under pressure.
-               If the After-Action Report is enabled (default ON), every missed question is
-               replayed after the shift with the correct answer, the explanation, and the topic
-               to review — like a real post-incident analyst learning report.
-               The response timer is configurable (10–45 seconds, default 20s, or “No timer”):
-               choose “No timer” to learn and review at your own pace, or a shorter timer to
-               simulate real incident-response pressure.</p>
+            <h3>Practice the fundamentals</h3>
+            <p>Use Security Foundations (Quiz) for concept practice across the eight learning paths.</p>
           </div>
         </div>
         <div class="help-item help-item-note">
           <span class="help-num">★</span>
           <div class="help-body">
-            <h3>Remember</h3>
-            <p>Game rules are fixed. Correct answers earn rewards. Wrong answers help the attacker.</p>
+            <h3>Safe by design</h3>
+            <p>This is a safe simulated-data portfolio lab. It does not connect to a real SIEM, EDR, cloud platform, or threat-intelligence service.</p>
           </div>
         </div>
       </div>
