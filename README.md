@@ -167,11 +167,13 @@ Then open **http://localhost:3900**.
 
 ## Project docs
 
-- [`docs/architecture.md`](docs/architecture.md) — architecture overview
-- [`docs/demo-flow.md`](docs/demo-flow.md) — portfolio demo flow
-- [`TESTING.md`](TESTING.md) — manual testing checklist
-- [`ROADMAP.md`](ROADMAP.md) — project roadmap
-- [`CLAUDE.md`](CLAUDE.md) — AI-assisted development working rules
+For reviewers or future development work, the supporting documentation is here:
+
+- [Architecture overview](docs/architecture.md) — static/browser-only structure, modules, data boundaries, and limitations.
+- [Portfolio demo flow](docs/demo-flow.md) — recommended 3–5 minute walkthrough for showing the project.
+- [Testing checklist](TESTING.md) — manual checks for the quiz, SOC Dashboard, analyst tools, and navigation.
+- [Roadmap](ROADMAP.md) — planned improvements and future direction.
+- [Claude working rules](CLAUDE.md) — guardrails used for AI-assisted development on this repo.
 
 ## Disclaimer
 
