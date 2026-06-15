@@ -165,6 +165,14 @@ python -m http.server 3900
 
 Then open **http://localhost:3900**.
 
+## Project docs
+
+- [`docs/architecture.md`](docs/architecture.md) — architecture overview
+- [`docs/demo-flow.md`](docs/demo-flow.md) — portfolio demo flow
+- [`TESTING.md`](TESTING.md) — manual testing checklist
+- [`ROADMAP.md`](ROADMAP.md) — project roadmap
+- [`CLAUDE.md`](CLAUDE.md) — AI-assisted development working rules
+
 ## Disclaimer
 
 This is an **educational training project**. All incidents, alerts, hostnames, users,
