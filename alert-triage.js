@@ -434,8 +434,21 @@ function buildMarkdown(r) {
 }
 
 /* ── Buttons ───────────────────────────────────────────────────────── */
+// Prefer the shared "Invoice 4471" scenario pack when present; fall back to the
+// tool's built-in sample. Defensive: never break if the global is missing or malformed.
+function getSampleAlert() {
+  try {
+    const s = window.CDL_SCENARIOS && window.CDL_SCENARIOS["phishing-powershell"];
+    const input = s && s.soarLiteInput;
+    if (input && typeof input === "object" && !Array.isArray(input) && input.alertName) {
+      return input;
+    }
+  } catch (e) { /* fall through to the built-in sample */ }
+  return SAMPLE_ALERT;
+}
+
 function loadSample() {
-  $("alert-json").value = JSON.stringify(SAMPLE_ALERT, null, 2);
+  $("alert-json").value = JSON.stringify(getSampleAlert(), null, 2);
   $("at-parse-error").classList.add("hidden");
   analyze();
 }
