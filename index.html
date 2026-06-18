@@ -92,6 +92,35 @@
       <button id="btn-soc-dashboard" class="btn-secondary" onclick="location.href='soc-dashboard.html'">🖥 SOC Shift Simulator</button>
       <p class="menu-caption">Timed incident-response practice · after-action learning report.</p>
 
+      <!-- ── Recommended Analyst Workflow — frames the connected analyst tools ── -->
+      <section class="workflow-strip" aria-label="Recommended analyst workflow">
+        <div class="workflow-title">Recommended Analyst Workflow</div>
+        <p class="workflow-desc">Start with a simulated alert, reconstruct the timeline, write the report, and draft detection logic using the same scenario evidence.</p>
+        <div class="workflow-steps">
+          <a class="wf-step" href="alert-triage.html">
+            <span class="wf-num">1</span>
+            <span class="wf-step-name">Triage</span>
+            <span class="wf-tool">SOAR-Lite Alert Triage</span>
+          </a>
+          <a class="wf-step" href="timeline-builder.html">
+            <span class="wf-num">2</span>
+            <span class="wf-step-name">Timeline</span>
+            <span class="wf-tool">Incident Timeline Builder</span>
+          </a>
+          <a class="wf-step" href="report-generator.html">
+            <span class="wf-num">3</span>
+            <span class="wf-step-name">Report</span>
+            <span class="wf-tool">SOC Alert Report Generator</span>
+          </a>
+          <a class="wf-step" href="kql-assistant.html">
+            <span class="wf-num">4</span>
+            <span class="wf-step-name">Detection</span>
+            <span class="wf-tool">KQL Detection Assistant</span>
+          </a>
+        </div>
+        <p class="workflow-case"><b>Current case:</b> Invoice 4471 — phishing → encoded PowerShell → blocked outbound connection.</p>
+      </section>
+
       <!-- ── Analyst Tools — primary professional section ─────────────────── -->
       <button id="btn-analyst-tools" class="btn-secondary section-primary open"
               onclick="document.getElementById('analyst-tools-panel').classList.toggle('hidden'); this.classList.toggle('open')">

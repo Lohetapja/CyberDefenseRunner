@@ -376,10 +376,71 @@ function applyTemplate(tplId) {
   $("f-fp").value = t.fp;
 }
 
+/* ── Canonical scenario integration ────────────────────────────────── */
+// Overlay the shared "Invoice 4471" detection idea
+// (window.CDL_SCENARIOS["phishing-powershell"].kqlDetectionIdea) onto the
+// freshly generated sample. Defensive: if the pack is missing or malformed this
+// is a no-op and the built-in Outlook→PowerShell template sample stands.
+function lcFirst(s) { return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+
+function setSelect(id, value) {
+  const el = $(id);
+  if (!el || value == null) return;
+  if ([...el.options].some(o => o.value === value)) el.value = value;
+}
+
+function applyScenarioDetection() {
+  let s, k;
+  try {
+    s = window.CDL_SCENARIOS && window.CDL_SCENARIOS["phishing-powershell"];
+    k = s && s.kqlDetectionIdea;
+  } catch (e) { return; }                          // malformed global → keep template sample
+  if (!k || typeof k !== "object" || !lastResult) return;
+
+  // Reflect the canonical detection in the builder (left panel).
+  if (k.name)       $("f-name").value   = k.name;
+  if (k.dataSource) $("f-source").value = k.dataSource;
+  setSelect("f-table", k.table);
+  setSelect("f-severity", k.severity);
+  if (k.mitre)      $("f-mitre").value  = k.mitre;
+  if (typeof k.falsePositives === "string" && k.falsePositives) $("f-fp").value = k.falsePositives;
+  $("f-cmd").value = "-enc";                        // canonical detection targets encoded PowerShell
+
+  // Overlay canonical data onto the generated result (generation logic unchanged).
+  if (k.name)       lastResult.name     = k.name;
+  if (k.dataSource) lastResult.source   = k.dataSource;
+  if (k.table)      lastResult.table    = k.table;
+  if (k.severity)   lastResult.severity = k.severity;
+  if (typeof k.query === "string" && k.query.trim()) lastResult.kql = k.query;
+  if (k.mitre)      lastResult.mitre    = parseMitre(k.mitre);
+  if (k.name)       lastResult.goal     = "Detect " + lcFirst(k.name) +
+    " — the script-execution step of a phishing → encoded PowerShell intrusion.";
+
+  // False positives: detection-specific note + triage-level considerations.
+  const tri = s.expectedTriageOutput || {};
+  const fps = [];
+  if (typeof k.falsePositives === "string" && k.falsePositives) fps.push(k.falsePositives);
+  (Array.isArray(tri.falsePositiveConsiderations) ? tri.falsePositiveConsiderations : [])
+    .forEach(x => { if (x) fps.push(x); });
+  if (fps.length) lastResult.falsePositives = fps;
+
+  // Limitations: keep the standard notes, add the pack note + a simulated-data line.
+  if (typeof k.note === "string" && k.note && !lastResult.limitations.includes(k.note))
+    lastResult.limitations.push(k.note);
+  lastResult.limitations.push(
+    "Scenario data is fictional/simulated training data (RFC 5737 IP ranges, .test domains, " +
+    "defanged URLs) — no real IOCs, hosts, or users.");
+
+  render();
+}
+
 function loadSample() {
+  // Base = built-in Outlook→PowerShell template (also the fallback if the pack is absent).
   $("f-template").value = "outlook_powershell";
   applyTemplate("outlook_powershell");
   generate();
+  // Prefer the canonical "Invoice 4471" detection idea when the scenario pack is present.
+  applyScenarioDetection();
 }
 
 function clearAll() {

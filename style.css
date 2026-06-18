@@ -3225,3 +3225,82 @@ body {
 .proto-modal-text { font-size: 0.8rem; line-height: 1.6; margin: 10px 0 18px; }
 /* live prototype tag: green instead of planned-purple */
 .planned-tag.proto-live { color: var(--accent); border-color: var(--accent); }
+
+/* ── Recommended Analyst Workflow strip (landing page) ─────────────────
+   Frames the four analyst tools as one ordered, scenario-linked workflow.
+   Static navigation only (plain <a href>) — no logic, consistent with the
+   existing dark SOC theme and panel widths. */
+.workflow-strip {
+  width: min(380px, 100%);
+  margin: 6px auto 10px;
+  padding: 14px 16px;
+  background: rgba(13, 22, 36, 0.85);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: left;
+}
+.workflow-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: 'Consolas', monospace;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+.workflow-desc {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.workflow-steps { display: flex; flex-direction: column; }
+.wf-step {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-left: 11px;
+  padding: 8px 8px 8px 16px;
+  border-left: 2px solid var(--border-hi);
+  text-decoration: none;
+  color: var(--text);
+}
+.wf-num {
+  position: absolute;
+  left: -11px;
+  top: 5px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Consolas', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--surface2);
+  border: 1px solid var(--border-hi);
+  border-radius: 50%;
+}
+.wf-step-name {
+  flex: 0 0 70px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.wf-tool { font-size: 0.66rem; color: var(--text-muted); line-height: 1.4; }
+.wf-step:hover { background: var(--accent-dim); border-radius: 0 6px 6px 0; }
+.wf-step:hover .wf-step-name,
+.wf-step:hover .wf-tool { color: var(--accent); }
+.workflow-case {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.workflow-case b { color: var(--text); }
