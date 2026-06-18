@@ -272,6 +272,62 @@ function buildFpConsiderations(a, hitIds) {
   return fp;
 }
 
+/* ── Analyst-guidance (from the canonical Invoice 4471 scenario pack) ───
+   Educational only. Surfaced when the analyzed alert IS the canonical
+   phishing-powershell scenario and the pack carries an analystGuidance block.
+   Fully defensive: returns null if the global is missing or malformed, so the
+   section is simply omitted and normal triage output still renders. */
+function getScenarioGuidance(a) {
+  try {
+    const s = window.CDL_SCENARIOS && window.CDL_SCENARIOS["phishing-powershell"];
+    const g = s && s.analystGuidance;
+    if (!g || typeof g !== "object" || Array.isArray(g)) return null;
+
+    // Only show case-specific guidance when the alert matches this scenario.
+    const refName = (s.soarLiteInput && s.soarLiteInput.alertName) ||
+                    (s.alert && s.alert.alertName) || "";
+    const refHost = (s.alert && s.alert.host) || "";
+    const nameMatch = has(a.alertName) && has(refName) &&
+                      a.alertName.trim().toLowerCase() === refName.trim().toLowerCase();
+    const hostParentMatch = has(refHost) &&
+                      String(a.host).toUpperCase() === String(refHost).toUpperCase() &&
+                      OFFICE_PARENTS.includes(String(a.parentProcess).toLowerCase());
+    if (!nameMatch && !hostParentMatch) return null;
+    return g;
+  } catch (e) { return null; }
+}
+
+// Build one labelled bullet block; "" when the group is absent/empty.
+function guidanceBlock(title, arr) {
+  if (!Array.isArray(arr)) return "";
+  const items = arr.filter(x => has(x));
+  if (!items.length) return "";
+  return `<div class="ag-subhead">${escHtml(title)}</div>` +
+    `<ul class="bullets">${items.map(x => `<li>${escHtml(x)}</li>`).join("")}</ul>`;
+}
+
+// Full Analyst Guidance section, or "" if there is nothing safe to show.
+function renderAnalystGuidance(a) {
+  const g = getScenarioGuidance(a);
+  if (!g) return "";
+  const body = [
+    guidanceBlock("Evidence increasing concern",  g.evidenceThatRaisesSeverity),
+    guidanceBlock("Evidence reducing concern",     g.evidenceThatLowersSeverity),
+    guidanceBlock("Questions to ask",              g.analystQuestions),
+    guidanceBlock("Missing evidence",              g.missingEvidence),
+    guidanceBlock("False-positive considerations", g.falsePositiveConsiderations),
+    guidanceBlock("Recommended next steps",        g.recommendedNextSteps),
+    guidanceBlock("Limitations",                   g.limitations),
+  ].join("");
+  if (!body) return "";   // guidance object present but every group empty
+  return `
+    <div class="at-section at-guidance">
+      <h3>ANALYST GUIDANCE</h3>
+      <p class="at-note">Educational guidance for the fictional “Invoice 4471” training scenario — practise judgement, false-positive thinking, missing-evidence and severity reasoning. Simulated data only; not production guidance.</p>
+      ${body}
+    </div>`;
+}
+
 /* ── Render ────────────────────────────────────────────────────────── */
 function render(r) {
   const a = r.normalizedAlert;
@@ -361,6 +417,7 @@ function render(r) {
       <h3>LIMITATIONS</h3>
       <ul class="bullets">${r.limitations.map(s => `<li>${escHtml(s)}</li>`).join("")}</ul>
     </div>
+    ${renderAnalystGuidance(a)}
   `;
 }
 

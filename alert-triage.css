@@ -159,6 +159,16 @@ body {
 .bullets li::before { content: "• "; color: var(--dim); }
 .at-note { font-size: 11px; color: var(--dim); line-height: 1.7; }
 
+/* Analyst Guidance: educational sub-sections inside the result panel */
+.at-guidance .at-note { margin-bottom: 10px; }
+.ag-subhead {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin: 12px 0 4px;
+}
+.at-guidance .bullets + .ag-subhead { margin-top: 14px; }
+
 @media (max-width: 900px) {
   .at-main { grid-template-columns: 1fr; }
   .input-panel, .result-panel { max-height: none; }
