@@ -156,8 +156,100 @@ const SAMPLE = {
   "f-lessons":   "Macros from internet-sourced documents should be blocked by default\nUser reported the email only after the alert — reinforce phishing-report training\nDetection worked, but proxy block logs should auto-enrich EDR alerts to speed triage",
 };
 
+/* ── Canonical scenario integration ────────────────────────────────── */
+// Map the shared "Invoice 4471" scenario pack (scenarios/phishing-powershell.js)
+// into this tool's form fields. The report builder has no dedicated MITRE /
+// false-positive / limitations sections, so that content is folded into the
+// existing free-text fields (Initial assessment, Lessons learned) where it
+// renders clearly. Returns a field-id → value map, or null if the pack is too
+// sparse to build a useful sample.
+function scenarioToFields(s) {
+  const a   = s.alert || {};
+  const rs  = s.reportStructure || {};
+  const tri = s.expectedTriageOutput || {};
+  const ent = s.entities || {};
+  if (!a.alertName && !rs.summary) return null;   // not enough to build a useful sample
+
+  // Extract "HH:MM" from an ISO timestamp; pass through anything already short.
+  const hhmm = t =>
+    (typeof t === "string" && t.indexOf("T") === 10 && t.length >= 16) ? t.slice(11, 16) : (t || "");
+
+  // Timeline summary from the canonical timeline events.
+  const timeline = (Array.isArray(s.timelineEvents) ? s.timelineEvents : [])
+    .filter(e => e && e.time && e.description)
+    .map(e => `${hhmm(e.time)} — ${e.description}`)
+    .join("\n");
+
+  // Key evidence bullets (factual indicators from the alert).
+  const evidence = [];
+  evidence.push(`EDR alert ${a.alertId || "(behavioral)"}: ${a.parentProcess || "parent process"} spawned ${a.processName || "powershell.exe"} with an encoded command`);
+  if (a.url)           evidence.push(`Decoded command attempts a download from ${a.url} (blocked by proxy)`);
+  if (a.fileName)      evidence.push(`Attachment '${a.fileName}'${a.fileHash ? ` (SHA-256 ${a.fileHash})` : ""}${a.emailSubject ? ` — email subject "${a.emailSubject}"` : ""}`);
+  if (a.destinationIp) evidence.push(`Outbound destination ${a.destinationIp}${a.domain ? ` (${a.domain})` : ""}`);
+
+  // MITRE ATT&CK mappings + false-positive notes — folded into the assessment.
+  const mitre = (Array.isArray(s.mitreMappings) ? s.mitreMappings : [])
+    .filter(m => m && m.id)
+    .map(m => `- ${m.id} — ${m.name || ""} (${m.confidence || "?"} confidence): ${m.reason || ""}`)
+    .join("\n");
+  const fp = (Array.isArray(tri.falsePositiveConsiderations) ? tri.falsePositiveConsiderations : [])
+    .map(x => `- ${x}`).join("\n");
+
+  const assessment = [
+    rs.summary || s.summary || "",
+    `\nVerdict: ${tri.verdict || "—"} · Severity: ${rs.severity || tri.severity || "—"} · Confidence: ${tri.confidence || "—"}.`,
+    mitre ? "\nMITRE ATT&CK mappings:\n" + mitre : "",
+    fp ? "\nFalse-positive considerations:\n" + fp : "",
+  ].filter(Boolean).join("\n").trim();
+
+  // Containment / recovery actions taken, then forward-looking next steps.
+  const containment = [rs.containment, rs.eradicationAndRecovery].filter(Boolean).join("\n");
+  const nextsteps   = (Array.isArray(tri.recommendedActions) ? tri.recommendedActions : []).join("\n");
+
+  // Lessons learned + an explicit limitations / simulated-data note.
+  const scope = (Array.isArray(s.scopeNotes) ? s.scopeNotes : []).map(x => `- ${x}`).join("\n");
+  const lessons = [
+    rs.lessonsLearned || "",
+    scope ? "\nLimitations / simulated data:\n" + scope : "",
+  ].filter(Boolean).join("\n").trim();
+
+  return {
+    "f-title":      a.alertName ? `${a.alertName}${a.host ? ` on ${a.host}` : ""}` : (rs.summary || "Incident"),
+    "f-severity":   rs.severity || tri.severity || "High",
+    "f-status":     "In Progress",
+    "f-analyst":    (ent.socAnalyst && ent.socAnalyst.account) || "",
+    "f-source":     a.alertSource || "",
+    "f-rule":       a.alertId ? `${a.alertId} — ${a.alertName || ""}`.trim() : (a.alertName || ""),
+    "f-user":       a.user || "",
+    "f-host":       a.host || "",
+    "f-srcip":      a.sourceIp || "",
+    "f-dstip":      a.destinationIp || "",
+    "f-process":    a.processName ? `${a.processName} (parent: ${a.parentProcess || "?"})` : "",
+    "f-cmdline":    a.commandLine || "",
+    "f-evidence":   evidence.join("\n"),
+    "f-timeline":   timeline,
+    "f-assessment": assessment,
+    "f-containment":containment,
+    "f-nextsteps":  nextsteps,
+    "f-lessons":    lessons,
+  };
+}
+
+// Prefer the shared "Invoice 4471" scenario pack when present; fall back to the
+// tool's built-in SAMPLE. Defensive: never break if the global is missing or malformed.
+function getSampleFields() {
+  try {
+    const s = window.CDL_SCENARIOS && window.CDL_SCENARIOS["phishing-powershell"];
+    if (s && typeof s === "object") {
+      const fields = scenarioToFields(s);
+      if (fields && fields["f-title"]) return fields;
+    }
+  } catch (e) { /* fall through to the built-in sample */ }
+  return SAMPLE;
+}
+
 function loadSample() {
-  Object.entries(SAMPLE).forEach(([id, v]) => { $(id).value = v; });
+  Object.entries(getSampleFields()).forEach(([id, v]) => { const el = $(id); if (el) el.value = v; });
   $("f-date").value = new Date().toISOString().slice(0, 10);
   refresh();
 }
