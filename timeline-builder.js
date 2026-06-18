@@ -86,8 +86,21 @@ function clearTimeline() {
   render();
 }
 
+// Prefer the shared "Invoice 4471" scenario pack rows when present; fall back to
+// the tool's built-in SAMPLE. Defensive: never break if the global is missing or malformed.
+function getSampleRows() {
+  try {
+    const s = window.CDL_SCENARIOS && window.CDL_SCENARIOS["phishing-powershell"];
+    const rows = s && s.timelineBuilderRows;
+    if (Array.isArray(rows) && rows.length && rows.every(r => r && typeof r === "object" && r.time)) {
+      return rows;
+    }
+  } catch (e) { /* fall through to the built-in sample */ }
+  return SAMPLE;
+}
+
 function loadSample() {
-  events = SAMPLE.map(e => ({ ...e, id: ++seq }));
+  events = getSampleRows().map(e => ({ ...e, id: ++seq }));
   render();
 }
 
