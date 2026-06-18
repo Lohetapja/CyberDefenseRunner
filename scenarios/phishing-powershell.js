@@ -193,6 +193,81 @@ window.CDL_SCENARIOS["phishing-powershell"] = {
     note: "Generated locally for practice — not validated against a real SIEM.",
   },
 
+  // ── Analyst-judgement guidance (Invoice 4471) ──────────────────────────
+  // Teaching layer: how to reason about severity, what to ask, what is still
+  // missing, and what to do next — so the scenario teaches judgement, not just
+  // alert handling. DATA-ONLY and purely additive: no field above is changed,
+  // so SOAR-Lite, Timeline Builder, Report Generator, and KQL Assistant keep
+  // working unchanged. No tool reads analystGuidance yet (a later, optional
+  // wiring task can surface it — see docs/scenarios.md).
+  analystGuidance: {
+    // Richer, case-specific FP reasoning (distinct from the short
+    // expectedTriageOutput.falsePositiveConsiderations reference list above).
+    falsePositiveConsiderations: [
+      "A standard user account (m.tamm) running encoded PowerShell is unusual — sanctioned automation is unlikely here, but confirm before dismissing.",
+      "Some legitimate Office add-ins or deployment tools launch PowerShell; verify the publisher and the command's intent before downgrading.",
+      "Encoded commands are occasionally used by legitimate installers — decode and read the command before judging it malicious.",
+      "A blocked outbound connection lowers impact but does not make the alert a false positive; the execution attempt still occurred.",
+      "Confirm there is no matching change ticket or maintenance window before reducing severity.",
+    ],
+
+    analystQuestions: [
+      "Did m.tamm actually expect an invoice from this sender?",
+      "Did other TRAINING-CORP users receive the same 'Invoice 4471' email?",
+      "Has the encoded PowerShell command been decoded and reviewed offline?",
+      "Was the outbound connection to 203.0.113.66 established, or blocked at the proxy?",
+      "Are PowerShell script-block / module logs available for WS-TRAINING-07?",
+      "Are there similar Outlook→PowerShell alerts on other hosts?",
+      "Has the attachment (Invoice_4471.docm) hash been seen on other endpoints or mailboxes?",
+    ],
+
+    missingEvidence: [
+      "Full email headers for the phishing message (sender infrastructure, SPF/DKIM/DMARC results).",
+      "The decoded PowerShell payload — what the encoded command actually does.",
+      "PowerShell script-block / transcription logs from the endpoint.",
+      "Reputation / sandbox verdict for the attachment file hash.",
+      "DNS and proxy follow-up showing any retries or alternate destinations.",
+      "Confirmed endpoint containment / isolation status at the time of triage.",
+      "Direct user confirmation of whether they opened the attachment and enabled macros.",
+    ],
+
+    limitations: [
+      "Simulated training scenario only — not a real incident.",
+      "No live telemetry; all alerts and logs are fixed sample data.",
+      "No real file-hash, domain, or IP reputation lookups are performed.",
+      "Not validated against a real SIEM or EDR.",
+      "Compromise cannot be confirmed from this evidence alone — more artifacts would be needed in a real investigation.",
+    ],
+
+    recommendedNextSteps: [
+      "Isolate WS-TRAINING-07 if containment policy requires (host isolation is modeled at 09:24Z).",
+      "Collect PowerShell script-block logs and the full process tree from the endpoint.",
+      "Review email gateway logs for the sender, subject, and other recipients.",
+      "Check proxy/DNS activity for any successful or retried connections to the destination.",
+      "Search for the same attachment/hash and command line across mailboxes and endpoints.",
+      "Reset credentials only if account-compromise indicators appear (e.g., a successful suspicious logon).",
+      "Document findings, verdict, and follow-ups in the incident report.",
+    ],
+
+    evidenceThatRaisesSeverity: [
+      "outlook.exe (an email client) spawning powershell.exe — email apps rarely launch script interpreters.",
+      "Encoded / obfuscated PowerShell (-Enc, hidden window, -NoProfile) concealing the real command.",
+      "Attempted remote script download (download cradle) to hxxp://files.example-cdn[.]test/inv.ps1.",
+      "Outbound connection attempt to a suspicious external destination (203.0.113.66) tied to the script.",
+      "User opened a macro-enabled attachment (Invoice_4471.docm) and enabled macros.",
+      "Failed logons to FILE-SRV-02 shortly after execution (possible follow-on movement).",
+    ],
+
+    evidenceThatLowersSeverity: [
+      "Activity matches a known, approved automation or deployment job for this host/user.",
+      "The launching script is signed by a trusted internal publisher.",
+      "PowerShell was launched by a sanctioned, known enterprise Outlook add-in.",
+      "Execution falls inside a documented maintenance / change window with a matching ticket.",
+      "The outbound destination is a known-safe, allowlisted update/CDN endpoint.",
+      "The command line and pattern match prior benign baseline activity for this user.",
+    ],
+  },
+
   scopeNotes: [
     "Data-only: this scenario does not connect to any tool yet.",
     "All values are fictional/simulated (RFC 5737 IPs, .test domains, defanged URLs, fictional hash).",

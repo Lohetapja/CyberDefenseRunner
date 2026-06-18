@@ -57,7 +57,14 @@ host, and secures the account.
 **Fields provided by the pack** (data only): `id`, `title`, `summary`, `learningGoals`,
 `organization`, `entities`, `alert`, `timelineEvents`, `logLines`, `soarLiteInput`,
 `expectedTriageOutput`, `mitreMappings`, `reportStructure`, `timelineBuilderRows`,
-`kqlDetectionIdea`, `scopeNotes`.
+`kqlDetectionIdea`, `analystGuidance`, `scopeNotes`.
+
+**Analyst-judgement guidance:** a scenario pack may also carry an optional, data-only
+`analystGuidance` block so the case teaches *judgement*, not just alert handling. For
+"Invoice 4471" it includes `falsePositiveConsiderations`, `analystQuestions`,
+`missingEvidence`, `limitations`, `recommendedNextSteps`, `evidenceThatRaisesSeverity`, and
+`evidenceThatLowersSeverity`. These are additive and not yet read by any tool — surfacing
+them in a tool is an optional later wiring task.
 
 **Suggested ATT&CK mappings:** T1566 (Phishing), T1204.002 (User Execution: Malicious
 File), T1059.001 (PowerShell), T1105 (Ingress Tool Transfer), and T1110 (Brute Force —
