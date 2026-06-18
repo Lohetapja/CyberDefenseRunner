@@ -176,3 +176,51 @@ For each task:
 
 Prefer one narrow task at a time.
 Avoid broad rewrites.
+
+## Future direction: Scenario Forge
+
+A future **Scenario Forge / Case Pack Generator** may generate safe, simulated SOC case
+packs (in the same shape as the existing scenario packs). It is a **long-term** direction
+and must follow the project's safe-data and local-first rules.
+
+How it must work:
+
+* It must **not** generate random, disconnected stories.
+* It must generate **evidence first**, then build the scenario story from that evidence.
+* Generated scenarios must be based on **controlled templates, local knowledge objects, and
+  validation rules** — not free-form text generation.
+* The generator should understand the relationships between:
+  * scenario type
+  * evidence sources
+  * timeline events
+  * MITRE ATT&CK mappings
+  * false-positive considerations
+  * detection ideas
+  * response actions
+  * report outputs
+
+Guardrails:
+
+* MITRE ATT&CK mappings must be **evidence-based, not decorative**.
+* Do not map **T1566 Phishing** unless email/phishing evidence exists.
+* Do not map **T1078 Valid Accounts** unless login, credential, or account-abuse evidence
+  exists.
+* Do not describe **ransomware** unless safe simulated evidence supports ransomware-like
+  activity (e.g. mass file changes, encryption indicators, ransom-note artifacts, or
+  recovery/containment evidence).
+* Do not describe **exfiltration** unless there is simulated outbound data-movement evidence.
+* Do not generate real IOCs, real companies, real users, real malware, real exploit steps,
+  or offensive instructions.
+* Use only fictional entities, `.test` domains, defanged URLs, and documentation-safe IP
+  ranges (RFC 5737: `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`).
+* Keep all generated cases safe, defensive, and training-focused.
+
+Core principle:
+
+> The generator should not generate stories first. It should generate evidence first. The
+> story should come from the evidence.
+
+**This is a long-term direction and must not interrupt the current short-term priority.**
+
+Current priority: finish the **Invoice 4471** flagship workflow —
+SOAR-Lite → Timeline Builder → Report Generator → KQL Detection Assistant.
