@@ -416,12 +416,17 @@ function applyScenarioDetection() {
   if (k.name)       lastResult.goal     = "Detect " + lcFirst(k.name) +
     " — the script-execution step of a phishing → encoded PowerShell intrusion.";
 
-  // False positives: detection-specific note + triage-level considerations.
+  // False positives: detection-specific note + case-specific considerations.
+  // Prefer the richer analystGuidance list when present; otherwise fall back to
+  // the triage reference list. Defensive against missing/malformed fields.
+  const ag  = (s.analystGuidance && typeof s.analystGuidance === "object") ? s.analystGuidance : {};
   const tri = s.expectedTriageOutput || {};
+  const fpSource = (Array.isArray(ag.falsePositiveConsiderations) && ag.falsePositiveConsiderations.length)
+    ? ag.falsePositiveConsiderations
+    : (Array.isArray(tri.falsePositiveConsiderations) ? tri.falsePositiveConsiderations : []);
   const fps = [];
   if (typeof k.falsePositives === "string" && k.falsePositives) fps.push(k.falsePositives);
-  (Array.isArray(tri.falsePositiveConsiderations) ? tri.falsePositiveConsiderations : [])
-    .forEach(x => { if (x) fps.push(x); });
+  fpSource.forEach(x => { if (x) fps.push(x); });
   if (fps.length) lastResult.falsePositives = fps;
 
   // Limitations: keep the standard notes, add the pack note + a simulated-data line.
