@@ -95,7 +95,7 @@
       <!-- ── Recommended Analyst Workflow — frames the connected analyst tools ── -->
       <section class="workflow-strip" aria-label="Recommended analyst workflow">
         <div class="workflow-title">Recommended Analyst Workflow</div>
-        <p class="workflow-desc">Start with a simulated alert, reconstruct the timeline, write the report, and draft detection logic using the same scenario evidence.</p>
+        <p class="workflow-desc">Start with a simulated alert, reconstruct the timeline, map how the evidence connects, write the report, and draft detection logic using the same scenario evidence.</p>
         <div class="workflow-steps">
           <a class="wf-step" href="alert-triage.html">
             <span class="wf-num">1</span>
@@ -107,13 +107,18 @@
             <span class="wf-step-name">Timeline</span>
             <span class="wf-tool">Incident Timeline Builder</span>
           </a>
-          <a class="wf-step" href="report-generator.html">
+          <a class="wf-step" href="artifact-map.html">
             <span class="wf-num">3</span>
+            <span class="wf-step-name">Artifact Map</span>
+            <span class="wf-tool">Artifact Relationship View</span>
+          </a>
+          <a class="wf-step" href="report-generator.html">
+            <span class="wf-num">4</span>
             <span class="wf-step-name">Report</span>
             <span class="wf-tool">SOC Alert Report Generator</span>
           </a>
           <a class="wf-step" href="kql-assistant.html">
-            <span class="wf-num">4</span>
+            <span class="wf-num">5</span>
             <span class="wf-step-name">Detection</span>
             <span class="wf-tool">KQL Detection Assistant</span>
           </a>
@@ -143,6 +148,10 @@
         <button class="proto-card" onclick="location.href='timeline-builder.html'">
           <span class="proto-head">🕒 Incident Timeline Builder</span>
           <span class="proto-desc">Turn event timestamps into a clear investigation timeline.</span>
+        </button>
+        <button class="proto-card" onclick="location.href='artifact-map.html'">
+          <span class="proto-head">🗺️ Artifact Relationship View</span>
+          <span class="proto-desc">Visualize how users, hosts, files, processes, alerts, destinations, and response actions connect in the Invoice 4471 scenario.</span>
         </button>
         <button class="proto-card" onclick="location.href='log-parser.html'">
           <span class="proto-head">🧾 Log Parser / SIEM Demo</span>
