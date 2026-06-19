@@ -158,7 +158,7 @@ window.CDL_SCENARIOS["phishing-powershell"] = {
     detectionAndAnalysis: "EDR alert TR-2031 on outlook.exe → powershell.exe with an encoded command; proxy block to 203.0.113.66; supporting email, endpoint, and identity events (see timeline).",
     containment: "Host WS-TRAINING-07 isolated from the network via EDR at 09:24Z.",
     eradicationAndRecovery: "User sessions revoked and password reset at 09:31Z; sender domain and payload URL blocked at the mail gateway and proxy.",
-    lessonsLearned: "Mail gateway missed the attachment; review macro-execution policy; add the detection from kqlDetectionIdea; reinforce user phishing awareness.",
+    lessonsLearned: "Mail gateway missed the attachment; review macro-execution policy; add a detection based on the suspicious Office-to-PowerShell behavior; reinforce user phishing awareness.",
     severity: "High",
   },
 
@@ -269,7 +269,7 @@ window.CDL_SCENARIOS["phishing-powershell"] = {
   },
 
   scopeNotes: [
-    "Data-only: this scenario does not connect to any tool yet.",
+    "This scenario powers the Invoice 4471 flagship workflow across SOAR-Lite, Timeline Builder, Report Generator, and KQL Detection Assistant.",
     "All values are fictional/simulated (RFC 5737 IPs, .test domains, defanged URLs, fictional hash).",
     "No backend, no real SIEM/EDR/threat-intel, no secrets — educational portfolio use only.",
   ],
