@@ -28,7 +28,8 @@ Browser (GitHub Pages or local static server)
 │   ├── report-generator.html ..... SOC Alert Report Generator
 │   ├── timeline-builder.html ..... Incident Timeline Builder
 │   ├── log-parser.html ........... Log Parser / SIEM Demo
-│   └── ai-misuse-demo.html ....... AI Misuse Detection Demo
+│   ├── ai-misuse-demo.html ....... AI Misuse Detection Demo
+│   └── artifact-map.html ......... Artifact Relationship View (read-only evidence map)
 ├── companion-unlocks.js ... shared helper: tools award companion badges via localStorage
 ├── style.css + per-tool CSS  dark cyber/SOC theme
 └── assets/ ............... companion portraits, screenshots
@@ -93,10 +94,12 @@ configurable response timer, and watch escalation rise. Afterward, an **After-Ac
 Report** replays missed questions with explanations and weak-topic summaries (copyable as
 Markdown) — mirroring a real post-incident review.
 
-### Analyst Tools (six standalone pages)
+### Analyst Tools (seven standalone pages)
 Local "workbenches" that make junior-analyst reasoning explicit (details below): SOAR-Lite
 Alert Triage, KQL Detection Assistant, SOC Alert Report Generator, Incident Timeline
-Builder, Log Parser / SIEM Demo, and AI Misuse Detection Demo.
+Builder, Artifact Relationship View, Log Parser / SIEM Demo, and AI Misuse Detection Demo.
+The first four plus the Artifact Relationship View form the connected **Invoice 4471**
+workflow (Triage → Timeline → Artifact Map → Report → Detection).
 
 ### Experimental Game Modes (`mission.js`, `defense-mission-v2.html`)
 Two tower-defense-style experiments (Defense Mission, Network Defense Mission v2). They are
@@ -122,6 +125,11 @@ run entirely on local rules and fixed sample data:
   exports investigation notes.
 - **AI Misuse Detection Demo** — flags simulated risky/shadow-AI usage and possible data
   exposure from sample enterprise logs.
+- **Artifact Relationship View** — a standalone, read-only analyst workbench page that reads
+  the canonical scenario pack and renders the Invoice 4471 artifacts (users, hosts, files,
+  processes, alerts, destinations, response actions) as a deterministic lane-based SVG
+  evidence map with click-through node/edge details. No editing, no Load Sample/Copy — it is a
+  relationship view, not an input form.
 
 Some tools accept a **local file** via the browser's `FileReader` (read in-browser only,
 never uploaded), with a privacy note and a size cap. None of the tools call out to any

@@ -63,8 +63,8 @@ host, and secures the account.
 `analystGuidance` block so the case teaches *judgement*, not just alert handling. For
 "Invoice 4471" it includes `falsePositiveConsiderations`, `analystQuestions`,
 `missingEvidence`, `limitations`, `recommendedNextSteps`, `evidenceThatRaisesSeverity`, and
-`evidenceThatLowersSeverity`. These are additive and not yet read by any tool — surfacing
-them in a tool is an optional later wiring task.
+`evidenceThatLowersSeverity`. SOAR-Lite Alert Triage surfaces this guidance on-screen, and the
+Artifact Relationship View uses `missingEvidence` to populate its Missing Evidence panel.
 
 **Suggested ATT&CK mappings:** T1566 (Phishing), T1204.002 (User Execution: Malicious
 File), T1059.001 (PowerShell), T1105 (Ingress Tool Transfer), and T1110 (Brute Force —
@@ -72,22 +72,25 @@ possible mapping from the failed logons).
 
 ---
 
-## Recommended future tool order
+## Connected analyst workflow
 
-Once a pack is connected to the tools (a later task), this is the intended analyst flow for
-"Invoice 4471":
+The "Invoice 4471" pack now powers a connected, demo-ready workflow. Each tool prefers the
+pack and falls back to its own built-in sample if the pack is unavailable:
 
-1. **SOAR-Lite Alert Triage** — start from the alert; produce verdict, severity, and ATT&CK mapping.
+1. **SOAR-Lite Alert Triage** — verdict, severity, ATT&CK mapping, and on-screen analyst guidance.
 2. **Incident Timeline Builder** — reconstruct the sequence of events.
-3. **SOC Alert Report Generator** — write the structured NIST-lifecycle report.
-4. **KQL Detection Assistant** — draft a detection so this is caught next time.
-5. **Log Parser / SIEM Demo** — practise filtering the raw log lines (optional/supporting).
+3. **Artifact Relationship View** — a read-only evidence map of how the artifacts connect.
+4. **SOC Alert Report Generator** — write the structured NIST-lifecycle report.
+5. **KQL Detection Assistant** — draft a detection so this is caught next time.
+
+(**Log Parser / SIEM Demo** remains an optional supporting tool for filtering the raw log lines.)
 
 ---
 
-## Scope note for this task
+## Workflow status
 
-This first task **only creates the shared scenario pack** (`scenarios/phishing-powershell.js`)
-and this documentation. It does **not** connect the scenario to any tool, change any tool
-logic, or modify existing tool samples. Wiring tools to read from `window.CDL_SCENARIOS`
-is a separate, later task — one tool at a time, each independently verifiable.
+The pack is wired into the connected workflow above (SOAR-Lite Alert Triage, Incident Timeline
+Builder, Artifact Relationship View, SOC Alert Report Generator, and KQL Detection Assistant).
+Each tool reads from `window.CDL_SCENARIOS["phishing-powershell"]` and degrades gracefully to a
+local sample if the pack is missing or malformed. It remains data-only, fictional, and
+browser-only — no backend, no real SIEM/EDR/threat-intel, and no production claims.

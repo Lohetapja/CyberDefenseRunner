@@ -69,6 +69,26 @@
 - **MVP next step:** balance pass (spawn rate vs. one-question-at-a-time bottleneck), upgrade tier for built slots, identity-threat type wired to the Identity & Logins bank (mapping already reserved in code).
 - **Not yet:** more node types, multiple maps, endless mode.
 
+## 4 · Long-term direction — Case Workspace
+
+A possible future evolution from separate analyst tools into a **case-centered workspace**:
+load one safe, simulated SOC case and work the whole investigation in a single local view.
+
+- **Flow:** 1) Triage · 2) Timeline · 3) Artifact Relationship View · 4) Report ·
+  5) Detection logic · 6) Export.
+- **Shape:** the existing tools become **panels around one case** — case-centered, not
+  tool-sprawl. (Principle: *"Separate tools are useful, but the long-term product shape is a
+  Case Workspace where tools become panels around one case."*)
+- **MVP (when started):** wire the already-built Invoice 4471 tools to one shared, in-page
+  case selection; reuse the existing scenario-pack data; keep each panel's current logic.
+- **Data:** built-in cases = fictional scenario packs; future user cases = **local JSON import
+  only**.
+- **Not yet / not ever:** no fake SIEM dashboard, no real telemetry or SIEM/EDR integration,
+  no accounts, no backend, no uploads/server storage, no real customer logs, no production
+  claims.
+- **Gate:** **do not start until the Invoice 4471 workflow is documented, committed, and
+  stable.** See `docs/decisions.md` §11.
+
 ## Question banks — policy
 
 The eight `questions-*.js` files are the validated source of truth.

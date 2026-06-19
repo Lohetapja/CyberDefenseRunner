@@ -8,8 +8,9 @@ Then re-check the live site after pushing.
 - [ ] Page loads with dark theme, title shows **Cyber Defense Lab / Blue Team Training Simulator**
 - [ ] Question count shows **3,200** (stat box and description line)
 - [ ] Actions visible: Start Quiz Training · SOC Dashboard · Analyst Tools · Experimental Game Modes · How to Play
-- [ ] **Analyst Tools** opens/closes; shows **6 live PROTOTYPE** tools (SOAR-Lite Alert Triage, KQL Detection Assistant, SOC Alert Report Generator, Incident Timeline Builder, Log Parser / SIEM Demo, AI Misuse Detection Demo)
-- [ ] Each of the 6 Analyst Tools opens its page directly (no "planned" modal)
+- [ ] **Analyst Tools** opens/closes; shows **7 live PROTOTYPE** tools (SOAR-Lite Alert Triage, KQL Detection Assistant, SOC Alert Report Generator, Incident Timeline Builder, Artifact Relationship View, Log Parser / SIEM Demo, AI Misuse Detection Demo)
+- [ ] Each of the 7 Analyst Tools opens its page directly (no "planned" modal)
+- [ ] **Recommended Analyst Workflow** strip shows 5 steps in order: Triage → Timeline → Artifact Map → Report → Detection, each linking to the correct page
 - [ ] **Experimental Game Modes** opens/closes; shows **2 BETA** modes (Defense Mission, Network Defense Mission v2)
 - [ ] How to Play opens; includes SOC Dashboard item (timers + after-action explanation); closes
 - [ ] No errors in browser console (F12)
@@ -45,6 +46,18 @@ Then re-check the live site after pushing.
 - [ ] **Copy Report** → "✔ COPIED"; paste renders as proper Markdown (tables, bullets, code fence)
 - [ ] **Clear Form** resets (date=today, severity=Medium, status=Open)
 - [ ] Back to Menu works
+
+## Artifact Relationship View
+- [ ] Opens from Analyst Tools / the workflow strip (`artifact-map.html`, PROTOTYPE tag)
+- [ ] All six lanes render: Identity & Users, Email Delivery, Execution, Network / Egress, Detection, Response
+- [ ] Required nodes render (m.tamm, WS-TRAINING-07, Invoice 4471 email, Invoice_4471.docm, outlook.exe, powershell.exe, 203.0.113.66, files.example-cdn[.]test, TR-2031, Host isolated, Sessions revoked / password reset)
+- [ ] Required edges render (received, carried, opened, executed in, spawned, attempted download, connected to, blocked by, triggered, contained by, secured by)
+- [ ] Click a node → details panel shows type, label, and connections
+- [ ] Click an edge → details panel shows relationship, timestamp, and supporting evidence
+- [ ] **Missing Evidence** section is visible
+- [ ] Safe simulated-data disclaimer is visible (no real SIEM/EDR/cloud/threat-intel, no live telemetry, browser-only)
+- [ ] No errors in browser console
+- [ ] No horizontal page overflow at normal desktop width
 
 ## GitHub Pages deployment (after push)
 - [ ] Live URL loads; hard-refresh to bypass CDN/browser cache

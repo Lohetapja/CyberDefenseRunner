@@ -40,12 +40,60 @@ the public-facing name of the project is Cyber Defense Lab.)*
 | **After-Action Report** | Stable | Post-shift review inside SOC Dashboard: every missed question replayed with the correct answer, explanation, and topic to review. Copyable as Markdown. |
 | **Analyst Companion** | Stable | Lightweight learning-progression layer in Quiz Training (see below). |
 
-The main menu groups the rest into two sections: **Analyst Tools** (the six tools below)
+The main menu groups the rest into two sections: **Analyst Tools** (the seven tools below)
 and **Experimental Game Modes**.
+
+## Flagship workflow: Invoice 4471
+
+The analyst tools are connected through one canonical, fictional scenario — **Invoice 4471**
+(phishing → encoded PowerShell → blocked outbound connection) — so the same case reads
+consistently end to end. The landing page's **Recommended Analyst Workflow** walks it in order:
+
+**Triage → Timeline → Artifact Map → Report → Detection**
+
+1. **SOAR-Lite Alert Triage** — verdict, severity, MITRE mapping, and analyst guidance.
+2. **Incident Timeline Builder** — reconstruct the event sequence.
+3. **Artifact Relationship View** — a read-only evidence map of how the users, hosts, files,
+   processes, alerts, destinations, and response actions connect.
+4. **SOC Alert Report Generator** — a structured NIST-lifecycle report.
+5. **KQL Detection Assistant** — draft a detection so it's caught next time.
+
+Each tool reads the shared scenario pack and falls back to its own built-in sample if it isn't
+present. Everything runs **in the browser on safe simulated data** — no backend, no accounts,
+and no real SIEM / EDR / cloud / threat-intelligence integration or live telemetry.
+
+## Workflow preview
+
+The connected Invoice 4471 workflow, end to end. All screenshots use fictional, simulated
+training data only.
+
+**Landing page — Recommended Analyst Workflow**
+
+![Landing page Recommended Analyst Workflow showing the connected Invoice 4471 path: Triage → Timeline → Artifact Map → Report → Detection](assets/screenshots/landing-workflow.jpg)
+
+**SOAR-Lite Alert Triage**
+
+![SOAR-Lite Alert Triage: verdict, severity, MITRE ATT&CK mapping, and analyst-guidance notes for the Invoice 4471 alert](assets/screenshots/soar-lite-analyst-guidance.jpg)
+
+**Incident Timeline Builder**
+
+![Incident Timeline Builder: the Invoice 4471 event sequence reconstructed from email, endpoint, proxy, and identity evidence](assets/screenshots/timeline-invoice-4471.jpg)
+
+**Artifact Relationship View**
+
+![Artifact Relationship View: a read-only evidence map showing how the user, host, email, file, processes, destination, alert, and response actions connect](assets/screenshots/artifact-relationship-view.jpg)
+
+**SOC Alert Report Generator**
+
+![SOC Alert Report Generator: a structured incident report generated from the same scenario evidence](assets/screenshots/report-generator-invoice-4471.jpg)
+
+**KQL Detection Assistant**
+
+![KQL Detection Assistant: a template-based detection idea for Office spawning encoded PowerShell, with explanation, false positives, and validation notes](assets/screenshots/kql-detection-invoice-4471.jpg)
 
 ## Analyst Tools
 
-Six standalone, browser-only utilities a junior analyst would actually reach for. All are
+Seven standalone, browser-only utilities a junior analyst would actually reach for. All are
 working **prototypes** — local, client-side, and fed with safe simulated data only.
 
 | Tool | Status | What it trains |
@@ -54,6 +102,7 @@ working **prototypes** — local, client-side, and fed with safe simulated data 
 | **KQL Detection Assistant** | Prototype | Build and explain template-based KQL detection ideas with detection notes, false-positive considerations, and a validation checklist. *(Generates queries locally — not connected to a real SIEM.)* |
 | **SOC Alert Report Generator** | Prototype | Structured incident reporting: a form that produces a clean Markdown report following the NIST incident-handling lifecycle, with a fictional sample incident loader. |
 | **Incident Timeline Builder** | Prototype | Turn timestamped investigation events into a sorted, exportable Markdown timeline. |
+| **Artifact Relationship View** | Prototype | A read-only evidence map for the Invoice 4471 case: shows how users, hosts, files, processes, alerts, destinations, and response actions connect, with click-through node and edge details. |
 | **Log Parser / SIEM Demo** | Prototype | Paste pipe-delimited sample logs, filter and group them, highlight suspicious activity, and export investigation notes. |
 | **AI Misuse Detection Demo** | Prototype | A defensive demo for spotting risky / shadow-AI usage and possible data exposure in simulated enterprise logs. |
 
@@ -96,6 +145,7 @@ A rough map of which part of the project exercises which SOC / blue-team skill:
 | **KQL Detection Assistant** | Detection logic and KQL practice |
 | **SOC Alert Report Generator** | Structured incident reporting (NIST lifecycle) |
 | **Incident Timeline Builder** | Event sequencing and timeline reconstruction |
+| **Artifact Relationship View** | Connecting evidence into an attack-and-response story |
 | **Log Parser / SIEM Demo** | Log analysis and filtering |
 | **AI Misuse Detection Demo** | Shadow-AI / data-exposure awareness |
 | **Analyst Companion** | Learning-progression design and front-end UX |
@@ -113,7 +163,8 @@ These are practice and demonstration exercises, not production tooling.
 ## Current status
 
 - Quiz Training, SOC Dashboard, the After-Action Report, and the Analyst Companion are stable.
-- All six Analyst Tools are working prototypes (local, simulated data only — not production tools).
+- All seven Analyst Tools are working prototypes (local, simulated data only — not production tools).
+- The **Invoice 4471** workflow (Triage → Timeline → Artifact Map → Report → Detection) is connected and demo-ready.
 - Defense Mission modes are playable experiments, not yet balanced.
 
 See [`ROADMAP.md`](ROADMAP.md) for what's next and [`TESTING.md`](TESTING.md) for the

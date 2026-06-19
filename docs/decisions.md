@@ -73,3 +73,22 @@ changes.
 - **Short term:** clarity, documentation, demo flow, screenshots, public presentation.
 - **Medium term:** one flagship scenario connecting quiz / SOC / triage / timeline / report.
 - **Long term:** a local-first blue-team scenario lab with multiple polished simulated cases.
+
+## 11. Case Workspace (future product direction)
+- **Idea:** Cyber Defense Lab may evolve from separate analyst tools into a **case-centered
+  workspace** — one local, browser-based place where a user loads a safe, simulated SOC case
+  and moves through the full workflow: 1) Triage · 2) Timeline · 3) Artifact Relationship
+  View · 4) Report · 5) Detection logic · 6) Export.
+- **Shape:** the existing tools become **panels around one case** — case-centered, not
+  tool-sprawl-centered.
+- **What it is NOT:** not a fake SIEM dashboard. It must not imply real telemetry, real
+  SIEM/EDR integration, accounts, a backend, or live data.
+- **Data rules (unchanged):** built-in cases use safe **fictional scenario packs**; any future
+  user-supplied case is a **local JSON import only** — no uploaded data, no backend storage,
+  no real customer logs.
+- **Principle:** *"Separate tools are useful, but the long-term product shape is a Case
+  Workspace where tools become panels around one case."*
+- **Priority guard:** the **current priority remains finishing and polishing the Invoice 4471
+  workflow.** Do not start Case Workspace implementation until the current workflow is
+  documented, committed, and stable. This is a direction note, not an approved build, and
+  claims no production readiness.
