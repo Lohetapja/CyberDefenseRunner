@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artifact Relationship View — Cyber Defense Lab</title>
+  <link rel="stylesheet" href="artifact-map.css" />
+</head>
+<body>
+
+  <header class="am-hud">
+    <div class="hud-left">
+      <a class="hud-back" href="index.html">⟵ Menu</a>
+      <span class="hud-title">ARTIFACT RELATIONSHIP VIEW <span class="beta">PROTOTYPE</span></span>
+    </div>
+    <div class="hud-actions">
+      <a class="btn-act" href="index.html">BACK TO MENU</a>
+    </div>
+  </header>
+
+  <div class="am-banner">
+    ⓘ Read-only evidence map · simulated training data only.
+    No real SIEM, EDR, cloud, or threat-intelligence connection. No live telemetry. Browser-only.
+  </div>
+
+  <details class="use-box" open>
+    <summary>Intended use</summary>
+    <div class="use-body">
+      <p><b>Purpose:</b> A safe, simulated-data training view for understanding the relationships
+      between artifacts in a SOC case — who was involved, what host, what file/email, what process
+      spawned what, what destination was contacted, what alert fired, and what response followed.</p>
+      <p><b>Demonstrates:</b> investigation reasoning — connecting evidence into an attack-and-response story.</p>
+      <p><b>Try:</b> click any node for its details, or any connection for the supporting evidence; hover to highlight a path.</p>
+      <p><b>Does not:</b> connect to real systems or use real data — every artifact shown is fictional.</p>
+      <p class="use-disc">Educational prototype. Uses simulated data only. Validate all logic before operational use.</p>
+    </div>
+  </details>
+
+  <div class="am-titles">
+    <h1>Artifact Relationship View</h1>
+    <p class="am-sub">Invoice 4471 evidence map</p>
+    <p class="am-scenario" id="am-scenario"></p>
+  </div>
+
+  <div class="am-legend" id="am-legend"></div>
+
+  <main class="am-main">
+    <section class="am-panel map-panel">
+      <div class="panel-title">▣ EVIDENCE MAP — phishing → encoded PowerShell → blocked outbound</div>
+      <div class="map-scroll">
+        <div id="am-canvas"></div>
+      </div>
+      <p class="am-hint">Tip: click a node or a connection for details. Hover or focus to highlight the path.</p>
+    </section>
+
+    <aside class="am-side">
+      <section class="am-panel">
+        <div class="panel-title">▣ DETAILS</div>
+        <div id="am-detail" class="am-detail" aria-live="polite">
+          <p class="am-detail-empty">Select a node or connection to see its details.</p>
+        </div>
+      </section>
+
+      <section class="am-panel">
+        <div class="panel-title">▣ MISSING EVIDENCE</div>
+        <p class="am-missing-intro">Gaps a real investigation would still need to close:</p>
+        <div id="am-missing" class="am-missing"></div>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Canonical "Invoice 4471" scenario pack (data only) — read for optional enrichment;
+       this page renders safely from built-in data even if it is absent. -->
+  <script src="scenarios/phishing-powershell.js"></script>
+  <script src="artifact-map.js"></script>
+</body>
+</html>

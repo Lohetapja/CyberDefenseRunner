@@ -1,0 +1,172 @@
+/* artifact-map.css — Artifact Relationship View (standalone analyst prototype).
+   Self-contained dark SOC theme, consistent with the rest of Cyber Defense Lab. */
+
+:root {
+  --bg:        #080c10;
+  --surface:   #0f1923;
+  --surface2:  #162030;
+  --border:    #1e3048;
+  --border-hi: #2a4a6a;
+  --accent:    #00d4ff;
+  --text:      #cdd9e5;
+  --dim:       #607080;
+  --warn:      #ffb300;
+  --radius:    10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, rgba(0,212,255,0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── HUD header ───────────────────────────────────────────────────────── */
+.am-hud {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 18px; border-bottom: 1px solid var(--border);
+  background: rgba(15, 25, 35, 0.9);
+}
+.hud-left { display: flex; align-items: center; gap: 14px; }
+.hud-back { color: var(--dim); text-decoration: none; font-size: 13px; }
+.hud-back:hover { color: var(--accent); }
+.hud-title { font-size: 14px; letter-spacing: 2px; color: var(--accent); }
+.beta {
+  font-size: 9px; letter-spacing: 1px; color: var(--warn);
+  border: 1px solid var(--warn); border-radius: 3px; padding: 1px 5px; margin-left: 4px;
+}
+.hud-actions { display: flex; gap: 8px; }
+.btn-act {
+  background: transparent; border: 1px solid var(--border-hi); color: var(--dim);
+  padding: 6px 12px; border-radius: 6px; font-size: 12px; text-decoration: none; cursor: pointer;
+}
+.btn-act:hover { color: var(--text); border-color: var(--accent); }
+
+/* ── Banner + intended-use ────────────────────────────────────────────── */
+.am-banner {
+  max-width: 1180px; margin: 14px auto 0; padding: 9px 16px;
+  font-size: 12px; line-height: 1.6; color: var(--warn);
+  background: rgba(255, 179, 0, 0.06); border: 1px solid rgba(255, 179, 0, 0.3); border-radius: 8px;
+}
+.use-box {
+  max-width: 1180px; margin: 12px auto 0;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+}
+.use-box > summary { cursor: pointer; padding: 8px 14px; color: var(--accent); letter-spacing: 1px; list-style: none; font-size: 13px; }
+.use-box > summary::before { content: "▸ "; color: var(--dim); }
+.use-box[open] > summary::before { content: "▾ "; }
+.use-box .use-body { padding: 4px 14px 12px; color: var(--dim); line-height: 1.7; font-size: 13px; }
+.use-box .use-body p { margin: 6px 0; }
+.use-box .use-body b { color: var(--text); }
+.use-box .use-disc { color: var(--warn); margin-top: 8px; }
+
+/* ── Titles + legend ──────────────────────────────────────────────────── */
+.am-titles { max-width: 1180px; margin: 16px auto 0; padding: 0 2px; }
+.am-titles h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+.am-sub { margin: 2px 0 0; color: var(--accent); font-size: 13px; letter-spacing: 1px; }
+.am-scenario { margin: 4px 0 0; color: var(--dim); font-size: 11px; font-family: 'Consolas', monospace; }
+
+.am-legend {
+  max-width: 1180px; margin: 12px auto 0; display: flex; flex-wrap: wrap; gap: 8px 16px;
+}
+.leg { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--dim); }
+.leg-dot { width: 10px; height: 10px; border-radius: 3px; background: var(--c, var(--accent)); display: inline-block; }
+
+/* ── Main layout ──────────────────────────────────────────────────────── */
+.am-main {
+  max-width: 1180px; margin: 14px auto; padding: 0 16px 28px;
+  display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start;
+}
+.am-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.am-side { display: flex; flex-direction: column; gap: 16px; }
+.panel-title { font-size: 11px; letter-spacing: 2px; color: var(--dim); margin-bottom: 10px; }
+.am-hint { margin: 8px 2px 0; font-size: 11px; color: var(--dim); }
+
+.map-scroll { overflow-x: auto; }
+#am-canvas svg { width: 100%; min-width: 760px; height: auto; display: block; }
+
+/* ── Type accent colors (shared by legend swatch, node stripe, detail) ── */
+.type-user        { --c: #00d4ff; }
+.type-host        { --c: #3ea7ff; }
+.type-email       { --c: #ffb300; }
+.type-file        { --c: #b48bf2; }
+.type-process     { --c: #00e87a; }
+.type-destination { --c: #ff3d55; }
+.type-domain      { --c: #ff8a5b; }
+.type-alert       { --c: #ff2d6f; }
+.type-action      { --c: #19c39a; }
+
+/* ── SVG: lanes ───────────────────────────────────────────────────────── */
+.lane-bg { fill: rgba(255,255,255,0.015); stroke: var(--border); stroke-width: 1; stroke-dasharray: 3 6; }
+.lane-hdr {
+  fill: var(--dim); font: 700 9px 'Consolas', monospace; letter-spacing: 1.4px;
+  text-anchor: middle; text-transform: uppercase;
+}
+
+/* ── SVG: edges ───────────────────────────────────────────────────────── */
+.edge { cursor: pointer; }
+.edge:focus { outline: none; }
+.edge-hit { fill: none; stroke: transparent; stroke-width: 14; pointer-events: stroke; }
+.edge-line { fill: none; stroke: var(--border-hi); stroke-width: 1.6; }
+#am-arrow path { fill: var(--border-hi); }
+.edge-lbl rect { fill: var(--surface); stroke: var(--border); stroke-width: 1; }
+.edge-lbl text { fill: var(--dim); font: 10px 'Consolas', monospace; text-anchor: middle; dominant-baseline: middle; }
+.edge:hover .edge-line, .edge:focus .edge-line { stroke: var(--accent); }
+.edge:hover .edge-lbl text, .edge:focus .edge-lbl text { fill: var(--text); }
+
+/* ── SVG: nodes ───────────────────────────────────────────────────────── */
+.node { cursor: pointer; }
+.node:focus { outline: none; }
+.node-bg { fill: var(--surface2); stroke: var(--border-hi); stroke-width: 1; }
+.node-stripe { fill: var(--c, var(--accent)); }
+.node-type { fill: var(--c, var(--accent)); font: 700 8px 'Consolas', monospace; letter-spacing: 1px; }
+.node-label { fill: var(--text); font: 600 12px 'Segoe UI', sans-serif; }
+.node-sub { fill: var(--dim); font: 10px 'Segoe UI', sans-serif; }
+.node:hover .node-bg, .node:focus .node-bg { stroke: var(--c, var(--accent)); stroke-width: 1.6; }
+
+/* ── SVG: highlight states ────────────────────────────────────────────── */
+.is-filtering .node.dim, .is-filtering .edge.dim { opacity: 0.16; }
+.is-filtering .node.hl .node-bg { stroke: var(--c, var(--accent)); stroke-width: 2; }
+.is-filtering .edge.hl .edge-line { stroke: var(--accent); stroke-width: 2.4; }
+.is-filtering .edge.hl .edge-lbl text { fill: var(--text); }
+
+/* ── Detail panel ─────────────────────────────────────────────────────── */
+.am-detail { font-size: 13px; min-height: 60px; }
+.am-detail-empty { color: var(--dim); font-size: 12px; }
+.d-kind {
+  display: inline-block; font: 700 9px 'Consolas', monospace; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--c, var(--accent));
+  border: 1px solid currentColor; border-radius: 3px; padding: 2px 6px; margin-bottom: 8px;
+}
+.d-rel { color: var(--accent); }
+.d-title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.4; word-break: break-word; }
+.d-arrow { color: var(--accent); font-family: 'Consolas', monospace; font-size: 13px; }
+.d-sub { color: var(--dim); font-size: 12px; margin-top: 4px; }
+.d-h { margin-top: 12px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); }
+.d-list { margin: 6px 0 0; padding-left: 0; list-style: none; }
+.d-list li { padding: 3px 0; font-size: 12px; line-height: 1.5; border-bottom: 1px solid var(--border); }
+.d-list b { color: var(--text); }
+.d-list .t { color: var(--dim); }
+.d-ev { margin-top: 6px; font-size: 12px; line-height: 1.6; color: var(--text); }
+
+/* ── Missing evidence ─────────────────────────────────────────────────── */
+.am-missing-intro { margin: 0 0 8px; font-size: 11px; color: var(--dim); }
+.am-missing { display: flex; flex-direction: column; gap: 8px; }
+.miss-item {
+  border: 1px dashed var(--border-hi); border-radius: 6px; padding: 7px 10px;
+  background: rgba(255,255,255,0.012);
+}
+.miss-label { display: block; font-size: 12px; color: var(--text); }
+.miss-note { display: block; font-size: 11px; color: var(--dim); margin-top: 2px; line-height: 1.5; }
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .am-main { grid-template-columns: 1fr; }
+}
